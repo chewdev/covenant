@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const keys = require("../../config/keys");
 const passport = require("passport");
 
 // Load Customer input validation
@@ -11,16 +9,16 @@ const validateCustomerInput = require("../../validation/customer");
 // Load Customer model
 const Customer = require("../../models/Customer");
 
-// @route GET api/users/test
-// @desc Tests users route
+// @route GET api/customers/test
+// @desc Tests customers route
 // @access Public route
 router.get("/test", (req, res) => {
   res.json({ msg: "some customer" });
 });
 
-// @route GET api/users/register
-// @desc Register user
-// @access Public route
+// @route POST api/customers/
+// @desc Add a customer
+// @access Private route
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
