@@ -3,12 +3,13 @@ const Schema = mongoose.Schema;
 
 // Create Schema
 const CustomerSchema = new Schema({
-  name: {
-    type: String,
+  contactnames: {
+    type: [String],
     required: true
   },
   company: {
-    type: String
+    type: String,
+    required: true
   },
   email: {
     type: String
@@ -25,4 +26,4 @@ const CustomerSchema = new Schema({
   }
 });
 
-module.exports = user = mongoose.model("users", CustomerSchema);
+module.exports = customer = mongoose.model("customers", CustomerSchema);
