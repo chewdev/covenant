@@ -18,8 +18,7 @@ const ProjectSchema = new Schema({
     type: String
   },
   covenantponumber: {
-    type: String,
-    required: true
+    type: String
   },
   currentstatus: {
     type: String,
@@ -39,6 +38,10 @@ const ProjectSchema = new Schema({
   },
   paidamount: {
     type: Number
+  },
+  date: {
+    type: Date,
+    default: Date.now
   }
 });
 

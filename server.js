@@ -6,6 +6,7 @@ const path = require("path");
 
 const users = require("./routes/api/users");
 const customers = require("./routes/api/customers");
+const projects = require("./routes/api/projects");
 
 const app = express();
 
@@ -30,6 +31,7 @@ require("./config/passport")(passport);
 
 app.use("/api/users", users);
 app.use("/api/customers", customers);
+app.use("/api/projects", projects);
 app.get("/", function(req, res) {
   res.send("hello! This is a test page!");
 });
