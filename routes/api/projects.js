@@ -6,13 +6,13 @@ const passport = require("passport");
 const validateProjectInput = require("../../validation/project");
 const validateProjectLocationInput = require("../../validation/projectlocation");
 
-// Load User model
+// Load models
 const Project = require("../../models/Project");
 const Customer = require("../../models/Customer");
 const ProjectLocation = require("../../models/ProjectLocation");
 
 // @route GET api/projects/test
-// @desc Tests users route
+// @desc Tests projects route
 // @access Public route
 router.get("/test", (req, res) => {
   res.json({ msg: "some project" });
@@ -134,6 +134,132 @@ router.post(
         }
       }
     });
+  }
+);
+
+// @route PUT api/projects/:proj_id
+// @desc Update project
+// @access Private route
+router.put(
+  "/:proj_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateProjectInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
+    Project.findById(req.params.proj_id).then(project => {
+      if (!project) {
+        return res.status(400).json({
+          error: "This project does not exist and cannot be updated."
+        });
+      } else {
+        Customer.findOne({ company: req.body.customer }).then(customer => {
+          if (!customer) {
+            return res.status(400).json({
+              error:
+                "This customer does not exist. Please add this customer before creating or updating a project for this customer."
+            });
+          } else {
+            ProjectLocation.findOne({
+              address: req.body.projectlocation.address
+            }).then(projectlocation => {
+              if (!projectlocation) {
+                const projectLocData = req.body.projectlocation;
+                const { errors, isValid } = validateProjectLocationInput(
+                  projectLocData
+                );
+
+                if (!isValid) {
+                  return res.status(400).json(errors);
+                }
+
+                const newProjectLocation = new ProjectLocation({
+                  address: req.body.projectlocation.address
+                });
+
+                if (projectLocData.locationname) {
+                  newProjectLocation.locationname = projectLocData.locationname;
+                }
+                if (projectLocData.phonenumber) {
+                  newProjectLocation.phonenumber = projectLocData.phonenumber;
+                }
+                if (projectLocData.contactname) {
+                  newProjectLocation.contactname = projectLocData.contactname;
+                }
+
+                newProjectLocation
+                  .save()
+                  .then(projectlocation => {
+                    updateProject(projectlocation, project);
+                    // return res.json(project || { error: "no project" });
+                  })
+                  .catch(err => console.log(err));
+              } else {
+                // return res.json(project || { error: "no project" });
+                updateProject(projectlocation, project);
+              }
+            });
+
+            function updateProject(projectlocation, project) {
+              project.customer = customer._id;
+              project.projectlocation = projectlocation._id;
+
+              if (req.body.customerponumber) {
+                project.customerponumber = req.body.customerponumber;
+              }
+              if (req.body.locationponumber) {
+                project.locationponumber = req.body.locationponumber;
+              }
+              if (req.body.covenantponumber) {
+                project.covenantponumber = req.body.covenantponumber;
+              }
+              if (req.body.currentstatus) {
+                project.currentstatus = req.body.currentstatus;
+              }
+              if (req.body.nextsteps) {
+                project.nextsteps = req.body.nextsteps;
+              }
+              if (req.body.estimatenumber) {
+                project.estimatenumber = req.body.estimatenumber;
+              }
+              if (req.body.invoicenumber) {
+                project.invoicenumber = req.body.invoicenumber;
+              }
+              if (req.body.totalamount) {
+                project.totalamount = req.body.totalamount;
+              }
+              if (req.body.paidamount) {
+                project.paidamount = req.body.paidamount;
+              }
+
+              project
+                .save()
+                .then(project => res.json(project))
+                .catch(err => console.log(err));
+            }
+          }
+        });
+      }
+    });
+  }
+);
+
+// @route DELETE api/projects/:proj_id
+// @desc Delete a project
+// @access Private
+router.delete(
+  "/:proj_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Project.findByIdAndRemove(req.params.proj_id)
+      .then(project => res.json(project))
+      .catch(err =>
+        res.status(404).json({ noprojectsfound: "No projects found" })
+      );
   }
 );
 

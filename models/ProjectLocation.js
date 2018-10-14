@@ -15,6 +15,10 @@ const ProjectLocationSchema = new Schema({
   },
   phonenumber: {
     type: String
+  },
+  date: {
+    type: Date,
+    default: Date.now
   }
 });
 
