@@ -256,9 +256,17 @@ router.delete(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Project.findByIdAndRemove(req.params.proj_id)
-      .then(project => res.json(project))
+      .then(project => {
+        if (project) {
+          res.json(project);
+        } else {
+          res
+            .status(400)
+            .json({ projectnotfound: "Project not found. Unable to remove." });
+        }
+      })
       .catch(err =>
-        res.status(404).json({ noprojectsfound: "No projects found" })
+        res.status(404).json({ projectnotfound: "Error finding project." })
       );
   }
 );
