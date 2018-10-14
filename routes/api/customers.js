@@ -16,6 +16,22 @@ router.get("/test", (req, res) => {
   res.json({ msg: "some customer" });
 });
 
+// @route GET api/customers
+// @desc Get customers
+// @access Private
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Customer.find()
+      .sort({ date: -1 })
+      .then(customers => res.json(customers))
+      .catch(err =>
+        res.status(404).json({ nocustomersfound: "No customers found" })
+      );
+  }
+);
+
 // @route POST api/customers/
 // @desc Add a customer
 // @access Private route
@@ -49,6 +65,70 @@ router.post(
           .catch(err => console.log(err));
       }
     });
+  }
+);
+
+// @route PUT api/customers/:cust_id
+// @desc Update a customer
+// @access Private route
+router.put(
+  "/:cust_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Customer.findById(req.params.cust_id)
+      .then(customer => {
+        if (!customer) {
+          return res
+            .status(400)
+            .json({ error: "Customer not found. Unable to update." });
+        } else {
+          const { errors, isValid } = validateCustomerInput(req.body);
+
+          // Check Validation
+          if (!isValid) {
+            return res.status(400).json(errors);
+          }
+
+          customer.company = req.body.company;
+          customer.contactnames = req.body.contactnames;
+          customer.email = req.body.email;
+          customer.address = req.body.address;
+          customer.phonenumber = req.body.phonenumber;
+
+          customer
+            .save()
+            .then(customer => res.json(customer))
+            .catch(err => console.log(err));
+        }
+      })
+      .catch(err =>
+        res.status(404).json({ error: "Customer not found. Could not update." })
+      );
+  }
+);
+
+// @route DELETE api/customers/:cust_id
+// @desc Delete a customer
+// @access Private
+router.delete(
+  "/:cust_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Customer.findByIdAndRemove(req.params.cust_id)
+      .then(customer => {
+        if (customer) {
+          res.json(customer);
+        } else {
+          res
+            .status(400)
+            .json({
+              customernotfound: "Customer not found. Unable to remove."
+            });
+        }
+      })
+      .catch(err =>
+        res.status(404).json({ cutsomernotfound: "Error finding customer." })
+      );
   }
 );
 
