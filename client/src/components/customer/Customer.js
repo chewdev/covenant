@@ -18,7 +18,16 @@ class Customers extends Component {
     if (customer === null || loading) {
       customerContent = <Spinner />;
     } else {
-      customerContent = <div>{customer.company}</div>;
+      customerContent = (
+        <div>
+          <div>{customer.company}</div>
+          <div>{customer.email}</div>
+          <div>{customer.phonenumber}</div>
+          <div>{customer.address}</div>
+          {customer.contactnames &&
+            customer.contactnames.map(contact => <div>{contact}</div>)}
+        </div>
+      );
     }
 
     return (

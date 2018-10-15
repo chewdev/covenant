@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import TextFieldGroup from "../common/TextFieldGroup";
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
 import InputGroup from "../common/InputGroup";
-import { addCustomer } from "../../actions/customerActions";
+import { addCustomer, updateCustomer } from "../../actions/customerActions";
 
 class AddCompany extends Component {
   constructor(props) {
@@ -35,7 +35,12 @@ class AddCompany extends Component {
     };
 
     console.log(this.state);
-    this.props.addCustomer(customerData, this.props.history);
+    if (this.props.editOrAdd === "add") {
+      this.props.addCustomer(customerData, this.props.history);
+    } else {
+      customerData.id = this.props.match.params.id;
+      this.props.updateCustomer(customerData, this.props.history);
+    }
   }
 
   onChange(e) {
@@ -43,11 +48,14 @@ class AddCompany extends Component {
   }
 
   render() {
+    console.log(this.props.editOrAdd);
     return (
       <div className="container">
         <div className="row">
           <div className="col-md-8 m-auto">
-            <h1 className="display-4 text-center">Add Customer</h1>
+            <h1 className="display-4 text-center">
+              {this.props.editOrAdd === "add" ? "Add " : "Edit "} Customer
+            </h1>
             <p className="lead text-center">
               Add a new company or person to the list of customers
             </p>
@@ -107,10 +115,12 @@ class AddCompany extends Component {
 }
 
 AddCompany.propTypes = {
-  addCustomer: PropTypes.func.isRequired
+  addCustomer: PropTypes.func.isRequired,
+  updateCustomer: PropTypes.func.isRequired,
+  editOrAdd: PropTypes.string.isRequired
 };
 
 export default connect(
   null,
-  { addCustomer }
+  { addCustomer, updateCustomer }
 )(withRouter(AddCompany));

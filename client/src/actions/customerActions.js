@@ -30,6 +30,21 @@ export const addCustomer = (customerData, history) => dispatch => {
     );
 };
 
+// Update Customer
+export const updateCustomer = (customerData, history) => dispatch => {
+  dispatch(clearErrors());
+
+  axios
+    .put(`/api/customers/${customerData.id}`, customerData)
+    .then(res => history.push(`/customers/${customerData.id}`))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 // Get Customers
 export const getCustomers = () => dispatch => {
   dispatch(setCustomerLoading());

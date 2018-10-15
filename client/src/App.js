@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import { setCurrentUser, logoutUser } from "./actions/authActions";
@@ -50,9 +50,13 @@ class App extends Component {
                 <div className="customers">
                   <button className="side-btn">Customers</button>
                   <ul className="customers-options">
-                    <li className="customer-option">New</li>
+                    <li className="customer-option">
+                      <Link to={"/customers/new"}>New</Link>
+                    </li>
                     <li className="customer-option">Update</li>
-                    <li className="customer-option">View All</li>
+                    <li className="customer-option">
+                      <Link to={"/customers"}>View All</Link>
+                    </li>
                   </ul>
                 </div>
                 <div className="projects">
@@ -67,7 +71,14 @@ class App extends Component {
               <Switch>
                 <PrivateRoute
                   exact
+                  path="/customers/:id/edit"
+                  editOrAdd={"edit"}
+                  component={AddCompany}
+                />
+                <PrivateRoute
+                  exact
                   path="/customers/new"
+                  editOrAdd={"add"}
                   component={AddCompany}
                 />
                 <PrivateRoute exact path="/customers" component={Customers} />
