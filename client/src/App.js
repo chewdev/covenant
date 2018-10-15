@@ -12,6 +12,8 @@ import PrivateRoute from "./components/common/PrivateRoute";
 import Header from "./components/Header";
 import AddCompany from "./components/add-data/AddCompany";
 import Login from "./components/auth/Login";
+import Customers from "./components/customers/Customers";
+import Customer from "./components/customer/Customer";
 
 import "./App.css";
 
@@ -67,6 +69,12 @@ class App extends Component {
                   exact
                   path="/customers/new"
                   component={AddCompany}
+                />
+                <PrivateRoute exact path="/customers" component={Customers} />
+                <PrivateRoute
+                  exact
+                  path="/customers/:id"
+                  component={Customer}
                 />
               </Switch>
               {/* <div className="main-content">

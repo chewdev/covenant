@@ -21,7 +21,7 @@ export const addCustomer = (customerData, history) => dispatch => {
         payload: res.data
       })
     )
-    .then(() => history.push("/dashboard"))
+    .then(() => history.push("/customers"))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,

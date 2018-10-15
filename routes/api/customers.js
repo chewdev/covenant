@@ -68,6 +68,25 @@ router.post(
   }
 );
 
+// @route GET api/customers/:cust_id
+// @desc Get a single customer
+// @access Private route
+router.get(
+  "/:cust_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Customer.findById(req.params.cust_id)
+      .then(customer => {
+        if (!customer) {
+          return res.status(400).json({ error: "Customer not found." });
+        } else {
+          return res.json(customer);
+        }
+      })
+      .catch(err => res.status(404).json({ error: "Customer not found." }));
+  }
+);
+
 // @route PUT api/customers/:cust_id
 // @desc Update a customer
 // @access Private route
@@ -119,11 +138,9 @@ router.delete(
         if (customer) {
           res.json(customer);
         } else {
-          res
-            .status(400)
-            .json({
-              customernotfound: "Customer not found. Unable to remove."
-            });
+          res.status(400).json({
+            customernotfound: "Customer not found. Unable to remove."
+          });
         }
       })
       .catch(err =>
