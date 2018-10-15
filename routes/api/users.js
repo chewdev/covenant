@@ -66,6 +66,7 @@ router.post("/login", (req, res) => {
   if (!isValid) {
     return res.status(400).json(errors);
   }
+  console.log(req.body);
 
   const email = req.body.email;
   const password = req.body.password;
