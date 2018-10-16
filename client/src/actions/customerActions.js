@@ -86,7 +86,7 @@ export const getCustomer = id => dispatch => {
 };
 
 // Delete Customer
-export const deleteCustomer = id => dispatch => {
+export const deleteCustomer = (id, history) => dispatch => {
   axios
     .delete(`/api/customers/${id}`)
     .then(res =>
@@ -95,6 +95,7 @@ export const deleteCustomer = id => dispatch => {
         payload: id
       })
     )
+    .then(() => history.push("/customers"))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,

@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
-import { getCustomer } from "../../actions/customerActions";
+import { getCustomer, deleteCustomer } from "../../actions/customerActions";
 
 class Customers extends Component {
   componentDidMount() {
@@ -12,6 +12,10 @@ class Customers extends Component {
 
   onEditCustomer() {
     this.props.history.push(`/customers/${this.props.match.params.id}/edit`);
+  }
+
+  onDeleteCustomer() {
+    this.props.deleteCustomer(this.props.match.params.id, this.props.history);
   }
 
   render() {
@@ -43,6 +47,9 @@ class Customers extends Component {
             <button onClick={this.onEditCustomer.bind(this)}>
               Edit Customer
             </button>
+            <button onClick={this.onDeleteCustomer.bind(this)}>
+              Delete Customer
+            </button>
           </div>
         </div>
       </div>
@@ -52,6 +59,7 @@ class Customers extends Component {
 
 Customers.propTypes = {
   getCustomer: PropTypes.func.isRequired,
+  deleteCustomer: PropTypes.func.isRequired,
   customers: PropTypes.object.isRequired
 };
 
@@ -61,5 +69,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getCustomer }
-)(Customers);
+  { getCustomer, deleteCustomer }
+)(withRouter(Customers));
