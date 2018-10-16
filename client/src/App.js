@@ -10,9 +10,9 @@ import store from "./store";
 import PrivateRoute from "./components/common/PrivateRoute";
 
 import Header from "./components/Header";
-import AddCompany from "./components/add-data/AddCompany";
+import AddCompany from "./components/customer/AddUpdateCustomer";
 import Login from "./components/auth/Login";
-import Customers from "./components/customers/Customers";
+import Customers from "./components/customer/Customers";
 import Customer from "./components/customer/Customer";
 
 import "./App.css";

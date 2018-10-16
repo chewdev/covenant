@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logoutUser } from "../actions/authActions";
 import HeaderLogo from "./HeaderLogo";
-import HeaderLinks from "./HeaderLinks";
 
 class Header extends Component {
   onLogoutClick(e) {
