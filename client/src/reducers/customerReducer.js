@@ -17,7 +17,7 @@ export default function(state = initialState, action) {
     case CUSTOMER_LOADING:
       return {
         ...state,
-        loading: true
+        loading: action.payload
       };
     case GET_CUSTOMERS:
       return {

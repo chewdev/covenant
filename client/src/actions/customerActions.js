@@ -47,7 +47,7 @@ export const updateCustomer = (customerData, history) => dispatch => {
 
 // Get Customers
 export const getCustomers = () => dispatch => {
-  dispatch(setCustomerLoading());
+  dispatch(setCustomerLoading(true));
   axios
     .get("/api/customers")
     .then(res =>
@@ -56,6 +56,7 @@ export const getCustomers = () => dispatch => {
         payload: res.data
       })
     )
+    .then(() => dispatch(setCustomerLoading(false)))
     .catch(err =>
       dispatch({
         type: GET_CUSTOMERS,
@@ -66,7 +67,7 @@ export const getCustomers = () => dispatch => {
 
 // Get Customer
 export const getCustomer = id => dispatch => {
-  dispatch(setCustomerLoading());
+  dispatch(setCustomerLoading(true));
   axios
     .get(`/api/customers/${id}`)
     .then(res =>
@@ -75,6 +76,7 @@ export const getCustomer = id => dispatch => {
         payload: res.data
       })
     )
+    .then(() => dispatch(setCustomerLoading(false)))
     .catch(err =>
       dispatch({
         type: GET_CUSTOMER,
@@ -102,9 +104,10 @@ export const deleteCustomer = id => dispatch => {
 };
 
 // Set loading state
-export const setCustomerLoading = () => {
+export const setCustomerLoading = isLoading => {
   return {
-    type: CUSTOMER_LOADING
+    type: CUSTOMER_LOADING,
+    payload: isLoading
   };
 };
 

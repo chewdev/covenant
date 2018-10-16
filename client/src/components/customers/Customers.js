@@ -18,9 +18,9 @@ class Customers extends Component {
       customerContent = <Spinner />;
     } else {
       customerContent = customers.map(customer => (
-        <Link key={customer._id} to={`/customers/${customer._id}`}>
-          {customer.company}
-        </Link>
+        <div key={customer._id}>
+          <Link to={`/customers/${customer._id}`}>{customer.company}</Link>
+        </div>
       ));
     }
 

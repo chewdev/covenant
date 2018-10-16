@@ -7,8 +7,11 @@ import { getCustomer } from "../../actions/customerActions";
 
 class Customers extends Component {
   componentDidMount() {
-    console.log(this.props.match.params.id);
     this.props.getCustomer(this.props.match.params.id);
+  }
+
+  onEditCustomer() {
+    this.props.history.push(`/customers/${this.props.match.params.id}/edit`);
   }
 
   render() {
@@ -25,7 +28,9 @@ class Customers extends Component {
           <div>{customer.phonenumber}</div>
           <div>{customer.address}</div>
           {customer.contactnames &&
-            customer.contactnames.map(contact => <div>{contact}</div>)}
+            customer.contactnames.map(contact => (
+              <div key={contact}>{contact}</div>
+            ))}
         </div>
       );
     }
@@ -35,6 +40,9 @@ class Customers extends Component {
         <div className="container">
           <div className="row">
             <div className="col-md-12">{customerContent}</div>
+            <button onClick={this.onEditCustomer.bind(this)}>
+              Edit Customer
+            </button>
           </div>
         </div>
       </div>

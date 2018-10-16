@@ -4,8 +4,13 @@ import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import TextFieldGroup from "../common/TextFieldGroup";
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
+import Spinner from "../common/Spinner";
 import InputGroup from "../common/InputGroup";
-import { addCustomer, updateCustomer } from "../../actions/customerActions";
+import {
+  addCustomer,
+  updateCustomer,
+  getCustomer
+} from "../../actions/customerActions";
 
 class AddCompany extends Component {
   constructor(props) {
@@ -16,11 +21,30 @@ class AddCompany extends Component {
       address: "",
       phonenumber: "",
       contactnames: "",
-      errors: {}
+      errors: {},
+      isLoading: true
     };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    if (this.props.editOrAdd !== "add") {
+      this.props.getCustomer(this.props.match.params.id);
+    }
+  }
+
+  componentWillReceiveProps(props, state) {
+    if (this.props.editOrAdd !== "add" && !props.customers.loading) {
+      this.setState({
+        ...this.props.customers.customer,
+        contactnames:
+          this.props.customers.customer.contactnames &&
+          this.props.customers.customer.contactnames.join(", "),
+        isLoading: false
+      });
+    }
   }
 
   onSubmit(e) {
@@ -34,7 +58,6 @@ class AddCompany extends Component {
       contactnames: this.state.contactnames.split(",").map(name => name.trim())
     };
 
-    console.log(this.state);
     if (this.props.editOrAdd === "add") {
       this.props.addCustomer(customerData, this.props.history);
     } else {
@@ -48,8 +71,10 @@ class AddCompany extends Component {
   }
 
   render() {
-    console.log(this.props.editOrAdd);
-    return (
+    const { customer, loading } = this.props.customers;
+    return this.props.editOrAdd !== "add" && this.state.isLoading ? (
+      <Spinner />
+    ) : (
       <div className="container">
         <div className="row">
           <div className="col-md-8 m-auto">
@@ -117,10 +142,16 @@ class AddCompany extends Component {
 AddCompany.propTypes = {
   addCustomer: PropTypes.func.isRequired,
   updateCustomer: PropTypes.func.isRequired,
-  editOrAdd: PropTypes.string.isRequired
+  getCustomer: PropTypes.func.isRequired,
+  editOrAdd: PropTypes.string.isRequired,
+  customers: PropTypes.object.isRequired
 };
 
+const mapStateToProps = state => ({
+  customers: state.customer
+});
+
 export default connect(
-  null,
-  { addCustomer, updateCustomer }
+  mapStateToProps,
+  { addCustomer, updateCustomer, getCustomer }
 )(withRouter(AddCompany));
