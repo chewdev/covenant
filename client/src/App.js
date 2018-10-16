@@ -46,28 +46,6 @@ class App extends Component {
             <Header />
             <Route exact path="/" component={Login} />
             <div className="App-header">
-              <div className="sidebar">
-                <div className="customers">
-                  <button className="side-btn">Customers</button>
-                  <ul className="customers-options">
-                    <li className="customer-option">
-                      <Link to={"/customers/new"}>New</Link>
-                    </li>
-                    <li className="customer-option">Update</li>
-                    <li className="customer-option">
-                      <Link to={"/customers"}>View All</Link>
-                    </li>
-                  </ul>
-                </div>
-                <div className="projects">
-                  <button className="side-btn">Projects</button>
-                  <ul className="projects-options">
-                    <li className="projects-option">New</li>
-                    <li className="projects-option">Update</li>
-                    <li className="projects-option">View All</li>
-                  </ul>
-                </div>
-              </div>
               <Switch>
                 <PrivateRoute
                   exact
@@ -88,41 +66,6 @@ class App extends Component {
                   component={Customer}
                 />
               </Switch>
-              {/* <div className="main-content">
-            <div className="content-header">Add Customer</div>
-            <form>
-              <div>
-                <label htmlFor="company">Company or Customer Name</label>
-                <input type="text" name="company" className="customer-input" />
-              </div>
-              <div>
-                <label htmlFor="contactnames">
-                  Contact Names at Company (Separate names by commas)
-                </label>
-                <input
-                  type="text"
-                  name="contactnames"
-                  className="customer-input"
-                />
-              </div>
-              <div>
-                <label htmlFor="address">Address</label>
-                <input type="text" name="address" className="customer-input" />
-              </div>
-              <div>
-                <label htmlFor="email">Email</label>
-                <input type="text" name="email" className="customer-input" />
-              </div>
-              <div>
-                <label htmlFor="phonenumber">Phone Number</label>
-                <input
-                  type="text"
-                  name="phonenumber"
-                  className="customer-input"
-                />
-              </div>
-            </form>
-          </div> */}
             </div>
           </div>
         </Router>

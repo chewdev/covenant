@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logoutUser } from "../actions/authActions";
@@ -27,8 +27,11 @@ class Header extends Component {
     return (
       <header style={headerStyles} className="header">
         <HeaderLogo />
-
-        <button onClick={this.onLogoutClick.bind(this)}>Logout</button>
+        <div>
+          <Link to={"/projects"}>Projects</Link>
+          <Link to={"/customers"}>Customers</Link>
+          <button onClick={this.onLogoutClick.bind(this)}>Logout</button>
+        </div>
       </header>
     );
   }

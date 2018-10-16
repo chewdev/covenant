@@ -28,6 +28,7 @@ class Customers extends Component {
       <div className="feed">
         <div className="container">
           <div className="row">
+            <Link to={"/customers/new"}>Add Customer</Link>
             <div className="col-md-12">{customerContent}</div>
           </div>
         </div>
