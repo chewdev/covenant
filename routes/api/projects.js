@@ -26,11 +26,31 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Project.find()
+      .populate("projectlocation")
       .sort({ date: -1 })
       .then(projects => res.json(projects))
       .catch(err =>
         res.status(404).json({ noprojectsfound: "No projects found" })
       );
+  }
+);
+
+// @route GET api/projects/:proj_id
+// @desc Get a single project
+// @access Private route
+router.get(
+  "/:proj_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Project.findById(req.params.proj_id)
+      .then(project => {
+        if (!project) {
+          return res.status(400).json({ error: "Project not found." });
+        } else {
+          return res.json(project);
+        }
+      })
+      .catch(err => res.status(404).json({ error: "Project not found." }));
   }
 );
 

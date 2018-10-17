@@ -14,6 +14,9 @@ import AddCompany from "./components/customer/AddUpdateCustomer";
 import Login from "./components/auth/Login";
 import Customers from "./components/customer/Customers";
 import Customer from "./components/customer/Customer";
+import Projects from "./components/project/Projects";
+import Project from "./components/project/Project";
+import AddProject from "./components/project/AddUpdateProject";
 
 import "./App.css";
 
@@ -49,22 +52,31 @@ class App extends Component {
               <Switch>
                 <PrivateRoute
                   exact
-                  path="/customers/:id/edit"
-                  editOrAdd={"edit"}
-                  component={AddCompany}
-                />
-                <PrivateRoute
-                  exact
                   path="/customers/new"
                   editOrAdd={"add"}
                   component={AddCompany}
                 />
-                <PrivateRoute exact path="/customers" component={Customers} />
+                <PrivateRoute
+                  exact
+                  path="/customers/:id/edit"
+                  editOrAdd={"edit"}
+                  component={AddCompany}
+                />
+
                 <PrivateRoute
                   exact
                   path="/customers/:id"
                   component={Customer}
                 />
+                <PrivateRoute exact path="/customers" component={Customers} />
+                <PrivateRoute exact path="/projects" component={Projects} />
+                <PrivateRoute
+                  exact
+                  path="/projects/new"
+                  editOrAdd={"add"}
+                  component={AddProject}
+                />
+                <PrivateRoute exact path="/projects/:id" component={Project} />
               </Switch>
             </div>
           </div>

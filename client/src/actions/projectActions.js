@@ -10,7 +10,7 @@ import {
 } from "./types";
 
 // Add Project
-export const addProject = projectData => dispatch => {
+export const addProject = (projectData, history) => dispatch => {
   dispatch(clearErrors());
 
   axios
@@ -21,6 +21,22 @@ export const addProject = projectData => dispatch => {
         payload: res.data
       })
     )
+    .then(() => history.push("/projects"))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Update Customer
+export const updateProject = (projectData, history) => dispatch => {
+  dispatch(clearErrors());
+
+  axios
+    .put(`/api/projects/${projectData.id}`, projectData)
+    .then(res => history.push(`/projects/${projectData.id}`))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
@@ -31,7 +47,7 @@ export const addProject = projectData => dispatch => {
 
 // Get Projects
 export const getProjects = () => dispatch => {
-  dispatch(setProjectLoading());
+  dispatch(setProjectLoading(true));
   axios
     .get("/api/projects")
     .then(res =>
@@ -40,6 +56,7 @@ export const getProjects = () => dispatch => {
         payload: res.data
       })
     )
+    .then(() => dispatch(setProjectLoading(false)))
     .catch(err =>
       dispatch({
         type: GET_PROJECTS,
@@ -50,7 +67,7 @@ export const getProjects = () => dispatch => {
 
 // Get Project
 export const getProject = id => dispatch => {
-  dispatch(setProjectLoading());
+  dispatch(setProjectLoading(true));
   axios
     .get(`/api/projects/${id}`)
     .then(res =>
@@ -59,6 +76,7 @@ export const getProject = id => dispatch => {
         payload: res.data
       })
     )
+    .then(() => dispatch(setProjectLoading(false)))
     .catch(err =>
       dispatch({
         type: GET_PROJECT,
@@ -86,9 +104,10 @@ export const deleteProject = id => dispatch => {
 };
 
 // Set loading state
-export const setProjectLoading = () => {
+export const setProjectLoading = isLoading => {
   return {
-    type: PROJECT_LOADING
+    type: PROJECT_LOADING,
+    payload: isLoading
   };
 };
 

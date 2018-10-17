@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
 import { getCustomer, deleteCustomer } from "../../actions/customerActions";
 
-class Customers extends Component {
+class Customer extends Component {
   componentDidMount() {
     this.props.getCustomer(this.props.match.params.id);
   }
@@ -57,7 +57,7 @@ class Customers extends Component {
   }
 }
 
-Customers.propTypes = {
+Customer.propTypes = {
   getCustomer: PropTypes.func.isRequired,
   deleteCustomer: PropTypes.func.isRequired,
   customers: PropTypes.object.isRequired
@@ -70,4 +70,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { getCustomer, deleteCustomer }
-)(withRouter(Customers));
+)(withRouter(Customer));

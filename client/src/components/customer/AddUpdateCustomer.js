@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import TextFieldGroup from "../common/TextFieldGroup";
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
 import Spinner from "../common/Spinner";
-import InputGroup from "../common/InputGroup";
 import {
   addCustomer,
   updateCustomer,
@@ -71,7 +70,6 @@ class AddCompany extends Component {
   }
 
   render() {
-    const { customer, loading } = this.props.customers;
     return this.props.editOrAdd !== "add" && this.state.isLoading ? (
       <Spinner />
     ) : (
