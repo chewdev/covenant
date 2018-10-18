@@ -76,6 +76,12 @@ class App extends Component {
                   editOrAdd={"add"}
                   component={AddProject}
                 />
+                <PrivateRoute
+                  exact
+                  path="/projects/:id/edit"
+                  editOrAdd={"edit"}
+                  component={AddProject}
+                />
                 <PrivateRoute exact path="/projects/:id" component={Project} />
               </Switch>
             </div>

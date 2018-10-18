@@ -43,6 +43,8 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Project.findById(req.params.proj_id)
+      .populate("projectlocation")
+      .populate("customer")
       .then(project => {
         if (!project) {
           return res.status(400).json({ error: "Project not found." });

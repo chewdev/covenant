@@ -53,6 +53,18 @@ class AddProject extends Component {
     if (this.props.editOrAdd !== "add" && !props.projects.loading) {
       this.setState({
         ...this.props.projects.project,
+        customer: this.props.projects.project.customer
+          ? this.props.projects.project.customer.company
+          : "",
+        totalamount: this.props.projects.project.totalamount
+          ? this.props.projects.project.totalamount.toString()
+          : "",
+        paidamount: this.props.projects.project.paidamount
+          ? this.props.projects.project.paidamount.toString()
+          : "",
+        steps: this.props.projects.project.nextsteps
+          ? this.props.projects.project.nextsteps.length
+          : 0,
         isLoading: false
       });
     }
@@ -97,9 +109,6 @@ class AddProject extends Component {
   }
 
   onChangeNextStep(i, e) {
-    console.log(i);
-    console.log(e.target.value);
-    console.log(this);
     const nextsteps = [...this.state.nextsteps];
     nextsteps[i] = e.target.value;
     this.setState({ nextsteps });
@@ -205,7 +214,7 @@ class AddProject extends Component {
                 error={null}
                 info="Add a location PO number if different than the customer PO number."
               />
-              <TextAreaFieldGroup
+              <TextFieldGroup
                 placeholder="Covenant PO#"
                 name="covenantponumber"
                 value={this.state.covenantponumber}
@@ -213,7 +222,7 @@ class AddProject extends Component {
                 error={null}
                 info="Add a personal PO# for Covenant"
               />
-              <TextAreaFieldGroup
+              <TextFieldGroup
                 placeholder="Current Status"
                 name="currentstatus"
                 value={this.state.currentstatus}
@@ -221,7 +230,7 @@ class AddProject extends Component {
                 error={null}
                 info="Input the current status of this project (i.e. 'Scheduled', 'Awaiting Quote', etc.)"
               />
-              <TextAreaFieldGroup
+              <TextFieldGroup
                 placeholder="Estimate #"
                 name="estimatenumber"
                 value={this.state.estimatenumber}
@@ -229,7 +238,7 @@ class AddProject extends Component {
                 error={null}
                 info="Add an Estimate # for this project if it has been quoted"
               />
-              <TextAreaFieldGroup
+              <TextFieldGroup
                 placeholder="Invoice #"
                 name="invoicenumber"
                 value={this.state.invoicenumber}
@@ -237,7 +246,7 @@ class AddProject extends Component {
                 error={null}
                 info="Add an Invoice # for this project if it has been invoiced"
               />
-              <TextAreaFieldGroup
+              <TextFieldGroup
                 placeholder="Total Cost of Project"
                 name="totalamount"
                 value={this.state.totalamount}
@@ -245,7 +254,7 @@ class AddProject extends Component {
                 error={null}
                 info="Add the total cost of the estimate if quoted"
               />
-              <TextAreaFieldGroup
+              <TextFieldGroup
                 placeholder="Total Amount Paid"
                 name="paidamount"
                 value={this.state.paidamount}
@@ -253,7 +262,12 @@ class AddProject extends Component {
                 error={null}
                 info="Add the total amount the customer has paid toward this project"
               />
-              <button onClick={this.addStep}>Add Next Steps</button>
+              <button
+                className="btn btn-success btn-block mb-4"
+                onClick={this.addStep}
+              >
+                Add Next Steps
+              </button>
               {nextSteps}
               <input
                 type="submit"
