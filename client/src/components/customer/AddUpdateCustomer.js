@@ -70,67 +70,74 @@ class AddCompany extends Component {
   }
 
   render() {
-    return this.props.editOrAdd !== "add" && this.state.isLoading ? (
-      <Spinner />
-    ) : (
+    const formContent =
+      this.props.editOrAdd !== "add" && this.state.isLoading ? (
+        <Spinner />
+      ) : this.props.customers.customer === null ? (
+        <div className="alert alert-danger">Customer not found</div>
+      ) : (
+        <div>
+          <h1 className="display-4 text-center">
+            {this.props.editOrAdd === "add" ? "Add " : "Edit "} Customer
+          </h1>
+          <p className="lead text-center">
+            Add a new company or person to the list of customers
+          </p>
+          <small className="d-block pb-3">* = required fields</small>
+          <form onSubmit={this.onSubmit}>
+            <TextFieldGroup
+              placeholder="* Company or Person's name"
+              name="company"
+              value={this.state.company}
+              onChange={this.onChange}
+              error={null}
+              info="A company name or the main contact's name"
+            />
+            <TextFieldGroup
+              placeholder="Phone Number"
+              name="phonenumber"
+              value={this.state.phonenumber}
+              onChange={this.onChange}
+              error={null}
+              info="The customer's phone number, only number digits should be input"
+            />
+            <TextFieldGroup
+              placeholder="Email"
+              name="email"
+              value={this.state.email}
+              onChange={this.onChange}
+              error={null}
+              info="The customer's email address (i.e. rewald@covenant-doors.com)"
+            />
+            <TextAreaFieldGroup
+              placeholder="Address"
+              name="address"
+              value={this.state.address}
+              onChange={this.onChange}
+              error={null}
+              info="The customer's address including street name and number, city, state and zip code"
+            />
+            <TextAreaFieldGroup
+              placeholder="Contact Names - Separate each name with a comma"
+              name="contactnames"
+              value={this.state.contactnames}
+              onChange={this.onChange}
+              error={null}
+              info="A list of contact names at the company. Separate each name with a comma"
+            />
+            <input
+              type="submit"
+              value="submit"
+              className="btn btn-info btn-block mt-4"
+            />
+          </form>
+        </div>
+      );
+
+    return (
       <div className="container">
         <div className="row">
-          <div className="col-md-8 m-auto">
-            <h1 className="display-4 text-center">
-              {this.props.editOrAdd === "add" ? "Add " : "Edit "} Customer
-            </h1>
-            <p className="lead text-center">
-              Add a new company or person to the list of customers
-            </p>
-            <small className="d-block pb-3">* = required fields</small>
-            <form onSubmit={this.onSubmit}>
-              <TextFieldGroup
-                placeholder="* Company or Person's name"
-                name="company"
-                value={this.state.company}
-                onChange={this.onChange}
-                error={null}
-                info="A company name or the main contact's name"
-              />
-              <TextFieldGroup
-                placeholder="Phone Number"
-                name="phonenumber"
-                value={this.state.phonenumber}
-                onChange={this.onChange}
-                error={null}
-                info="The customer's phone number, only number digits should be input"
-              />
-              <TextFieldGroup
-                placeholder="Email"
-                name="email"
-                value={this.state.email}
-                onChange={this.onChange}
-                error={null}
-                info="The customer's email address (i.e. rewald@covenant-doors.com)"
-              />
-              <TextAreaFieldGroup
-                placeholder="Address"
-                name="address"
-                value={this.state.address}
-                onChange={this.onChange}
-                error={null}
-                info="The customer's address including street name and number, city, state and zip code"
-              />
-              <TextAreaFieldGroup
-                placeholder="Contact Names - Separate each name with a comma"
-                name="contactnames"
-                value={this.state.contactnames}
-                onChange={this.onChange}
-                error={null}
-                info="A list of contact names at the company. Separate each name with a comma"
-              />
-              <input
-                type="submit"
-                value="submit"
-                className="btn btn-info btn-block mt-4"
-              />
-            </form>
-          </div>
+          <div className="col-md-8 m-auto">{formContent}</div>
         </div>
       </div>
     );

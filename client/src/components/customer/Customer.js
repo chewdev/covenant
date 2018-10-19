@@ -4,6 +4,7 @@ import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
 import { getCustomer, deleteCustomer } from "../../actions/customerActions";
+import isEmpty from "../../validation/is-empty";
 
 class Customer extends Component {
   componentDidMount() {
@@ -22,7 +23,11 @@ class Customer extends Component {
     const { customer, loading } = this.props.customers;
     let customerContent;
 
-    if (customer === null || loading) {
+    if (customer === null) {
+      customerContent = (
+        <div className="alert alert-danger">Customer not found</div>
+      );
+    } else if (isEmpty(customer) || loading) {
       customerContent = <Spinner />;
     } else {
       customerContent = (
@@ -35,22 +40,20 @@ class Customer extends Component {
             customer.contactnames.map(contact => (
               <div key={contact}>{contact}</div>
             ))}
+          <button onClick={this.onEditCustomer.bind(this)}>
+            Edit Customer
+          </button>
+          <button onClick={this.onDeleteCustomer.bind(this)}>
+            Delete Customer
+          </button>
         </div>
       );
     }
 
     return (
-      <div className="feed">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-12">{customerContent}</div>
-            <button onClick={this.onEditCustomer.bind(this)}>
-              Edit Customer
-            </button>
-            <button onClick={this.onDeleteCustomer.bind(this)}>
-              Delete Customer
-            </button>
-          </div>
+      <div className="container">
+        <div className="row">
+          <div className="col-md-8 m-auto">{customerContent}</div>
         </div>
       </div>
     );
