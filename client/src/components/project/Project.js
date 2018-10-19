@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+import isEmpty from "../../validation/is-empty";
 import Spinner from "../common/Spinner";
 import { getProject, deleteProject } from "../../actions/projectActions";
 
@@ -22,7 +23,11 @@ class Project extends Component {
     const { project, loading } = this.props.projects;
     let projectContent;
 
-    if (project === null || loading) {
+    if (project === null) {
+      projectContent = (
+        <div className="alert alert-danger">Project not found</div>
+      );
+    } else if (isEmpty(project) || loading) {
       projectContent = <Spinner />;
     } else {
       projectContent = (
@@ -30,28 +35,29 @@ class Project extends Component {
           <div>
             {project.projectlocation && project.projectlocation.address}
           </div>
+          <Link to={`/customers/${project.customer._id}`}>
+            {project.customer.company}
+          </Link>
           <div>{project.customerponumber}</div>
           <div>{project.currentstatus}</div>
           {project.nextsteps &&
             project.nextsteps.map(nextstep => (
               <div key={nextstep}>{nextstep}</div>
             ))}
+          <button className="mr-2" onClick={this.onEditProject.bind(this)}>
+            Edit Project
+          </button>
+          <button className="ml-2" onClick={this.onDeleteProject.bind(this)}>
+            Delete Project
+          </button>
         </div>
       );
     }
 
     return (
-      <div className="feed">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-12">{projectContent}</div>
-            <button onClick={this.onEditProject.bind(this)}>
-              Edit Project
-            </button>
-            <button onClick={this.onDeleteProject.bind(this)}>
-              Delete Project
-            </button>
-          </div>
+      <div className="container">
+        <div className="row">
+          <div className="col-md-8 m-auto">{projectContent}</div>
         </div>
       </div>
     );

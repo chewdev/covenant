@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import TextFieldGroup from "../common/TextFieldGroup";
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
@@ -132,150 +132,162 @@ class AddProject extends Component {
       const nextStep = (
         <TextFieldGroup
           key={i}
-          placeholder="Next Step"
+          placeholder="To-do item"
           name={name}
           value={this.state.nextsteps[i]}
           onChange={e => that.onChangeNextStep(i, e)}
           error={null}
-          info="Add a new todo item for this project"
+          info=""
         />
       );
       nextSteps.push(nextStep);
     }
-    return this.props.editOrAdd !== "add" && this.state.isLoading ? (
-      <Spinner />
-    ) : (
+
+    const formContent =
+      this.props.editOrAdd !== "add" && this.state.isLoading ? (
+        <Spinner />
+      ) : this.props.editOrAdd !== "add" &&
+      this.props.projects.project === null ? (
+        <div className="alert alert-danger">Project not found</div>
+      ) : (
+        <div>
+          <h1 className="display-4 text-center">
+            {this.props.editOrAdd === "add" ? "Add " : "Edit "} Project
+          </h1>
+          <p className="lead text-center">
+            {this.props.editOrAdd === "add"
+              ? "Add a new project to the project list"
+              : "Update data for this project"}
+          </p>
+          <small className="d-block pb-3">* = required fields</small>
+          <form onSubmit={this.onSubmit}>
+            <TextFieldGroup
+              placeholder="* Customer name"
+              name="customer"
+              value={this.state.customer}
+              onChange={this.onChange}
+              error={null}
+              info="Customer name is required and must match an existing customer."
+            />
+            <Link className="btn btn-secondary mb-4" to={"/customers/new"}>
+              Add Customer
+            </Link>
+            <TextFieldGroup
+              placeholder="Location Name"
+              name="locationname"
+              value={this.state.projectlocation.locationname}
+              onChange={this.onChangeProjectLocation}
+              error={null}
+              info="Name of the project location (i.e. 'Gap', 'Nike', etc.)"
+            />
+            <TextFieldGroup
+              placeholder="* Location Address"
+              name="address"
+              value={this.state.projectlocation.address}
+              onChange={this.onChangeProjectLocation}
+              error={null}
+              info="Address of the project location is required"
+            />
+            <TextFieldGroup
+              placeholder="Location Contact"
+              name="contactname"
+              value={this.state.projectlocation.contactname}
+              onChange={this.onChangeProjectLocation}
+              error={null}
+              info="Contact name for the project location"
+            />
+            <TextFieldGroup
+              placeholder="Phone Number"
+              name="phonenumber"
+              value={this.state.projectlocation.phonenumber}
+              onChange={this.onChangeProjectLocation}
+              error={null}
+              info="Phone number to contact at the project location"
+            />
+            <TextFieldGroup
+              placeholder="Customer PO#"
+              name="customerponumber"
+              value={this.state.customerponumber}
+              onChange={this.onChange}
+              error={null}
+              info="Customer PO number"
+            />
+            <TextFieldGroup
+              placeholder="Location PO#"
+              name="locationponumber"
+              value={this.state.locationponumber}
+              onChange={this.onChange}
+              error={null}
+              info="Location PO number if different than customer PO number"
+            />
+            <TextFieldGroup
+              placeholder="Covenant PO#"
+              name="covenantponumber"
+              value={this.state.covenantponumber}
+              onChange={this.onChange}
+              error={null}
+              info="Project PO number"
+            />
+            <TextFieldGroup
+              placeholder="Current Status"
+              name="currentstatus"
+              value={this.state.currentstatus}
+              onChange={this.onChange}
+              error={null}
+              info="Current status (i.e. 'Scheduled', 'Awaiting Quote', etc.)"
+            />
+            <TextFieldGroup
+              placeholder="Estimate #"
+              name="estimatenumber"
+              value={this.state.estimatenumber}
+              onChange={this.onChange}
+              error={null}
+              info="Estimate # for project"
+            />
+            <TextFieldGroup
+              placeholder="Invoice #"
+              name="invoicenumber"
+              value={this.state.invoicenumber}
+              onChange={this.onChange}
+              error={null}
+              info="Invoice # for project"
+            />
+            <TextFieldGroup
+              placeholder="Total Cost of Project"
+              name="totalamount"
+              value={this.state.totalamount}
+              onChange={this.onChange}
+              error={null}
+              info="Total price of project estimate"
+            />
+            <TextFieldGroup
+              placeholder="Total Amount Paid"
+              name="paidamount"
+              value={this.state.paidamount}
+              onChange={this.onChange}
+              error={null}
+              info="Total amount already paid toward project by customer"
+            />
+            <button
+              className="btn btn-secondary btn-block mb-4"
+              onClick={this.addStep}
+            >
+              Add To-Do Item
+            </button>
+            {nextSteps}
+            <input
+              type="submit"
+              value="submit"
+              className="btn btn-info btn-block mt-4"
+            />
+          </form>
+        </div>
+      );
+
+    return (
       <div className="container">
         <div className="row">
-          <div className="col-md-8 m-auto">
-            <h1 className="display-4 text-center">
-              {this.props.editOrAdd === "add" ? "Add " : "Edit "} Project
-            </h1>
-            <p className="lead text-center">
-              {this.props.editOrAdd === "add"
-                ? "Add a new project to the project list"
-                : "Update data for this project"}
-            </p>
-            <small className="d-block pb-3">* = required fields</small>
-            <form onSubmit={this.onSubmit}>
-              <TextFieldGroup
-                placeholder="* Customer name"
-                name="customer"
-                value={this.state.customer}
-                onChange={this.onChange}
-                error={null}
-                info="The name must match an existing customer. Add customer before adding a new project."
-              />
-              <TextFieldGroup
-                placeholder="Location Name"
-                name="locationname"
-                value={this.state.projectlocation.locationname}
-                onChange={this.onChangeProjectLocation}
-                error={null}
-                info="The name of the project location. (i.e. 'Gap', 'Nike', etc.)"
-              />
-              <TextFieldGroup
-                placeholder="* Location Address"
-                name="address"
-                value={this.state.projectlocation.address}
-                onChange={this.onChangeProjectLocation}
-                error={null}
-                info="The address of the project location is required"
-              />
-              <TextFieldGroup
-                placeholder="Location Contact"
-                name="contactname"
-                value={this.state.projectlocation.contactname}
-                onChange={this.onChangeProjectLocation}
-                error={null}
-                info="Add a contact name for the project location if available"
-              />
-              <TextFieldGroup
-                placeholder="Phone Number"
-                name="phonenumber"
-                value={this.state.projectlocation.phonenumber}
-                onChange={this.onChangeProjectLocation}
-                error={null}
-                info="Add a phone number to contact at the project location"
-              />
-              <TextFieldGroup
-                placeholder="Customer PO#"
-                name="customerponumber"
-                value={this.state.customerponumber}
-                onChange={this.onChange}
-                error={null}
-                info="Add a customer PO number if provided for the project"
-              />
-              <TextFieldGroup
-                placeholder="Location PO#"
-                name="locationponumber"
-                value={this.state.locationponumber}
-                onChange={this.onChange}
-                error={null}
-                info="Add a location PO number if different than the customer PO number."
-              />
-              <TextFieldGroup
-                placeholder="Covenant PO#"
-                name="covenantponumber"
-                value={this.state.covenantponumber}
-                onChange={this.onChange}
-                error={null}
-                info="Add a personal PO# for Covenant"
-              />
-              <TextFieldGroup
-                placeholder="Current Status"
-                name="currentstatus"
-                value={this.state.currentstatus}
-                onChange={this.onChange}
-                error={null}
-                info="Input the current status of this project (i.e. 'Scheduled', 'Awaiting Quote', etc.)"
-              />
-              <TextFieldGroup
-                placeholder="Estimate #"
-                name="estimatenumber"
-                value={this.state.estimatenumber}
-                onChange={this.onChange}
-                error={null}
-                info="Add an Estimate # for this project if it has been quoted"
-              />
-              <TextFieldGroup
-                placeholder="Invoice #"
-                name="invoicenumber"
-                value={this.state.invoicenumber}
-                onChange={this.onChange}
-                error={null}
-                info="Add an Invoice # for this project if it has been invoiced"
-              />
-              <TextFieldGroup
-                placeholder="Total Cost of Project"
-                name="totalamount"
-                value={this.state.totalamount}
-                onChange={this.onChange}
-                error={null}
-                info="Add the total cost of the estimate if quoted"
-              />
-              <TextFieldGroup
-                placeholder="Total Amount Paid"
-                name="paidamount"
-                value={this.state.paidamount}
-                onChange={this.onChange}
-                error={null}
-                info="Add the total amount the customer has paid toward this project"
-              />
-              <button
-                className="btn btn-success btn-block mb-4"
-                onClick={this.addStep}
-              >
-                Add Next Steps
-              </button>
-              {nextSteps}
-              <input
-                type="submit"
-                value="submit"
-                className="btn btn-info btn-block mt-4"
-              />
-            </form>
-          </div>
+          <div className="col-md-8 m-auto">{formContent}</div>
         </div>
       </div>
     );
