@@ -33,7 +33,13 @@ class Projects extends Component {
     let projectContent;
 
     if (projects === null || loading) {
-      projectContent = <Spinner />;
+      projectContent = (
+        <tr>
+          <td>
+            <Spinner />
+          </td>
+        </tr>
+      );
     } else {
       projectContent = projects.map(project => (
         <tr className="text-dark" key={project._id}>
