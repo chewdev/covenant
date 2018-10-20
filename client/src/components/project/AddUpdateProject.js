@@ -15,6 +15,7 @@ class AddProject extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      projectname: "",
       customer: "",
       projectlocation: {
         locationname: "",
@@ -74,6 +75,7 @@ class AddProject extends Component {
     e.preventDefault();
 
     const projectData = {
+      projectname: this.state.projectname,
       customer: this.state.customer,
       projectlocation: this.state.projectlocation,
       customerponumber: this.state.customerponumber,
@@ -172,6 +174,14 @@ class AddProject extends Component {
             <Link className="btn btn-secondary mb-4" to={"/customers/new"}>
               Add Customer
             </Link>
+            <TextFieldGroup
+              placeholder="* Project Name"
+              name="projectname"
+              value={this.state.projectname}
+              onChange={this.onChange}
+              error={null}
+              info="Name of the project: i.e. 'PVC Gap 3rd St. Restroom Mirror'"
+            />
             <TextFieldGroup
               placeholder="Location Name"
               name="locationname"

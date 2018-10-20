@@ -3,6 +3,9 @@ const Schema = mongoose.Schema;
 
 // Create Schema
 const ProjectSchema = new Schema({
+  projectname: {
+    type: String
+  },
   customer: {
     type: Schema.Types.ObjectId,
     ref: "customers"

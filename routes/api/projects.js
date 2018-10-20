@@ -133,6 +133,7 @@ router.post(
 
         function createNewProject(projectlocation) {
           const newProject = new Project({
+            projectname: req.body.projectname,
             customer: customer._id,
             projectlocation: projectlocation._id
           });
@@ -245,6 +246,7 @@ router.put(
             function updateProject(projectlocation, project) {
               project.customer = customer._id;
               project.projectlocation = projectlocation._id;
+              project.projectname = req.body.projectname;
 
               if (req.body.customerponumber) {
                 project.customerponumber = req.body.customerponumber;

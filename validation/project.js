@@ -5,6 +5,15 @@ module.exports = function validateProjectInput(data) {
   let errors = {};
 
   data.customer = !isEmpty(data.customer) ? data.customer : "";
+  data.projectname = !isEmpty(data.projectname) ? data.projectname : "";
+
+  if (!validator.isLength(data.projectname, { min: 1, max: 200 })) {
+    errors.projectname = "Project name must be between 1 and 200 characters";
+  }
+
+  if (validator.isEmpty(data.projectname)) {
+    errors.projectname = "Project name is required.";
+  }
 
   if (!validator.isLength(data.customer, { min: 2, max: 100 })) {
     errors.customer = "Customer name must be between 2 and 100 characters";
