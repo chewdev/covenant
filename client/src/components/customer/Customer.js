@@ -51,17 +51,15 @@ class Customer extends Component {
       this.props.projects.projects !== null
     ) {
       projectContent = this.props.projects.projects.map(project => (
-        <li className="list-group-item list-group-item-dark">
-          <Link to={`/projects/${project._id}`}>{project._id}</Link>
+        <li key={project._id} className="list-group-item">
+          <Link to={`/projects/${project._id}`}>{project.projectname}</Link>
         </li>
       ));
       projectContent =
         projectContent.length > 0 ? (
           projectContent
         ) : (
-          <li className="list-group-item list-group-item-danger">
-            No Projects Available
-          </li>
+          <li className="list-group-item text-muted">No Projects Available</li>
         );
       projectContent = <ul className="list-group">{projectContent}</ul>;
     }
