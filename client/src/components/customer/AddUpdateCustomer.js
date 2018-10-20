@@ -39,8 +39,9 @@ class AddCompany extends Component {
       this.setState({
         ...this.props.customers.customer,
         contactnames:
-          this.props.customers.customer.contactnames &&
-          this.props.customers.customer.contactnames.join(", "),
+          (this.props.customers.customer.contactnames &&
+            this.props.customers.customer.contactnames.join(", ")) ||
+          "",
         isLoading: false
       });
     }
