@@ -27,6 +27,7 @@ router.get(
   (req, res) => {
     Project.find()
       .populate("projectlocation")
+      .populate("customer")
       .sort({ date: -1 })
       .then(projects => res.json(projects))
       .catch(err =>

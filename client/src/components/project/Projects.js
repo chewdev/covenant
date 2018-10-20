@@ -11,11 +11,16 @@ function treatAsUTC(date) {
   return result;
 }
 
-function daysBetween(startDate, endDate) {
-  var millisecondsPerDay = 24 * 60 * 60 * 1000;
-  return Math.round(
-    (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerDay
+function timeBetween(startDate, endDate) {
+  var millisecondsPerHour = 60 * 60 * 1000;
+  let hoursBetween = Math.round(
+    (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerHour
   );
+  if (hoursBetween >= 24) {
+    return `${Math.floor(hoursBetween / 24)} Days Ago`;
+  } else {
+    return `${hoursBetween} Hours Ago`;
+  }
 }
 
 class Projects extends Component {
@@ -31,21 +36,42 @@ class Projects extends Component {
       projectContent = <Spinner />;
     } else {
       projectContent = projects.map(project => (
-        <div key={project._id}>
-          <Link to={`/projects/${project._id}`}>
-            {project.projectlocation.address}
-          </Link>
-          <div>{daysBetween(project.date, Date.now()) + " days ago"}</div>
-        </div>
+        <tr className="text-dark" key={project._id}>
+          <td>
+            <Link to={`/projects/${project._id}`}>{project.projectname}</Link>
+          </td>
+          <td>
+            <Link to={`/customers/${project.customer._id}`}>
+              {project.customer.company}
+            </Link>
+          </td>
+          <td>{project.currentstatus}</td>
+          <td>{timeBetween(project.date, Date.now())}</td>
+        </tr>
       ));
     }
 
     return (
-      <div className="feed">
-        <div className="container">
-          <div className="row">
-            <Link to={"/projects/new"}>Add Project</Link>
-            <div className="col-md-12">{projectContent}</div>
+      <div className="container">
+        <div className="row">
+          <div className="col">
+            <div className="card">
+              <div className="card-header">Projects</div>
+              <Link className="btn btn-primary btn-lg" to={"/projects/new"}>
+                Add Project
+              </Link>
+              <table className="table table-striped">
+                <thead className="thead-dark">
+                  <tr>
+                    <th>Project Name</th>
+                    <th>Customer</th>
+                    <th>Current Status</th>
+                    <th>Last Updated</th>
+                  </tr>
+                </thead>
+                <tbody>{projectContent}</tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

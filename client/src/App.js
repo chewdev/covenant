@@ -18,7 +18,7 @@ import Projects from "./components/project/Projects";
 import Project from "./components/project/Project";
 import AddProject from "./components/project/AddUpdateProject";
 
-import "./App.css";
+// import "./App.css";
 
 // Check for token
 const currToken = localStorage.jwtToken || null;
