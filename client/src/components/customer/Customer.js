@@ -4,9 +4,19 @@ import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
 import { getCustomer, deleteCustomer } from "../../actions/customerActions";
+import { getCustomerProjects } from "../../actions/projectActions";
 import isEmpty from "../../validation/is-empty";
 
 class Customer extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showProjects: false,
+      projectsLoaded: false
+    };
+  }
+
   componentDidMount() {
     this.props.getCustomer(this.props.match.params.id);
   }
@@ -19,9 +29,42 @@ class Customer extends Component {
     this.props.deleteCustomer(this.props.match.params.id, this.props.history);
   }
 
+  onShowProjects() {
+    if (!this.state.showProjects && !this.state.projectsLoaded) {
+      const projectsPromise = new Promise((resolve, reject) => {
+        this.props.getCustomerProjects(this.props.match.params.id, resolve);
+      });
+
+      projectsPromise.then(() => this.setState({ projectsLoaded: true }));
+    }
+    this.setState({ showProjects: !this.state.showProjects });
+  }
+
   render() {
     const { customer, loading } = this.props.customers;
     let customerContent;
+    let projectContent = null;
+
+    if (
+      this.state.showProjects &&
+      !this.props.projects.loading &&
+      this.props.projects.projects !== null
+    ) {
+      projectContent = this.props.projects.projects.map(project => (
+        <li className="list-group-item list-group-item-dark">
+          <Link to={`/projects/${project._id}`}>{project._id}</Link>
+        </li>
+      ));
+      projectContent =
+        projectContent.length > 0 ? (
+          projectContent
+        ) : (
+          <li className="list-group-item list-group-item-danger">
+            No Projects Available
+          </li>
+        );
+      projectContent = <ul className="list-group">{projectContent}</ul>;
+    }
 
     if (customer === null) {
       customerContent = (
@@ -40,11 +83,24 @@ class Customer extends Component {
             customer.contactnames.map(contact => (
               <div key={contact}>{contact}</div>
             ))}
-          <button onClick={this.onEditCustomer.bind(this)}>
-            Edit Customer
+          <button
+            className="btn btn-info btn-block"
+            onClick={this.onShowProjects.bind(this)}
+          >
+            Show Projects
           </button>
-          <button onClick={this.onDeleteCustomer.bind(this)}>
-            Delete Customer
+          {projectContent}
+          <button
+            className="btn btn-secondary mr-2"
+            onClick={this.onEditCustomer.bind(this)}
+          >
+            Edit
+          </button>
+          <button
+            className="btn btn-danger ml-2"
+            onClick={this.onDeleteCustomer.bind(this)}
+          >
+            Remove
           </button>
         </div>
       );
@@ -63,14 +119,16 @@ class Customer extends Component {
 Customer.propTypes = {
   getCustomer: PropTypes.func.isRequired,
   deleteCustomer: PropTypes.func.isRequired,
-  customers: PropTypes.object.isRequired
+  customers: PropTypes.object.isRequired,
+  projects: PropTypes.object
 };
 
 const mapStateToProps = state => ({
-  customers: state.customer
+  customers: state.customer,
+  projects: state.project
 });
 
 export default connect(
   mapStateToProps,
-  { getCustomer, deleteCustomer }
+  { getCustomer, deleteCustomer, getCustomerProjects }
 )(withRouter(Customer));

@@ -5,6 +5,19 @@ import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
 import { getProjects } from "../../actions/projectActions";
 
+function treatAsUTC(date) {
+  var result = new Date(date);
+  result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
+  return result;
+}
+
+function daysBetween(startDate, endDate) {
+  var millisecondsPerDay = 24 * 60 * 60 * 1000;
+  return Math.round(
+    (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerDay
+  );
+}
+
 class Projects extends Component {
   componentDidMount() {
     this.props.getProjects();
@@ -22,6 +35,7 @@ class Projects extends Component {
           <Link to={`/projects/${project._id}`}>
             {project.projectlocation.address}
           </Link>
+          <div>{daysBetween(project.date, Date.now()) + " days ago"}</div>
         </div>
       ));
     }

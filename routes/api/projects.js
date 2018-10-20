@@ -35,6 +35,22 @@ router.get(
   }
 );
 
+// @route GET api/projects/customer/:cust_id
+// @desc Get all projects for a customer by customer id
+// @access Private
+router.get(
+  "/customer/:cust_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Project.find({ customer: req.params.cust_id })
+      .sort({ date: -1 })
+      .then(projects => res.json(projects))
+      .catch(err =>
+        res.status(404).json({ noprojectsfound: "No projects found" })
+      );
+  }
+);
+
 // @route GET api/projects/:proj_id
 // @desc Get a single project
 // @access Private route

@@ -44,11 +44,17 @@ class Project extends Component {
             project.nextsteps.map(nextstep => (
               <div key={nextstep}>{nextstep}</div>
             ))}
-          <button className="mr-2" onClick={this.onEditProject.bind(this)}>
-            Edit Project
+          <button
+            className="btn btn-secondary mr-2"
+            onClick={this.onEditProject.bind(this)}
+          >
+            Edit
           </button>
-          <button className="ml-2" onClick={this.onDeleteProject.bind(this)}>
-            Delete Project
+          <button
+            className="btn btn-danger ml-2"
+            onClick={this.onDeleteProject.bind(this)}
+          >
+            Remove
           </button>
         </div>
       );

@@ -85,6 +85,27 @@ export const getProject = id => dispatch => {
     );
 };
 
+// Get Customer Projects
+export const getCustomerProjects = (id, resolve) => dispatch => {
+  dispatch(setProjectLoading(true));
+  axios
+    .get(`/api/projects/customer/${id}`)
+    .then(res =>
+      dispatch({
+        type: GET_PROJECTS,
+        payload: res.data
+      })
+    )
+    .then(() => dispatch(setProjectLoading(false)))
+    .then(() => resolve())
+    .catch(err =>
+      dispatch({
+        type: GET_PROJECTS,
+        payload: null
+      })
+    );
+};
+
 // Delete Project
 export const deleteProject = (id, history) => dispatch => {
   axios
