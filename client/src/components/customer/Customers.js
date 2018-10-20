@@ -15,21 +15,67 @@ class Customers extends Component {
     let customerContent;
 
     if (customers === null || loading) {
-      customerContent = <Spinner />;
+      customerContent = (
+        <tr>
+          <td>
+            <Spinner />
+          </td>
+        </tr>
+      );
     } else {
-      customerContent = customers.map(customer => (
-        <div key={customer._id}>
-          <Link to={`/customers/${customer._id}`}>{customer.company}</Link>
-        </div>
-      ));
+      customerContent = customers.map(customer => {
+        const phonenumber = !customer.phonenumber
+          ? null
+          : customer.phonenumber.length === 10
+            ? `(${customer.phonenumber.slice(
+                0,
+                3
+              )}) ${customer.phonenumber.slice(
+                3,
+                6
+              )}-${customer.phonenumber.slice(6)}`
+            : customer.phonenumber;
+        return (
+          <tr className="text-dark" key={customer._id}>
+            <td>
+              <Link to={`/customers/${customer._id}`}>{customer.company}</Link>
+            </td>
+            <td>{phonenumber || "Unavailable"}</td>
+            <td>{customer.email || "Unavailable"}</td>
+            <td>
+              <Link
+                className="btn btn-secondary"
+                to={`/customers/${customer._id}/edit`}
+              >
+                Update
+              </Link>
+            </td>
+          </tr>
+        );
+      });
     }
 
     return (
-      <div className="feed">
-        <div className="container">
-          <div className="row">
-            <Link to={"/customers/new"}>Add Customer</Link>
-            <div className="col-md-12">{customerContent}</div>
+      <div className="container">
+        <div className="row">
+          <div className="col">
+            <div className="card">
+              <div className="card-header">Customers</div>
+              <Link className="btn btn-primary btn-lg" to={"/customers/new"}>
+                Add Customer
+              </Link>
+              <table className="table table-striped">
+                <thead className="thead-dark">
+                  <tr>
+                    <th>Customer</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                    <th>Update</th>
+                  </tr>
+                </thead>
+                <tbody>{customerContent}</tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
