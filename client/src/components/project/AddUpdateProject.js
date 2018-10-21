@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import TextFieldGroup from "../common/TextFieldGroup";
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
 import Spinner from "../common/Spinner";
+import classnames from "classnames";
 import {
   addProject,
   updateProject,
@@ -40,6 +41,7 @@ class AddProject extends Component {
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.addStep = this.addStep.bind(this);
+    this.removeStep = this.removeStep.bind(this);
     this.onChangeNextStep = this.onChangeNextStep.bind(this);
     this.onChangeProjectLocation = this.onChangeProjectLocation.bind(this);
   }
@@ -126,21 +128,53 @@ class AddProject extends Component {
     });
   }
 
+  removeStep(e, i) {
+    e.preventDefault();
+    let nextsteps = [...this.state.nextsteps];
+    nextsteps.splice(i, 1);
+    this.setState({ nextsteps, steps: this.state.steps - 1 });
+  }
+
   render() {
     let nextSteps = [];
     for (let i = 0; i < this.state.steps; i++) {
       const name = `nextstep${i}`;
       const that = this;
       const nextStep = (
-        <TextFieldGroup
-          key={i}
-          placeholder="To-do item"
-          name={name}
-          value={this.state.nextsteps[i]}
-          onChange={e => that.onChangeNextStep(i, e)}
-          error={null}
-          info=""
-        />
+        <div key={i}>
+          <div className="input-group">
+            <input
+              type="text"
+              className={classnames("form-control form-control-lg", {
+                "is-invalid": null // error
+              })}
+              placeholder={"To-do item"}
+              name={name}
+              value={this.state.nextsteps[i]}
+              onChange={e => this.onChangeNextStep(i, e)}
+              disabled={false}
+            />
+            <div className="input-group-append">
+              <button
+                className="input-group-text"
+                onClick={e => this.removeStep(e, i)}
+              >
+                X
+              </button>
+            </div>
+            {"" && <small className="form-text text-muted">{""}</small>}
+            {null /* error */ && <div className="invalid-feedback">{null}</div>}
+
+            {/* <TextFieldGroup
+            placeholder="To-do item"
+            name={name}
+            value={this.state.nextsteps[i]}
+            onChange={e => that.onChangeNextStep(i, e)}
+            error={null}
+            info=""
+            /> */}
+          </div>
+        </div>
       );
       nextSteps.push(nextStep);
     }
