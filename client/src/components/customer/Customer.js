@@ -72,30 +72,83 @@ class Customer extends Component {
       customerContent = <Spinner />;
     } else {
       customerContent = (
-        <div>
-          <div>{customer.company}</div>
-          <div>{customer.email}</div>
-          <div>{customer.phonenumber}</div>
-          <div>{customer.address}</div>
-          {customer.contactnames &&
-            customer.contactnames.map(contact => (
-              <div key={contact}>{contact}</div>
-            ))}
+        <div className="container">
+          {/* <div className="card border-primary">
+            <div className="card-header bg-primary text-white">Customer</div>
+            <div className="card-body">{customer.company}</div>
+          </div>
+          <div className="card border-primary">
+            <div className="card-header bg-primary text-white">
+              Customer Email
+            </div>
+            <div className="card-body">{customer.email}</div>
+          </div> */}
+          <div className="card text-center border-dark">
+            <div className="card-header bg-dark text-white">Customer</div>
+            <div className="card-body p-0 pt-2">
+              <h2 className="card-title text-primary">
+                <strong>{customer.company}</strong>
+              </h2>
+              <div className="list-group">
+                <div className="list-group-item">
+                  <h3 className="card-text">
+                    Email: {customer.email || "No Email Provided"}
+                  </h3>
+                </div>
+
+                <div className="list-group-item">
+                  <h3 className="card-text">
+                    Phone Number:{" "}
+                    {customer.phonenumber || "No Phone Number Provided"}
+                  </h3>
+                </div>
+
+                <div className="list-group-item">
+                  <h3 className="card-text">
+                    <u>Address</u>
+                  </h3>
+                  <p className="card-text">
+                    {customer.address || "No Address Provided"}
+                  </p>
+                </div>
+
+                <div className="list-group-item">
+                  <h3 className="card-text">
+                    <u>Contacts</u>
+                  </h3>
+                  <ul className="list-inline">
+                    {(customer.contactnames &&
+                      customer.contactnames.map(contact => (
+                        <li
+                          className="list-inline-item border border-secondary p-3 mb-2 rounded"
+                          key={contact}
+                        >
+                          {contact}
+                        </li>
+                      ))) || (
+                      <li className="list-group-item">No Contacts Provided</li>
+                    )}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <button
-            className="btn btn-info btn-block"
+            className="btn btn-primary btn-block"
             onClick={this.onShowProjects.bind(this)}
           >
             Show Projects
           </button>
           {projectContent}
           <button
-            className="btn btn-secondary mr-2"
+            className="btn btn-dark col-sm-6 mt-3"
             onClick={this.onEditCustomer.bind(this)}
           >
             Edit
           </button>
           <button
-            className="btn btn-danger ml-2"
+            className="btn btn-danger col-sm-6 mt-3"
             onClick={this.onDeleteCustomer.bind(this)}
           >
             Remove
