@@ -139,7 +139,6 @@ class AddProject extends Component {
     let nextSteps = [];
     for (let i = 0; i < this.state.steps; i++) {
       const name = `nextstep${i}`;
-      const that = this;
       const nextStep = (
         <div key={i}>
           <div className="input-group">
@@ -150,7 +149,7 @@ class AddProject extends Component {
               })}
               placeholder={"To-do item"}
               name={name}
-              value={this.state.nextsteps[i]}
+              value={this.state.nextsteps[i] || ""}
               onChange={e => this.onChangeNextStep(i, e)}
               disabled={false}
             />
