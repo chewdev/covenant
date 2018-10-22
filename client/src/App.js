@@ -26,18 +26,19 @@ if (currToken) {
   // Set auth token header authorization
   setAuthToken(currToken);
   // Decode token and get user info and expiration
-  const decoded = jwt_decode(currToken);
-  // Set user and isAuthenticated
-  store.dispatch(setCurrentUser(decoded));
-
-  // Check for expired token
-  const currentTime = Date.now() / 1000;
-  if (decoded.exp < currentTime) {
-    // Logout user
-    store.dispatch(logoutUser());
-    // Redirect to login
-    window.location.href = "/";
-  }
+  try {
+    const decoded = jwt_decode(currToken);
+    // Set user and isAuthenticated
+    store.dispatch(setCurrentUser(decoded));
+    // Check for expired token
+    const currentTime = Date.now() / 1000;
+    if (decoded.exp < currentTime) {
+      // Logout user
+      store.dispatch(logoutUser());
+      // Redirect to login
+      window.location.href = "/";
+    }
+  } catch (err) {}
 }
 
 class App extends Component {
