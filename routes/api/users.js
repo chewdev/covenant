@@ -66,7 +66,6 @@ router.post("/login", (req, res) => {
   if (!isValid) {
     return res.status(400).json(errors);
   }
-  console.log(req.body);
 
   const email = req.body.email;
   const password = req.body.password;
@@ -94,7 +93,7 @@ router.post("/login", (req, res) => {
         jwt.sign(
           payload,
           keys.secretOrKey,
-          { expiresIn: 3600 },
+          { expiresIn: 7200 },
           (err, token) => {
             res.json({
               success: true,
