@@ -120,7 +120,7 @@ class Customer extends Component {
                     {(customer.contactnames &&
                       customer.contactnames.map(contact => (
                         <li
-                          className="list-inline-item border border-secondary p-3 mb-2 rounded"
+                          className="list-inline-item border border-secondary py-1 px-3 mb-2 rounded"
                           key={contact}
                         >
                           {contact}
@@ -142,13 +142,13 @@ class Customer extends Component {
           </button>
           {projectContent}
           <button
-            className="btn btn-dark col-sm-6 mt-3"
+            className="btn btn-secondary col-6 col-xs-6 mt-3"
             onClick={this.onEditCustomer.bind(this)}
           >
             Edit
           </button>
           <button
-            className="btn btn-danger col-sm-6 mt-3"
+            className="btn btn-dark col-6 col-xs-6 mt-3"
             onClick={this.onDeleteCustomer.bind(this)}
           >
             Remove
