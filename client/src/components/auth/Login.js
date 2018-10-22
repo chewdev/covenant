@@ -17,14 +17,20 @@ class Login extends Component {
   }
 
   componentDidMount() {
-    if (this.props.auth.isAuthenticated) {
-      this.props.history.push("/dashboard");
+    if (
+      this.props.auth.isAuthenticated &&
+      this.props.auth.user.exp > Date.now() / 1000
+    ) {
+      this.props.history.push("/projects");
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.auth.isAuthenticated) {
-      this.props.history.push("/dashboard");
+    if (
+      nextProps.auth.isAuthenticated &&
+      nextProps.auth.user.exp > Date.now() / 1000
+    ) {
+      this.props.history.push("/projects");
     }
 
     if (nextProps.errors) {
