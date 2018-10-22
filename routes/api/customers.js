@@ -8,6 +8,7 @@ const validateCustomerInput = require("../../validation/customer");
 
 // Load Customer model
 const Customer = require("../../models/Customer");
+const Project = require("../../models/Project");
 
 // @route GET api/customers/test
 // @desc Tests customers route
@@ -136,7 +137,13 @@ router.delete(
     Customer.findByIdAndRemove(req.params.cust_id)
       .then(customer => {
         if (customer) {
-          res.json(customer);
+          Project.deleteMany({ customer: customer._id }).then(projects => {
+            if (projects) {
+              res.json([projects, customer]);
+            } else {
+              res.json(customer);
+            }
+          });
         } else {
           res.status(400).json({
             customernotfound: "Customer not found. Unable to remove."
