@@ -17,9 +17,12 @@ class Customers extends Component {
     if (customers === null || loading) {
       customerContent = (
         <tr>
+          <td />
           <td>
             <Spinner />
           </td>
+          <td />
+          <td />
         </tr>
       );
     } else {
@@ -56,15 +59,27 @@ class Customers extends Component {
     }
 
     return (
-      <div className="container">
+      <div className="container mt-4">
         <div className="row">
           <div className="col">
-            <div className="card">
-              <div className="card-header">Customers</div>
-              <Link className="btn btn-primary btn-lg" to={"/customers/new"}>
-                Add Customer
-              </Link>
-              <table className="table table-striped">
+            <div className="table-responsive">
+              <table className="table table-striped border border-dark">
+                <thead>
+                  <tr>
+                    <th>Customers</th>
+                    <th />
+                    <th />
+                    <th>
+                      {" "}
+                      <Link
+                        className="btn btn-primary btn-lg btn-block"
+                        to={"/customers/new"}
+                      >
+                        Add Customer
+                      </Link>{" "}
+                    </th>
+                  </tr>
+                </thead>
                 <thead className="thead-dark">
                   <tr>
                     <th>Customer</th>

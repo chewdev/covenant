@@ -155,7 +155,7 @@ class AddProject extends Component {
             />
             <div className="input-group-append">
               <button
-                className="input-group-text"
+                className="input-group-text bg-dark text-white"
                 onClick={e => this.removeStep(e, i)}
               >
                 X
@@ -312,7 +312,7 @@ class AddProject extends Component {
               info="Total amount already paid toward project by customer"
             />
             <button
-              className="btn btn-secondary btn-block mb-4"
+              className="btn btn-dark btn-block mb-3"
               onClick={this.addStep}
             >
               Add To-Do Item
@@ -320,8 +320,8 @@ class AddProject extends Component {
             {nextSteps}
             <input
               type="submit"
-              value="submit"
-              className="btn btn-info btn-block mt-4"
+              value="Submit"
+              className="btn btn-primary btn-block mt-3 mb-5"
             />
           </form>
         </div>

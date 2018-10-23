@@ -72,17 +72,7 @@ class Customer extends Component {
       customerContent = <Spinner />;
     } else {
       customerContent = (
-        <div className="container">
-          {/* <div className="card border-primary">
-            <div className="card-header bg-primary text-white">Customer</div>
-            <div className="card-body">{customer.company}</div>
-          </div>
-          <div className="card border-primary">
-            <div className="card-header bg-primary text-white">
-              Customer Email
-            </div>
-            <div className="card-body">{customer.email}</div>
-          </div> */}
+        <div className="container my-4">
           <div className="card text-center border-dark">
             <div className="card-header bg-dark text-white">Customer</div>
             <div className="card-body p-0 pt-2">
@@ -142,13 +132,13 @@ class Customer extends Component {
           </button>
           {projectContent}
           <button
-            className="btn btn-secondary col-6 col-xs-6 mt-3"
+            className="btn btn-secondary col-6 mt-2"
             onClick={this.onEditCustomer.bind(this)}
           >
             Edit
           </button>
           <button
-            className="btn btn-dark col-6 col-xs-6 mt-3"
+            className="btn btn-dark col-6 mt-2"
             onClick={this.onDeleteCustomer.bind(this)}
           >
             Remove

@@ -128,8 +128,8 @@ class AddCompany extends Component {
             />
             <input
               type="submit"
-              value="submit"
-              className="btn btn-info btn-block mt-4"
+              value="Submit"
+              className="btn btn-primary btn-block mt-4"
             />
           </form>
         </div>

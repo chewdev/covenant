@@ -42,3 +42,12 @@ button:disabled {
 small {
   font-size: 60%;
 }
+
+.table thead th {
+  border-bottom: none;
+}
+
+.table td,
+.table th {
+  border-top: none;
+}

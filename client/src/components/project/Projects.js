@@ -35,9 +35,12 @@ class Projects extends Component {
     if (projects === null || loading) {
       projectContent = (
         <tr>
+          <td />
           <td>
             <Spinner />
           </td>
+          <td />
+          <td />
         </tr>
       );
     } else {
@@ -58,15 +61,26 @@ class Projects extends Component {
     }
 
     return (
-      <div className="container">
+      <div className="container mt-4">
         <div className="row">
           <div className="col">
-            <div className="card">
-              <div className="card-header">Projects</div>
-              <Link className="btn btn-primary btn-lg" to={"/projects/new"}>
-                Add Project
-              </Link>
-              <table className="table table-striped">
+            <div className="table-responsive">
+              <table className="table table-striped border border-dark">
+                <thead>
+                  <tr>
+                    <th>Projects</th>
+                    <th />
+                    <th />
+                    <th>
+                      <Link
+                        className="btn btn-primary btn-lg btn-block"
+                        to={"/projects/new"}
+                      >
+                        Add Project
+                      </Link>
+                    </th>
+                  </tr>
+                </thead>
                 <thead className="thead-dark">
                   <tr>
                     <th>Project Name</th>
