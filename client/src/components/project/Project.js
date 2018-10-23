@@ -91,8 +91,8 @@ class Project extends Component {
                         <u>Next Steps</u>
                       </h3>
                       <ul style={{ listStyleType: "none" }}>
-                        {project.nextsteps.map(nextstep => (
-                          <li>{nextstep}</li>
+                        {project.nextsteps.map((nextstep, i) => (
+                          <li key={i}>{nextstep}</li>
                         ))}
                       </ul>
                     </div>
