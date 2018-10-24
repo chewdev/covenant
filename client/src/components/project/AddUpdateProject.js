@@ -71,6 +71,10 @@ class AddProject extends Component {
         isLoading: false
       });
     }
+
+    if (props.errors) {
+      this.setState({ errors: props.errors });
+    }
   }
 
   onSubmit(e) {
@@ -136,6 +140,7 @@ class AddProject extends Component {
   }
 
   render() {
+    const { errors } = this.state;
     let nextSteps = [];
     for (let i = 0; i < this.state.steps; i++) {
       const name = `nextstep${i}`;
@@ -163,15 +168,6 @@ class AddProject extends Component {
             </div>
             {"" && <small className="form-text text-muted">{""}</small>}
             {null /* error */ && <div className="invalid-feedback">{null}</div>}
-
-            {/* <TextFieldGroup
-            placeholder="To-do item"
-            name={name}
-            value={this.state.nextsteps[i]}
-            onChange={e => that.onChangeNextStep(i, e)}
-            error={null}
-            info=""
-            /> */}
           </div>
         </div>
       );
@@ -201,7 +197,7 @@ class AddProject extends Component {
               name="customer"
               value={this.state.customer}
               onChange={this.onChange}
-              error={null}
+              error={errors.customer}
               info="Customer name is required and must match an existing customer."
             />
             <Link className="btn btn-secondary mb-4" to={"/customers/new"}>
@@ -212,7 +208,7 @@ class AddProject extends Component {
               name="projectname"
               value={this.state.projectname}
               onChange={this.onChange}
-              error={null}
+              error={errors.projectname}
               info="Name of the project: i.e. 'PVC Gap 3rd St. Restroom Mirror'"
             />
             <TextFieldGroup
@@ -220,15 +216,15 @@ class AddProject extends Component {
               name="locationname"
               value={this.state.projectlocation.locationname}
               onChange={this.onChangeProjectLocation}
-              error={null}
+              error={errors.locationname}
               info="Name of the project location (i.e. 'Gap', 'Nike', etc.)"
             />
-            <TextFieldGroup
+            <TextAreaFieldGroup
               placeholder="* Location Address"
               name="address"
               value={this.state.projectlocation.address}
               onChange={this.onChangeProjectLocation}
-              error={null}
+              error={errors.address}
               info="Address of the project location is required"
             />
             <TextFieldGroup
@@ -236,7 +232,7 @@ class AddProject extends Component {
               name="contactname"
               value={this.state.projectlocation.contactname}
               onChange={this.onChangeProjectLocation}
-              error={null}
+              error={errors.contactname}
               info="Contact name for the project location"
             />
             <TextFieldGroup
@@ -244,7 +240,7 @@ class AddProject extends Component {
               name="phonenumber"
               value={this.state.projectlocation.phonenumber}
               onChange={this.onChangeProjectLocation}
-              error={null}
+              error={errors.phonenumber}
               info="Phone number to contact at the project location"
             />
             <TextFieldGroup
@@ -252,7 +248,7 @@ class AddProject extends Component {
               name="customerponumber"
               value={this.state.customerponumber}
               onChange={this.onChange}
-              error={null}
+              error={errors.customerponumber}
               info="Customer PO number"
             />
             <TextFieldGroup
@@ -260,7 +256,7 @@ class AddProject extends Component {
               name="locationponumber"
               value={this.state.locationponumber}
               onChange={this.onChange}
-              error={null}
+              error={errors.locationponumber}
               info="Location PO number if different than customer PO number"
             />
             <TextFieldGroup
@@ -268,7 +264,7 @@ class AddProject extends Component {
               name="covenantponumber"
               value={this.state.covenantponumber}
               onChange={this.onChange}
-              error={null}
+              error={errors.covenantponumber}
               info="Project PO number"
             />
             <TextFieldGroup
@@ -276,7 +272,7 @@ class AddProject extends Component {
               name="currentstatus"
               value={this.state.currentstatus}
               onChange={this.onChange}
-              error={null}
+              error={errors.currentstatus}
               info="Current status (i.e. 'Scheduled', 'Awaiting Quote', etc.)"
             />
             <TextFieldGroup
@@ -284,7 +280,7 @@ class AddProject extends Component {
               name="estimatenumber"
               value={this.state.estimatenumber}
               onChange={this.onChange}
-              error={null}
+              error={errors.estimatenumber}
               info="Estimate # for project"
             />
             <TextFieldGroup
@@ -292,7 +288,7 @@ class AddProject extends Component {
               name="invoicenumber"
               value={this.state.invoicenumber}
               onChange={this.onChange}
-              error={null}
+              error={errors.invoicenumber}
               info="Invoice # for project"
             />
             <TextFieldGroup
@@ -300,7 +296,7 @@ class AddProject extends Component {
               name="totalamount"
               value={this.state.totalamount}
               onChange={this.onChange}
-              error={null}
+              error={errors.totalamount}
               info="Total price of project estimate"
             />
             <TextFieldGroup
@@ -308,7 +304,7 @@ class AddProject extends Component {
               name="paidamount"
               value={this.state.paidamount}
               onChange={this.onChange}
-              error={null}
+              error={errors.paidamount}
               info="Total amount already paid toward project by customer"
             />
             <button
@@ -346,7 +342,8 @@ AddProject.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  projects: state.project
+  projects: state.project,
+  errors: state.errors
 });
 
 export default connect(

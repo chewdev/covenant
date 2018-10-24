@@ -90,8 +90,8 @@ router.post(
     Customer.findOne({ company: req.body.customer }).then(customer => {
       if (!customer) {
         return res.status(400).json({
-          error:
-            "This customer does not exist. Please add this customer before creating a new project for this customer."
+          customer:
+            "Customer not found. Check customer name and add customer if it does not exist."
         });
       } else {
         ProjectLocation.findOne({

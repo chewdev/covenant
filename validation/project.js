@@ -28,20 +28,16 @@ module.exports = function validateProjectInput(data) {
     if (
       !validator.isLength(data.projectlocation.address, { min: 2, max: 150 })
     ) {
-      errors.projectlocation =
+      errors.address =
         "Project location address must be between 2 and 150 characters.";
     }
 
     if (validator.isEmpty(data.projectlocation.address)) {
-      errors.projectlocation = "Project location address is required";
+      errors.address = "Project location address is required";
     }
   } else {
-    if (!data.projectlocation) {
-      errors.projectlocation = "Project location information must be included";
-    } else {
-      if (!data.projectlocation.address) {
-        errors.projectlocation = "Project location address is required";
-      }
+    if (!data.projectlocation || !data.projectlocation.address) {
+      errors.address = "Project location address is required";
     }
   }
 
