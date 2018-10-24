@@ -45,6 +45,10 @@ class AddCompany extends Component {
         isLoading: false
       });
     }
+
+    if (props.errors) {
+      this.setState({ errors: props.errors });
+    }
   }
 
   onSubmit(e) {
@@ -71,6 +75,7 @@ class AddCompany extends Component {
   }
 
   render() {
+    const { errors } = this.state;
     const formContent =
       this.props.editOrAdd !== "add" && this.state.isLoading ? (
         <Spinner />
@@ -91,7 +96,7 @@ class AddCompany extends Component {
               name="company"
               value={this.state.company}
               onChange={this.onChange}
-              error={null}
+              error={errors.company}
               info="A company name or the main contact's name"
             />
             <TextFieldGroup
@@ -99,7 +104,7 @@ class AddCompany extends Component {
               name="phonenumber"
               value={this.state.phonenumber}
               onChange={this.onChange}
-              error={null}
+              error={errors.phonenumber}
               info="The customer's phone number, only number digits should be input"
             />
             <TextFieldGroup
@@ -107,7 +112,7 @@ class AddCompany extends Component {
               name="email"
               value={this.state.email}
               onChange={this.onChange}
-              error={null}
+              error={errors.email}
               info="The customer's email address (i.e. rewald@covenant-doors.com)"
             />
             <TextAreaFieldGroup
@@ -115,15 +120,15 @@ class AddCompany extends Component {
               name="address"
               value={this.state.address}
               onChange={this.onChange}
-              error={null}
+              error={errors.address}
               info="The customer's address including street name and number, city, state and zip code"
             />
             <TextAreaFieldGroup
-              placeholder="Contact Names - Separate each name with a comma"
+              placeholder="* Contact Names - Separate each name with a comma. At least one contact is required."
               name="contactnames"
               value={this.state.contactnames}
               onChange={this.onChange}
-              error={null}
+              error={errors.contactnames}
               info="A list of contact names at the company. Separate each name with a comma"
             />
             <input
@@ -150,11 +155,13 @@ AddCompany.propTypes = {
   updateCustomer: PropTypes.func.isRequired,
   getCustomer: PropTypes.func.isRequired,
   editOrAdd: PropTypes.string.isRequired,
-  customers: PropTypes.object.isRequired
+  customers: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  customers: state.customer
+  customers: state.customer,
+  errors: state.errors
 });
 
 export default connect(
