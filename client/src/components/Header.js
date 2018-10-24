@@ -3,7 +3,6 @@ import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logoutUser } from "../actions/authActions";
-import HeaderLogo from "./HeaderLogo";
 
 class Header extends Component {
   onLogoutClick(e) {
@@ -13,26 +12,9 @@ class Header extends Component {
   }
 
   render() {
-    const headerStyles = {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      height: "3rem",
-      padding: "0 1rem"
-    };
-
-    const { isAuthenticated } = this.props.auth;
+    const { isAuthenticated, user } = this.props.auth;
 
     return (
-      // <header style={headerStyles} className="header">
-      //   <HeaderLogo />
-      //   <div>
-      //     <Link to={"/projects"}>Projects</Link>
-      //     <Link to={"/customers"}>Customers</Link>
-      //     <button onClick={this.onLogoutClick.bind(this)}>Logout</button>
-      //   </div>
-      // </header>
-
       <nav className="navbar navbar-expand-sm navbar-light bg-light">
         <Link className="navbar-brand" to="/">
           Covenant Doors
@@ -94,12 +76,18 @@ class Header extends Component {
               </div>
             </li>
             <li className="nav-item">
-              <button
-                className="nav-link btn btn-lg btn-link"
-                onClick={this.onLogoutClick.bind(this)}
-              >
-                Logout
-              </button>
+              {isAuthenticated && user.exp > Date.now() / 1000 ? (
+                <button
+                  className="nav-link btn btn-lg btn-link"
+                  onClick={this.onLogoutClick.bind(this)}
+                >
+                  Logout
+                </button>
+              ) : (
+                <Link className="nav-link btn btn-lg btn-link" to={"/"}>
+                  Login
+                </Link>
+              )}
             </li>
           </ul>
         </div>
