@@ -41,6 +41,49 @@ module.exports = function validateProjectInput(data) {
     }
   }
 
+  if (
+    data.customerponumber &&
+    !validator.isLength(data.customerponumber, { min: 1, max: 25 })
+  ) {
+    errors.customerponumber =
+      "Customer PO# must be between 1 and 25 characters long.";
+  }
+  if (
+    data.locationponumber &&
+    !validator.isLength(data.locationponumber, { min: 1, max: 25 })
+  ) {
+    errors.locationponumber =
+      "Location PO# must be between 1 and 25 characters long.";
+  }
+  if (
+    data.covenantponumber &&
+    !validator.isLength(data.covenantponumber, { min: 1, max: 25 })
+  ) {
+    errors.covenantponumber =
+      "Covenant PO# must be between 1 and 25 characters long.";
+  }
+  if (
+    data.currentstatus &&
+    !validator.isLength(data.currentstatus, { min: 1, max: 100 })
+  ) {
+    errors.currentstatus =
+      "Current status must be between 1 and 100 characters long.";
+  }
+  if (
+    data.estimatenumber &&
+    !validator.isLength(data.estimatenumber, { min: 1, max: 25 })
+  ) {
+    errors.estimatenumber =
+      "Estimate # must be between 1 and 25 characters long.";
+  }
+  if (
+    data.invoicenumber &&
+    !validator.isLength(data.invoicenumber, { min: 1, max: 25 })
+  ) {
+    errors.invoicenumber =
+      "Invoice # must be between 1 and 25 characters long.";
+  }
+
   return {
     errors,
     isValid: isEmpty(errors)
