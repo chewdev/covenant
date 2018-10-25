@@ -87,7 +87,10 @@ module.exports = function validateProjectInput(data) {
   if (data.totalamount) {
     if (!/^\d*([,]\d{3})?([.]\d\d?)?$/gm.test(data.totalamount)) {
       errors.totalamount = "Total amount must be a properly formatted price.";
-    } else if (data.totalamount.split(".")[0].match(/[0-9]/g).length > 9) {
+    } else if (
+      data.totalamount.split(".")[0] &&
+      data.totalamount.split(".")[0].match(/\d/g).length > 9
+    ) {
       errors.totalamount =
         "Total amount must be less than or equal to $999,999,999.99";
     }
@@ -95,7 +98,10 @@ module.exports = function validateProjectInput(data) {
   if (data.paidamount) {
     if (!/^\d*([,]\d{3})?([.]\d\d?)?$/gm.test(data.paidamount)) {
       errors.paidamount = "Paid amount must be a properly formatted price.";
-    } else if (data.paidamount.split(".")[0].match(/[0-9]/g).length > 9) {
+    } else if (
+      data.paidamount.split(".")[0] &&
+      data.paidamount.split(".")[0].match(/\d/g).length > 9
+    ) {
       errors.paidamount =
         "Paid amount must be less than or equal to $999,999,999.99";
     }
