@@ -85,7 +85,7 @@ module.exports = function validateProjectInput(data) {
   }
 
   if (data.totalamount) {
-    if (!/^\d*([,]\d{3})?([.]\d\d?)?$/gm.test(data.totalamount)) {
+    if (!/^[$]?\d*([,]\d{3})*?([.]\d\d?)?$/gm.test(data.totalamount)) {
       errors.totalamount = "Total amount must be a properly formatted price.";
     } else if (
       data.totalamount.split(".")[0] &&
@@ -96,7 +96,7 @@ module.exports = function validateProjectInput(data) {
     }
   }
   if (data.paidamount) {
-    if (!/^\d*([,]\d{3})?([.]\d\d?)?$/gm.test(data.paidamount)) {
+    if (!/^[$]?\d*([,]\d{3})*?([.]\d\d?)?$/gm.test(data.paidamount)) {
       errors.paidamount = "Paid amount must be a properly formatted price.";
     } else if (
       data.paidamount.split(".")[0] &&
