@@ -161,10 +161,18 @@ router.post(
             newProject.invoicenumber = req.body.invoicenumber;
           }
           if (req.body.totalamount) {
-            newProject.totalamount = req.body.totalamount;
+            if (req.body.totalamount.startsWith("$")) {
+              newProject.totalamount = req.body.totalamount.slice(1);
+            } else {
+              newProject.totalamount = req.body.totalamount;
+            }
           }
           if (req.body.paidamount) {
-            newProject.paidamount = req.body.paidamount;
+            if (req.body.paidamount.startsWith("$")) {
+              newProject.paidamount = req.body.paidamount.slice(1);
+            } else {
+              newProject.paidamount = req.body.paidamount;
+            }
           }
 
           newProject
@@ -271,10 +279,18 @@ router.put(
                 project.invoicenumber = req.body.invoicenumber;
               }
               if (req.body.totalamount) {
-                project.totalamount = req.body.totalamount;
+                if (req.body.totalamount.startsWith("$")) {
+                  project.totalamount = req.body.totalamount.slice(1);
+                } else {
+                  project.totalamount = req.body.totalamount;
+                }
               }
               if (req.body.paidamount) {
-                project.paidamount = req.body.paidamount;
+                if (req.body.paidamount.startsWith("$")) {
+                  project.paidamount = req.body.paidamount.slice(1);
+                } else {
+                  project.paidamount = req.body.paidamount;
+                }
               }
 
               project
