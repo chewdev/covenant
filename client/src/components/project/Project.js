@@ -112,10 +112,12 @@ class Project extends Component {
                     {project.totalamount && (
                       <p>
                         Remaining Balance: $
-                        {parseFloat(project.totalamount) -
+                        {(
+                          parseFloat(project.totalamount) -
                           (project.paidamount
                             ? parseFloat(project.paidamount)
-                            : 0)}
+                            : 0)
+                        ).toFixed(2)}
                       </p>
                     )}
                   </div>
