@@ -8,6 +8,7 @@ const users = require("./routes/api/users");
 const customers = require("./routes/api/customers");
 const projects = require("./routes/api/projects");
 const projectlocations = require("./routes/api/projectlocations");
+const employees = require("./routes/api/employees");
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use("/api/users", users);
 app.use("/api/customers", customers);
 app.use("/api/projects", projects);
 app.use("/api/projectlocations", projectlocations);
+app.use("/api/employees", employees);
 
 app.get("/", function(req, res) {
   res.send("hello! This is a test page!");
