@@ -70,6 +70,64 @@ router.post(
   }
 );
 
+// @route GET api/employees/:empl_id
+// @desc Get a single employee
+// @access Private route
+router.get(
+  "/:empl_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Employee.findById(req.params.empl_id)
+      .then(employee => {
+        if (!employee) {
+          return res.status(400).json({ error: "Employee not found." });
+        } else {
+          return res.json(employee);
+        }
+      })
+      .catch(err => res.status(404).json({ error: "Employee not found." }));
+  }
+);
+
+// @route PUT api/employees/:empl_id
+// @desc Update an employee
+// @access Private route
+router.put(
+  "/:empl_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Employee.findById(req.params.empl_id)
+      .then(employee => {
+        if (!employee) {
+          return res
+            .status(400)
+            .json({ error: "Employee not found. Unable to update." });
+        } else {
+          const { errors, isValid } = validateEmployeeInput(req.body);
+
+          // Check Validation
+          if (!isValid) {
+            return res.status(400).json(errors);
+          }
+
+          employee.name = req.body.name;
+          employee.phonenumber = req.body.phonenumber;
+          employee.title = req.body.title;
+          employee.email = req.body.email;
+          employee.address = req.body.address;
+
+          employee
+            .save()
+            .then(employee => res.json(employee))
+            .catch(err => console.log(err));
+        }
+      })
+      .catch(err =>
+        res.status(404).json({ error: "Employee not found. Could not update." })
+      );
+  }
+);
+
 // @route DELETE api/employees/:empl_id
 // @desc Delete an employee
 // @access Private
