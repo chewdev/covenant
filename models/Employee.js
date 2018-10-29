@@ -21,10 +21,12 @@ const EmployeeSchema = new Schema({
     type: String,
     required: true
   },
-  schedule: {
-    type: [Schema.Types.ObjectId],
-    ref: "schedules"
-  },
+  schedule: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "schedules"
+    }
+  ],
   date: {
     type: Date,
     default: Date.now
