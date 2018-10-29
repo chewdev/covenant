@@ -77,6 +77,7 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Employee.findById(req.params.empl_id)
+      .populate({ path: "schedule", populate: { path: "project" } })
       .then(employee => {
         if (!employee) {
           return res.status(400).json({ error: "Employee not found." });
