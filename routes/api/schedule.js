@@ -57,8 +57,6 @@ router.post(
       } else {
         if (req.body.employees) {
           Employee.find().then(employees => {
-            console.log(req.body.employees);
-            console.log(employees);
             const filteredEmployees = employees.filter(employee =>
               req.body.employees.includes(employee._id.toString())
             );
@@ -76,7 +74,20 @@ router.post(
 
               newSchedule
                 .save()
-                .then(schedule => res.json(schedule))
+                .then(schedule => {
+                  filteredEmployees.forEach(employee => {
+                    if (employee.schedule) {
+                      employee.schedule.push(schedule._id);
+                    } else {
+                      employee.schedule = [schedule._id];
+                    }
+                    employee
+                      .save()
+                      .then(employee => null)
+                      .catch(err => console.log(err));
+                  });
+                  return res.json(schedule);
+                })
                 .catch(err => console.log(err));
             }
           });
@@ -139,24 +150,77 @@ router.put(
             } else {
               if (req.body.employees) {
                 Employee.find().then(employees => {
-                  const filteredEmployees = employees.filter(employee => {
-                    req.body.employees.includes(employee._id);
+                  const newEmployees = employees.filter(employee =>
+                    req.body.employees.includes(employee._id.toString())
+                  );
+                  const currEmployees = employees.filter(employee => {
+                    let isThere = false;
+                    schedule.employees.forEach(emplId => {
+                      if (emplId.equals(employee._id)) {
+                        isThere = true;
+                      }
+                    });
+                    return isThere;
                   });
-                  if (filteredEmployees.length !== req.body.employees.length) {
+                  if (newEmployees.length !== req.body.employees.length) {
                     return res.status(400).json({
                       error:
                         "Some or all employees provided were not found. Please ensure all employees have been added before scheduling work"
                     });
                   } else {
-                    const newSchedule = new Schedule({
-                      project: req.body.project,
-                      employees: req.body.employees,
-                      date: req.body.date
+                    const addedEmployees = newEmployees.filter(newEmployee => {
+                      let isThere = false;
+                      currEmployees.forEach(currEmployee => {
+                        if (currEmployee.equals(newEmployee)) {
+                          isThere = true;
+                        }
+                      });
+                      return !isThere;
                     });
 
-                    newSchedule
+                    const removedEmployees = currEmployees.filter(
+                      currEmployee => {
+                        let isThere = false;
+                        newEmployees.forEach(newEmployee => {
+                          if (newEmployee.equals(currEmployee)) {
+                            isThere = true;
+                          }
+                        });
+                        return !isThere;
+                      }
+                    );
+
+                    schedule.project = req.body.project;
+                    schedule.employees = req.body.employees;
+                    schedule.date = req.body.date;
+
+                    schedule
                       .save()
-                      .then(schedule => res.json(schedule))
+                      .then(schedule => {
+                        addedEmployees.forEach(addEmployee => {
+                          if (addEmployee.schedule) {
+                            addEmployee.schedule.push(schedule._id);
+                          } else {
+                            addEmployee.schedule = [schedule._id];
+                          }
+
+                          addEmployee
+                            .save()
+                            .then(() => null)
+                            .catch(err => console.log(err));
+                        });
+
+                        removedEmployees.forEach(remEmployee => {
+                          remEmployee.schedule = remEmployee.schedule.filter(
+                            scheduleId => !scheduleId.equals(schedule._id)
+                          );
+                          remEmployee
+                            .save()
+                            .then(() => null)
+                            .catch(err => console.log(err));
+                        });
+                        return res.json(schedule);
+                      })
                       .catch(err => console.log(err));
                   }
                 });
@@ -181,6 +245,23 @@ router.delete(
     Schedule.findByIdAndRemove(req.params.sched_id)
       .then(schedule => {
         if (schedule) {
+          if (schedule.employees) {
+            schedule.employees.forEach(employee => {
+              Employee.findById(employee)
+                .then(foundEmployee => {
+                  foundEmployee.schedule = foundEmployee.schedule.filter(
+                    scheduleItem => {
+                      return !scheduleItem.equals(schedule._id);
+                    }
+                  );
+                  foundEmployee
+                    .save()
+                    .then(() => null)
+                    .catch(err => console.log(err));
+                })
+                .catch(err => console.log(err));
+            });
+          }
           res.json(schedule);
         } else {
           res.status(400).json({

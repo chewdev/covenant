@@ -21,10 +21,6 @@ const EmployeeSchema = new Schema({
     type: String,
     required: true
   },
-  projects: {
-    type: [Schema.Types.ObjectId],
-    ref: "projects"
-  },
   schedule: {
     type: [Schema.Types.ObjectId],
     ref: "schedules"

@@ -8,7 +8,6 @@ const validateEmployeeInput = require("../../validation/employee");
 
 // Load Employee model
 const Employee = require("../../models/Employee");
-const Project = require("../../models/Project");
 
 // @route GET api/employees/test
 // @desc Tests employees route
