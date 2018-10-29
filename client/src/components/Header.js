@@ -43,14 +43,17 @@ class Header extends Component {
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                Projects
+                Add New
               </Link>
               <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <Link className="dropdown-item" to="/projects">
-                  All
-                </Link>
                 <Link className="dropdown-item" to="/projects/new">
-                  Add New
+                  Project
+                </Link>
+                <Link className="dropdown-item" to="/customers/new">
+                  Customer
+                </Link>
+                <Link className="dropdown-item" to="/employees/new">
+                  Employee
                 </Link>
               </div>
             </li>
@@ -64,17 +67,21 @@ class Header extends Component {
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                Customers
+                View
               </Link>
               <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <Link className="dropdown-item" to="/customers">
-                  All
+                <Link className="dropdown-item" to="/projects">
+                  Projects
                 </Link>
-                <Link className="dropdown-item" to="/customers/new">
-                  Add New
+                <Link className="dropdown-item" to="/customers">
+                  Customers
+                </Link>
+                <Link className="dropdown-item" to="/employees">
+                  Employees
                 </Link>
               </div>
             </li>
+
             <li className="nav-item">
               {isAuthenticated && user.exp > Date.now() / 1000 ? (
                 <button
