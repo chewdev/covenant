@@ -4,18 +4,16 @@ import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
 import { getEmployee, deleteEmployee } from "../../actions/employeeActions";
-// import { getCustomerProjects } from "../../actions/projectActions"; // Update to getEmployeeSchedule
 import isEmpty from "../../validation/is-empty";
 
 class Employee extends Component {
-  // constructor(props) {
-  //   super(props);
+  constructor(props) {
+    super(props);
 
-  //   this.state = {
-  //     showProjects: false,
-  //     projectsLoaded: false
-  //   };
-  // } // update to showSchedule and scheduleLoaded
+    this.state = {
+      showSchedule: false
+    };
+  }
 
   componentDidMount() {
     this.props.getEmployee(this.props.match.params.id);
@@ -29,40 +27,43 @@ class Employee extends Component {
     this.props.deleteEmployee(this.props.match.params.id, this.props.history);
   }
 
-  // onShowProjects() {
-  //   if (!this.state.showProjects && !this.state.projectsLoaded) {
-  //     const projectsPromise = new Promise((resolve, reject) => {
-  //       this.props.getCustomerProjects(this.props.match.params.id, resolve);
-  //     });
-
-  //     projectsPromise.then(() => this.setState({ projectsLoaded: true }));
-  //   }
-  //   this.setState({ showProjects: !this.state.showProjects });
-  // } // update to onShowSchedule
+  onShowSchedule() {
+    this.setState({ showSchedule: !this.state.showSchedule });
+  }
 
   render() {
     const { employee, loading } = this.props.employees;
     let employeeContent;
-    // let projectContent = null; // update to scheduleContent
 
-    // if (
-    //   this.state.showProjects &&
-    //   !this.props.projects.loading &&
-    //   this.props.projects.projects !== null
-    // ) {
-    //   projectContent = this.props.projects.projects.map(project => (
-    //     <li key={project._id} className="list-group-item">
-    //       <Link to={`/projects/${project._id}`}>{project.projectname}</Link>
-    //     </li>
-    //   ));
-    //   projectContent =
-    //     projectContent.length > 0 ? (
-    //       projectContent
-    //     ) : (
-    //       <li className="list-group-item text-muted">No Projects Available</li>
-    //     );
-    //   projectContent = <ul className="list-group">{projectContent}</ul>;
-    // } // update for scheduleContent
+    let scheduleContent = null;
+
+    if (
+      this.state.showSchedule &&
+      !this.props.employees.loading &&
+      this.props.employees.employee !== null
+    ) {
+      scheduleContent = this.props.employees.employee.schedule.map(
+        scheduleItem => (
+          <li key={scheduleItem._id} className="list-group-item">
+            <Link to={`/schedule/${scheduleItem._id}`}>
+              {scheduleItem.project.projectname}
+            </Link>{" "}
+            <span className="float-right">
+              {new Date(scheduleItem.date).toDateString()}
+            </span>
+          </li>
+        )
+      );
+      scheduleContent =
+        scheduleContent.length > 0 ? (
+          scheduleContent
+        ) : (
+          <li className="list-group-item text-muted">
+            No Schedule Items Available
+          </li>
+        );
+      scheduleContent = <ul className="list-group">{scheduleContent}</ul>;
+    }
 
     if (employee === null) {
       employeeContent = (
@@ -110,11 +111,11 @@ class Employee extends Component {
 
           <button
             className="btn btn-primary btn-block"
-            onClick={e => e.preventDefault() /*this.onShowProjects.bind(this)*/}
+            onClick={this.onShowSchedule.bind(this)}
           >
             Show Schedule
           </button>
-          {/* {projectContent} update to scheduleContent*/}
+          {scheduleContent}
           <button
             className="btn btn-secondary col-6 mt-2"
             onClick={this.onEditEmployee.bind(this)}
@@ -145,15 +146,13 @@ Employee.propTypes = {
   getEmployee: PropTypes.func.isRequired,
   deleteEmployee: PropTypes.func.isRequired,
   employees: PropTypes.object.isRequired
-  // projects: PropTypes.object
 };
 
 const mapStateToProps = state => ({
   employees: state.employee
-  // projects: state.project
 });
 
 export default connect(
   mapStateToProps,
-  { getEmployee, deleteEmployee /*getCustomerProjects*/ }
+  { getEmployee, deleteEmployee }
 )(withRouter(Employee));
