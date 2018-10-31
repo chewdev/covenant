@@ -9,6 +9,7 @@ const validateProjectLocationInput = require("../../validation/projectlocation")
 // Load models
 const Project = require("../../models/Project");
 const Customer = require("../../models/Customer");
+const Schedule = require("../../models/Schedule");
 const ProjectLocation = require("../../models/ProjectLocation");
 
 // @route GET api/projects/test
@@ -315,6 +316,10 @@ router.delete(
     Project.findByIdAndRemove(req.params.proj_id)
       .then(project => {
         if (project) {
+          Schedule.deleteMany({ project: project._id })
+            .then(schedules => null)
+            .catch(err => console.log(err));
+
           res.json(project);
         } else {
           res
