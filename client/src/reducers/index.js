@@ -5,6 +5,7 @@ import customerReducer from "./customerReducer";
 import projectReducer from "./projectReducer";
 import projectlocationReducer from "./projectlocationReducer";
 import employeeReducer from "./employeeReducer";
+import scheduleReducer from "./scheduleReducer";
 
 export default combineReducers({
   auth: authReducer,
@@ -12,5 +13,6 @@ export default combineReducers({
   customer: customerReducer,
   project: projectReducer,
   projectlocation: projectlocationReducer,
-  employee: employeeReducer
+  employee: employeeReducer,
+  schedule: scheduleReducer
 });
