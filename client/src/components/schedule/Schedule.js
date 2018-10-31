@@ -34,6 +34,9 @@ class Schedule extends Component {
       date = date.toLocaleString();
       scheduleContent = (
         <div className="container my-4">
+          <Link to="/schedule" className="btn btn-lg btn-primary mb-4">
+            Back To Schedule
+          </Link>
           <div className="card text-center border-dark">
             <div className="card-header bg-dark text-white">Schedule</div>
             <div className="card-body p-0 pt-2">

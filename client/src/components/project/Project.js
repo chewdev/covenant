@@ -32,6 +32,9 @@ class Project extends Component {
     } else {
       projectContent = (
         <div className="container my-4">
+          <Link to="/projects" className="btn btn-lg btn-primary mb-4">
+            Back To All Projects
+          </Link>
           <div className="card text-center border-d">
             <div className="card-header bg-dark text-white">Project</div>
             <div className="card-body p-0 pt-2">
@@ -137,28 +140,6 @@ class Project extends Component {
           >
             Remove
           </button>
-          {/* <div>
-            {project.projectlocation && project.projectlocation.address}
-          </div>
-          
-          <div>{project.customerponumber}</div>
-          <div>{project.currentstatus}</div>
-          {project.nextsteps &&
-            project.nextsteps.map(nextstep => (
-              <div key={nextstep}>{nextstep}</div>
-            ))}
-          <button
-            className="btn btn-secondary mr-2"
-            onClick={this.onEditProject.bind(this)}
-          >
-            Edit
-          </button>
-          <button
-            className="btn btn-danger ml-2"
-            onClick={this.onDeleteProject.bind(this)}
-          >
-            Remove
-          </button> */}
         </div>
       );
     }

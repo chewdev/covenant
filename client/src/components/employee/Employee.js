@@ -74,6 +74,9 @@ class Employee extends Component {
     } else {
       employeeContent = (
         <div className="container my-4">
+          <Link to="/employees" className="btn btn-lg btn-primary mb-4">
+            Back to All Employees
+          </Link>
           <div className="card text-center border-dark">
             <div className="card-header bg-dark text-white">Employee</div>
             <div className="card-body p-0 pt-2">
