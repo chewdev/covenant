@@ -20,6 +20,9 @@ import AddProject from "./components/project/AddUpdateProject";
 import Employee from "./components/employee/Employee";
 import Employees from "./components/employee/Employees";
 import AddEmployee from "./components/employee/AddUpdateEmployee";
+import Schedule from "./components/schedule/Schedule";
+import Schedules from "./components/schedule/Schedules";
+import AddSchedule from "./components/schedule/AddUpdateSchedule";
 
 // import "./App.css";
 
@@ -105,6 +108,20 @@ class App extends Component {
                   path="/employees/:id"
                   component={Employee}
                 />
+                <PrivateRoute exact path="/schedule" component={Schedules} />
+                <PrivateRoute
+                  exact
+                  path="/schedule/new"
+                  editOrAdd={"add"}
+                  component={AddSchedule}
+                />
+                <PrivateRoute
+                  exact
+                  path="/schedule/:id/edit"
+                  editOrAdd={"edit"}
+                  component={AddSchedule}
+                />
+                <PrivateRoute exact path="/schedule/:id" component={Schedule} />
               </Switch>
             </div>
           </div>
