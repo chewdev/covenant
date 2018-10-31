@@ -9,7 +9,7 @@ import {
 const initialState = {
   customers: [],
   customer: {},
-  loading: false
+  loading: true
 };
 
 export default function(state = initialState, action) {
