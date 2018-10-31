@@ -8,10 +8,12 @@ const ScheduleSchema = new Schema({
     ref: "projects",
     required: true
   },
-  employees: {
-    type: [Schema.Types.ObjectId],
-    ref: "employees"
-  },
+  employees: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "employees"
+    }
+  ],
   date: {
     type: Date,
     required: true
