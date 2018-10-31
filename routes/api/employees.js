@@ -8,6 +8,7 @@ const validateEmployeeInput = require("../../validation/employee");
 
 // Load Employee model
 const Employee = require("../../models/Employee");
+const Schedule = require("../../models/Schedule");
 
 // @route GET api/employees/test
 // @desc Tests employees route
@@ -138,6 +139,21 @@ router.delete(
     Employee.findByIdAndRemove(req.params.empl_id)
       .then(employee => {
         if (employee) {
+          Schedule.find({ employees: employee._id })
+            .then(schedules => {
+              if (schedules) {
+                schedules.forEach(schedule => {
+                  schedule.employees = schedule.employees.filter(
+                    schedEmployee => !schedEmployee.equals(employee._id)
+                  );
+                  schedule
+                    .save()
+                    .then(schedule => null)
+                    .catch(err => console.log(err));
+                });
+              }
+            })
+            .catch(err => console.log(err));
           res.json(employee);
         } else {
           res.status(400).json({
