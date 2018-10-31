@@ -105,6 +105,8 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Schedule.findById(req.params.sched_id)
+      .populate("employees")
+      .populate("project")
       .then(schedule => {
         if (!schedule) {
           return res
