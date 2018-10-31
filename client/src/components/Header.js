@@ -55,6 +55,9 @@ class Header extends Component {
                 <Link className="dropdown-item" to="/employees/new">
                   Employee
                 </Link>
+                <Link className="dropdown-item" to="/schedule/new">
+                  Schedule
+                </Link>
               </div>
             </li>
             <li className="nav-item dropdown">
@@ -78,6 +81,9 @@ class Header extends Component {
                 </Link>
                 <Link className="dropdown-item" to="/employees">
                   Employees
+                </Link>
+                <Link className="dropdown-item" to="/schedule">
+                  Schedule
                 </Link>
               </div>
             </li>
