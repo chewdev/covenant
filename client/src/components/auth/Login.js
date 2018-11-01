@@ -21,7 +21,7 @@ class Login extends Component {
       this.props.auth.isAuthenticated &&
       this.props.auth.user.exp > Date.now() / 1000
     ) {
-      this.props.history.push("/projects");
+      this.props.history.push("/dashboard");
     }
   }
 
@@ -30,7 +30,7 @@ class Login extends Component {
       nextProps.auth.isAuthenticated &&
       nextProps.auth.user.exp > Date.now() / 1000
     ) {
-      this.props.history.push("/projects");
+      this.props.history.push("/dashboard");
     }
 
     if (nextProps.errors) {
