@@ -3,16 +3,44 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
+import TextFieldGroup from "../common/TextFieldGroup";
+import SelectListGroup from "../common/SelectListGroup";
 import { getEmployees } from "../../actions/employeeActions";
 
 class Employees extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      search: "",
+      searchby: "name"
+    };
+
+    this.onChange = this.onChange.bind(this);
+  }
+
   componentDidMount() {
     this.props.getEmployees();
+  }
+
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
   }
 
   render() {
     const { employees, loading } = this.props.employees;
     let employeeContent;
+
+    const searchOptions = [
+      {
+        label: "Name",
+        value: "name"
+      },
+      {
+        label: "Title",
+        value: "title"
+      }
+    ];
 
     if (employees === null || loading) {
       employeeContent = (
@@ -26,7 +54,18 @@ class Employees extends Component {
         </tr>
       );
     } else {
-      employeeContent = employees.map(employee => {
+      let filteredEmployees = employees;
+      if (this.state.search) {
+        if (employees[0] && employees[0][this.state.searchby]) {
+          filteredEmployees = employees.filter(
+            employee =>
+              employee[this.state.searchby]
+                .toLowerCase()
+                .indexOf(this.state.search.toLowerCase()) !== -1
+          );
+        }
+      }
+      employeeContent = filteredEmployees.map(employee => {
         const phonenumber = !employee.phonenumber
           ? null
           : employee.phonenumber.length === 10
@@ -61,6 +100,26 @@ class Employees extends Component {
     return (
       <div className="container mt-4">
         <div className="row">
+          <div className="col-sm-9 col-12">
+            <TextFieldGroup
+              placeholder="Search"
+              name="search"
+              value={this.state.search}
+              onChange={this.onChange}
+              error={null}
+              info=""
+            />
+          </div>
+          <div className="col-sm-3 col-6">
+            <SelectListGroup
+              name="searchby"
+              value={this.state.searchby}
+              onChange={this.onChange}
+              error={null}
+              options={searchOptions}
+              info="Search by"
+            />
+          </div>
           <div className="col">
             <div className="table-responsive">
               <table className="table table-striped border border-dark">

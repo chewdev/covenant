@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
+import TextFieldGroup from "../common/TextFieldGroup";
+import SelectListGroup from "../common/SelectListGroup";
 import { getProjects } from "../../actions/projectActions";
 
 function treatAsUTC(date) {
@@ -24,13 +26,41 @@ function timeBetween(startDate, endDate) {
 }
 
 class Projects extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      search: "",
+      searchby: "projectname"
+    };
+
+    this.onChange = this.onChange.bind(this);
+  }
   componentDidMount() {
     this.props.getProjects();
+  }
+
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
   }
 
   render() {
     const { projects, loading } = this.props.projects;
     let projectContent;
+    const searchOptions = [
+      {
+        label: "Project Name",
+        value: "projectname"
+      },
+      {
+        label: "Customer Name",
+        value: "customer"
+      },
+      {
+        label: "Current Status",
+        value: "currentstatus"
+      }
+    ];
 
     if (projects === null || loading) {
       projectContent = (
@@ -44,7 +74,34 @@ class Projects extends Component {
         </tr>
       );
     } else {
-      projectContent = projects.map(project => (
+      let filteredProjects = projects;
+      if (this.state.search) {
+        if (
+          this.state.searchby === "customer" &&
+          projects[0] &&
+          projects[0]["customer"] &&
+          projects[0]["customer"]["company"]
+        ) {
+          filteredProjects = projects.filter(
+            project =>
+              project["customer"]["company"]
+                .toLowerCase()
+                .indexOf(this.state.search.toLowerCase()) !== -1
+          );
+        } else if (
+          this.state.searchby !== "customer" &&
+          projects[0] &&
+          projects[0][this.state.searchby]
+        ) {
+          filteredProjects = projects.filter(
+            project =>
+              project[this.state.searchby]
+                .toLowerCase()
+                .indexOf(this.state.search.toLowerCase()) !== -1
+          );
+        }
+      }
+      projectContent = filteredProjects.map(project => (
         <tr className="text-dark" key={project._id}>
           <td>
             <Link to={`/projects/${project._id}`}>{project.projectname}</Link>
@@ -63,6 +120,26 @@ class Projects extends Component {
     return (
       <div className="container mt-4">
         <div className="row">
+          <div className="col-sm-9 col-12">
+            <TextFieldGroup
+              placeholder="Search"
+              name="search"
+              value={this.state.search}
+              onChange={this.onChange}
+              error={null}
+              info=""
+            />
+          </div>
+          <div className="col-sm-3 col-6">
+            <SelectListGroup
+              name="searchby"
+              value={this.state.searchby}
+              onChange={this.onChange}
+              error={null}
+              options={searchOptions}
+              info="Search by"
+            />
+          </div>
           <div className="col">
             <div className="table-responsive">
               <table className="table table-striped border border-dark">

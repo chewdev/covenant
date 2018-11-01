@@ -3,11 +3,26 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
+import TextFieldGroup from "../common/TextFieldGroup";
 import { getCustomers } from "../../actions/customerActions";
 
 class Customers extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      search: ""
+    };
+
+    this.onChange = this.onChange.bind(this);
+  }
+
   componentDidMount() {
     this.props.getCustomers();
+  }
+
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
   }
 
   render() {
@@ -26,7 +41,16 @@ class Customers extends Component {
         </tr>
       );
     } else {
-      customerContent = customers.map(customer => {
+      let filteredCustomers = customers;
+      if (this.state.search) {
+        filteredCustomers = customers.filter(
+          customer =>
+            customer.company
+              .toLowerCase()
+              .indexOf(this.state.search.toLowerCase()) !== -1
+        );
+      }
+      customerContent = filteredCustomers.map(customer => {
         const phonenumber = !customer.phonenumber
           ? null
           : customer.phonenumber.length === 10
@@ -61,6 +85,16 @@ class Customers extends Component {
     return (
       <div className="container mt-4">
         <div className="row">
+          <div className="col-12">
+            <TextFieldGroup
+              placeholder="Search"
+              name="search"
+              value={this.state.search}
+              onChange={this.onChange}
+              error={null}
+              info="Search By Customer Name"
+            />
+          </div>
           <div className="col">
             <div className="table-responsive">
               <table className="table table-striped border border-dark">
