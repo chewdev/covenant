@@ -35,6 +35,12 @@ class Project extends Component {
           <Link to="/projects" className="btn btn-lg btn-primary mb-4">
             Back To All Projects
           </Link>
+          <Link
+            to={`/projects/${this.props.match.params.id}/schedule`}
+            className="btn btn-lg btn-secondary mb-4 float-right"
+          >
+            Schedule Project
+          </Link>
           <div className="card text-center border-d">
             <div className="card-header bg-dark text-white">Project</div>
             <div className="card-body p-0 pt-2">
