@@ -16,7 +16,7 @@ class Header extends Component {
 
     return (
       <nav className="navbar navbar-expand-sm navbar-light bg-light">
-        <Link className="navbar-brand" to="/">
+        <Link className="navbar-brand" to="/dashboard">
           Covenant Doors
         </Link>
         <button
