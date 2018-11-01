@@ -10,6 +10,7 @@ import store from "./store";
 import PrivateRoute from "./components/common/PrivateRoute";
 
 import Header from "./components/Header";
+import Dashboard from "./components/dashboard/Dashboard";
 import AddCompany from "./components/customer/AddUpdateCustomer";
 import Login from "./components/auth/Login";
 import Customers from "./components/customer/Customers";
@@ -57,6 +58,7 @@ class App extends Component {
             <Route exact path="/" component={Login} />
             <div className="App-header">
               <Switch>
+                <PrivateRoute exact path="/dashboard" component={Dashboard} />
                 <PrivateRoute
                   exact
                   path="/customers/new"
@@ -88,6 +90,12 @@ class App extends Component {
                   path="/projects/:id/edit"
                   editOrAdd={"edit"}
                   component={AddProject}
+                />
+                <PrivateRoute
+                  exact
+                  path="/projects/:id/schedule"
+                  editOrAdd={"addToProject"}
+                  component={AddSchedule}
                 />
                 <PrivateRoute exact path="/projects/:id" component={Project} />
                 <PrivateRoute exact path="/employees" component={Employees} />
