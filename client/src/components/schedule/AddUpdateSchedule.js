@@ -29,13 +29,17 @@ class AddSchedule extends Component {
   }
 
   componentDidMount() {
-    if (this.props.editOrAdd !== "add") {
+    if (this.props.editOrAdd === "edit") {
       this.props.getSchedule(this.props.match.params.id);
+    } else if (this.props.editOrAdd === "addToProject") {
+      this.setState({ project: this.props.match.params.id, isLoading: false });
+    } else {
+      this.setState({ isLoading: false });
     }
   }
 
   componentWillReceiveProps(props, state) {
-    if (this.props.editOrAdd !== "add" && !props.schedules.loading) {
+    if (this.props.editOrAdd === "edit" && !props.schedules.loading) {
       let employees = [];
       let project = "";
       let date = "";
@@ -82,7 +86,7 @@ class AddSchedule extends Component {
         date: this.state.date
       };
 
-      if (this.props.editOrAdd === "add") {
+      if (this.props.editOrAdd !== "edit") {
         this.props.addSchedule(scheduleData, this.props.history);
       } else {
         scheduleData.id = this.props.match.params.id;
@@ -138,14 +142,15 @@ class AddSchedule extends Component {
     });
 
     const formContent =
-      this.props.editOrAdd !== "add" && this.state.isLoading ? (
+      (this.props.editOrAdd === "edit" && this.state.isLoading) ||
+      (this.props.editOrAdd === "addToProject" && this.state.isLoading) ? (
         <Spinner />
       ) : this.props.schedules.schedule === null ? (
         <div className="alert alert-danger">Schedule not found</div>
       ) : (
         <div>
           <h1 className="display-4 text-center">
-            {this.props.editOrAdd === "add" ? "Add " : "Edit "} Schedule
+            {this.props.editOrAdd === "edit" ? "Edit " : "Add "} Schedule
           </h1>
           <p className="lead text-center">Add schedule information below</p>
           <small className="d-block pb-3">* = required fields</small>
