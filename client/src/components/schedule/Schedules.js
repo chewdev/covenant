@@ -6,6 +6,7 @@ import Spinner from "../common/Spinner";
 import { getSchedules } from "../../actions/scheduleActions";
 import { getProjects } from "../../actions/projectActions";
 import { getEmployees } from "../../actions/employeeActions";
+import TextFieldGroup from "../common/TextFieldGroup";
 
 class Schedules extends Component {
   constructor(props) {
@@ -15,11 +16,13 @@ class Schedules extends Component {
 
     this.state = {
       currMonth: this.date.getMonth(),
-      currYear: this.date.getFullYear()
+      currYear: this.date.getFullYear(),
+      search: ""
     };
 
     this.onNextMonth = this.onNextMonth.bind(this);
     this.onPrevMonth = this.onPrevMonth.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
   componentDidMount() {
     this.props.getSchedules();
@@ -41,6 +44,10 @@ class Schedules extends Component {
     } else {
       this.setState({ currMonth: 11, currYear: this.state.currYear - 1 });
     }
+  }
+
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
   }
 
   render() {
@@ -89,10 +96,11 @@ class Schedules extends Component {
         this.state.currMonth + 1,
         1
       );
-      const filteredSchedules = schedules.filter(schedule => {
+      let filteredSchedules = schedules.filter(schedule => {
         const scheduleDate = new Date(schedule.date);
         return scheduleDate >= startDate && scheduleDate < endDate;
       });
+
       scheduleContent = filteredSchedules.map(schedule => {
         const schedProject = projects.find(project => {
           return project._id === schedule.project;
@@ -100,6 +108,16 @@ class Schedules extends Component {
         const projectName = schedProject
           ? schedProject.projectname
           : "Unavailable";
+
+        if (this.state.search) {
+          if (
+            projectName
+              .toLowerCase()
+              .indexOf(this.state.search.toLowerCase()) === -1
+          ) {
+            return null;
+          }
+        }
 
         const schedEmployees =
           schedule.employees &&
@@ -163,6 +181,16 @@ class Schedules extends Component {
     return (
       <div className="container mt-4">
         <div className="row">
+          <div className="col-12">
+            <TextFieldGroup
+              placeholder="Search"
+              name="search"
+              value={this.state.search}
+              onChange={this.onChange}
+              error={null}
+              info="Search By Project Name"
+            />
+          </div>
           <div className="col">
             <div className="table-responsive">
               <button
