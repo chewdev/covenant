@@ -4,6 +4,7 @@ import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import TextFieldGroup from "../common/TextFieldGroup";
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
+import SelectListGroup from "../common/SelectListGroup";
 import Spinner from "../common/Spinner";
 import classnames from "classnames";
 import {
@@ -141,6 +142,54 @@ class AddProject extends Component {
 
   render() {
     const { errors } = this.state;
+    const statusOptions = [
+      {
+        label: "Request Received",
+        value: "Request Received"
+      },
+      {
+        label: "Needs Bid- Simple",
+        value: "Needs Bid- Simple"
+      },
+      {
+        label: "Needs Bid- Complicated",
+        value: "Needs Bid- Complicated"
+      },
+      {
+        label: "Bid Sent- Awaiting Approval",
+        value: "Bid Sent- Awaiting Approval"
+      },
+      {
+        label: "Need To Order Parts",
+        value: "Need To Order Parts"
+      },
+      {
+        label: "Waiting on Parts",
+        value: "Waiting on Parts"
+      },
+      {
+        label: "Need To Schedule",
+        value: "Need To Schedule"
+      },
+      {
+        label: "Scheduled- Waiting",
+        value: "Scheduled- Waiting"
+      },
+
+      {
+        label: "Needs Invoice",
+        value: "Needs Invoice"
+      },
+      {
+        label: "Invoiced- Awaiting Payment",
+        value: "Invoiced- Awaiting Payment"
+      },
+      {
+        label: "Completed",
+        value: "Completed"
+      }
+    ];
+
     let nextSteps = [];
     for (let i = 0; i < this.state.steps; i++) {
       const name = `nextstep${i}`;
@@ -267,13 +316,13 @@ class AddProject extends Component {
               error={errors.covenantponumber}
               info="Project PO number"
             />
-            <TextFieldGroup
-              placeholder="Current Status"
+            <SelectListGroup
               name="currentstatus"
               value={this.state.currentstatus}
               onChange={this.onChange}
               error={errors.currentstatus}
-              info="Current status (i.e. 'Scheduled', 'Awaiting Quote', etc.)"
+              options={statusOptions}
+              info="Select the current job status"
             />
             <TextFieldGroup
               placeholder="Estimate #"
