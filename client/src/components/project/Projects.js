@@ -24,6 +24,34 @@ function timeBetween(startDate, endDate) {
     return `${hoursBetween} Hours Ago`;
   }
 }
+const priorityMap = {
+  "Request Received": 0,
+  "Needs Bid- Simple": 1,
+  "Needs Bid- Complicated": 2,
+  "Bid Sent- Awaiting Approval": 3,
+  "Need To Order Parts": 4,
+  "Waiting on Parts": 5,
+  "Need To Schedule": 6,
+  "Scheduled- Waiting": 7,
+  "Needs Invoice": 8,
+  "Invoiced- Awaiting Payment": 9,
+  Completed: 10
+};
+
+const sortOptions = [
+  {
+    label: "Last Updated - Newest",
+    value: "datenew"
+  },
+  {
+    label: "Last Updated - Oldest",
+    value: "dateold"
+  },
+  {
+    label: "Priority",
+    value: "priority"
+  }
+];
 
 class Projects extends Component {
   constructor(props) {
@@ -31,7 +59,8 @@ class Projects extends Component {
 
     this.state = {
       search: "",
-      searchby: "projectname"
+      searchby: "projectname",
+      sortby: ""
     };
 
     this.onChange = this.onChange.bind(this);
@@ -101,6 +130,22 @@ class Projects extends Component {
           );
         }
       }
+
+      if (this.state.sortby === "priority") {
+        filteredProjects.sort(
+          (proj1, proj2) =>
+            priorityMap[proj1.currentstatus] - priorityMap[proj2.currentstatus]
+        );
+      } else if (this.state.sortby === "datenew") {
+        filteredProjects.sort(
+          (proj1, proj2) => new Date(proj2.date) - new Date(proj1.date)
+        );
+      } else if (this.state.sortby === "dateold") {
+        filteredProjects.sort(
+          (proj1, proj2) => new Date(proj1.date) - new Date(proj2.date)
+        );
+      }
+
       projectContent = filteredProjects.map(project => (
         <tr className="text-dark" key={project._id}>
           <td>
@@ -120,7 +165,7 @@ class Projects extends Component {
     return (
       <div className="container mt-4">
         <div className="row">
-          <div className="col-sm-9 col-12">
+          <div className="col-sm-8 col-6 px-1">
             <TextFieldGroup
               placeholder="Search"
               name="search"
@@ -130,7 +175,7 @@ class Projects extends Component {
               info=""
             />
           </div>
-          <div className="col-sm-3 col-6">
+          <div className="col-sm-4 col-6 px-1">
             <SelectListGroup
               name="searchby"
               value={this.state.searchby}
@@ -138,6 +183,19 @@ class Projects extends Component {
               error={null}
               options={searchOptions}
               info="Search by"
+            />
+          </div>
+
+          <div className="col-sm-8 col-6" />
+
+          <div className="col-sm-4 col-6 px-1">
+            <SelectListGroup
+              name="sortby"
+              value={this.state.sortby}
+              onChange={this.onChange}
+              error={null}
+              options={sortOptions}
+              info="Sort By"
             />
           </div>
           <div className="col">
