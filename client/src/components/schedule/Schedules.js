@@ -87,11 +87,11 @@ class Schedules extends Component {
       const endDate = new Date(
         this.state.currYear,
         this.state.currMonth + 1,
-        0
+        1
       );
       const filteredSchedules = schedules.filter(schedule => {
         const scheduleDate = new Date(schedule.date);
-        return scheduleDate > startDate && scheduleDate < endDate;
+        return scheduleDate >= startDate && scheduleDate < endDate;
       });
       scheduleContent = filteredSchedules.map(schedule => {
         const schedProject = projects.find(project => {
@@ -184,7 +184,7 @@ class Schedules extends Component {
                       Schedule (
                       {`${month ? month : ""} ${
                         month ? this.state.currYear : ""
-                      } `}
+                      }`}
                       )
                     </th>
                     <th />
