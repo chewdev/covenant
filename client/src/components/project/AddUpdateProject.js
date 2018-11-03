@@ -12,6 +12,7 @@ import {
   updateProject,
   getProject
 } from "../../actions/projectActions";
+import { getCustomers } from "../../actions/customerActions";
 
 class AddProject extends Component {
   constructor(props) {
@@ -36,7 +37,8 @@ class AddProject extends Component {
       paidamount: "",
       errors: {},
       isLoading: true,
-      steps: 0
+      steps: 0,
+      customersearch: ""
     };
 
     this.onChange = this.onChange.bind(this);
@@ -45,12 +47,14 @@ class AddProject extends Component {
     this.removeStep = this.removeStep.bind(this);
     this.onChangeNextStep = this.onChangeNextStep.bind(this);
     this.onChangeProjectLocation = this.onChangeProjectLocation.bind(this);
+    this.setCustomer = this.setCustomer.bind(this);
   }
 
   componentDidMount() {
     if (this.props.editOrAdd !== "add") {
       this.props.getProject(this.props.match.params.id);
     }
+    this.props.getCustomers();
   }
 
   componentWillReceiveProps(props, state) {
@@ -140,8 +144,13 @@ class AddProject extends Component {
     this.setState({ nextsteps, steps: this.state.steps - 1 });
   }
 
+  setCustomer(customer) {
+    this.setState({ customer });
+  }
+
   render() {
     const { errors } = this.state;
+    const { customers } = this.props;
     const statusOptions = [
       {
         label: "Request Received",
@@ -223,6 +232,34 @@ class AddProject extends Component {
       nextSteps.push(nextStep);
     }
 
+    const suggestedCustomers = customers.customers
+      ? this.state.customer
+        ? customers.customers
+            .filter(
+              customer =>
+                customer.company.indexOf(this.state.customer) !== -1 &&
+                customer.company !== this.state.customer
+            )
+            .map(customer => (
+              <li
+                key={customer._id}
+                className="list-group-item"
+                style={{ width: "100%" }}
+                onClick={() => this.setCustomer(customer.company)}
+                tabIndex={0}
+                onKeyPress={e => {
+                  const key = e.which || e.keyCode || 0;
+                  if (key === 13) {
+                    this.setCustomer(customer.company);
+                  }
+                }}
+              >
+                {customer.company}
+              </li>
+            ))
+        : null
+      : null;
+
     const formContent =
       this.props.editOrAdd !== "add" && this.state.isLoading ? (
         <Spinner />
@@ -241,14 +278,41 @@ class AddProject extends Component {
           </p>
           <small className="d-block pb-3">* = required fields</small>
           <form onSubmit={this.onSubmit}>
-            <TextFieldGroup
-              placeholder="* Customer name"
-              name="customer"
-              value={this.state.customer}
-              onChange={this.onChange}
-              error={errors.customer}
-              info="Customer name is required and must match an existing customer."
-            />
+            <div className="form-group" style={{ position: "relative" }}>
+              <input
+                type="text"
+                autoComplete="off"
+                className={classnames("form-control form-control-lg", {
+                  "is-invalid": errors.customer
+                })}
+                placeholder="* Customer Name"
+                name="customer"
+                value={this.state.customer || ""}
+                onChange={this.onChange}
+                disabled={false}
+              />
+              {
+                <small className="form-text text-muted">
+                  Customer name is required and must match an existing customer
+                </small>
+              }
+              {errors.customer && (
+                <div className="invalid-feedback">{errors.customer}</div>
+              )}
+              <ul
+                className="list-group"
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  zIndex: "100",
+                  display: "block",
+                  width: "100%"
+                }}
+              >
+                {suggestedCustomers}
+              </ul>
+            </div>
+
             <Link className="btn btn-secondary mb-4" to={"/customers/new"}>
               Add Customer
             </Link>
@@ -386,16 +450,19 @@ AddProject.propTypes = {
   addProject: PropTypes.func.isRequired,
   updateProject: PropTypes.func.isRequired,
   getProject: PropTypes.func.isRequired,
+  getCustomers: PropTypes.func.isRequired,
   editOrAdd: PropTypes.string.isRequired,
-  projects: PropTypes.object.isRequired
+  projects: PropTypes.object.isRequired,
+  customers: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   projects: state.project,
+  customers: state.customer,
   errors: state.errors
 });
 
 export default connect(
   mapStateToProps,
-  { addProject, updateProject, getProject }
+  { addProject, updateProject, getProject, getCustomers }
 )(withRouter(AddProject));
