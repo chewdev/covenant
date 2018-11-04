@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const userRoles = require("./../config/config").userRoles;
 
 // Create Schema
 const UserSchema = new Schema({
@@ -14,6 +15,10 @@ const UserSchema = new Schema({
   password: {
     type: String,
     required: true
+  },
+  role: {
+    type: Number,
+    default: userRoles.user
   },
   date: {
     type: Date,
