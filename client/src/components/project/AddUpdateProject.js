@@ -303,7 +303,7 @@ class AddProject extends Component {
                 className="list-group"
                 style={{
                   position: "absolute",
-                  top: "100%",
+                  top: "calc(2.875rem + 2px)",
                   zIndex: "100",
                   display: "block",
                   width: "100%"
