@@ -34,18 +34,16 @@ class Header extends Component {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav ml-auto">
             <li className="nav-item dropdown">
-              <Link
-                className="nav-link dropdown-toggle"
-                to="#"
-                id="navbarDropdown"
-                role="button"
+              <button
+                className="nav-link dropdown-toggle btn btn-link btn-lg"
+                id="navbarDropdown1"
                 data-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false"
               >
                 Add New
-              </Link>
-              <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+              </button>
+              <div className="dropdown-menu" aria-labelledby="navbarDropdown1">
                 <Link className="dropdown-item" to="/projects/new">
                   Project
                 </Link>
@@ -61,18 +59,16 @@ class Header extends Component {
               </div>
             </li>
             <li className="nav-item dropdown">
-              <Link
-                className="nav-link dropdown-toggle"
-                to="#"
-                id="navbarDropdown"
-                role="button"
+              <button
+                className="nav-link dropdown-toggle btn btn-link btn-lg"
+                id="navbarDropdown2"
                 data-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false"
               >
                 View
-              </Link>
-              <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+              </button>
+              <div className="dropdown-menu" aria-labelledby="navbarDropdown2">
                 <Link className="dropdown-item" to="/projects">
                   Projects
                 </Link>
@@ -88,20 +84,42 @@ class Header extends Component {
               </div>
             </li>
 
-            <li className="nav-item">
-              {isAuthenticated && user.exp > Date.now() / 1000 ? (
+            {isAuthenticated && user.exp > Date.now() / 1000 ? (
+              <li className="nav-item dropdown">
                 <button
-                  className="nav-link btn btn-lg btn-link"
-                  onClick={this.onLogoutClick.bind(this)}
+                  className="nav-link dropdown-toggle btn btn-link btn-lg"
+                  id="navbarDropdown3"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
                 >
-                  Logout
+                  Hello, {user.name.split(" ")[0]}
                 </button>
-              ) : (
+                <div
+                  className="dropdown-menu"
+                  aria-labelledby="navbarDropdown3"
+                >
+                  {user.role &&
+                    user.role === 4 && (
+                      <Link className="dropdown-item" to="/register">
+                        Add User
+                      </Link>
+                    )}
+                  <button
+                    className="dropdown-item"
+                    onClick={this.onLogoutClick.bind(this)}
+                  >
+                    Logout
+                  </button>
+                </div>
+              </li>
+            ) : (
+              <li className="nav-item">
                 <Link className="nav-link btn btn-lg btn-link" to={"/"}>
                   Login
                 </Link>
-              )}
-            </li>
+              </li>
+            )}
           </ul>
         </div>
       </nav>
