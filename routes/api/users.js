@@ -4,6 +4,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
 const passport = require("passport");
+const allowOnly = require("./../../services/routesHelper").allowOnly;
+const accessLevels = require("./../../config/config").accessLevels;
 
 // Load Input Validation
 const validateRegisterInput = require("../../validation/register");
@@ -22,39 +24,47 @@ router.get("/test", (req, res) => {
 // @route GET api/users/register
 // @desc Register user
 // @access Public route
-router.post("/register", (req, res) => {
-  const { errors, isValid } = validateRegisterInput(req.body);
+router.post(
+  "/register",
+  passport.authenticate("jwt", { session: false }),
+  allowOnly(accessLevels.admin, (req, res) => {
+    const { errors, isValid } = validateRegisterInput(req.body);
 
-  // Check Validation
-  if (!isValid) {
-    return res.status(400).json(errors);
-  }
-
-  User.findOne({ email: req.body.email }).then(user => {
-    if (user) {
-      return res.status(400).json({ error: "register error" });
-    } else {
-      const newUser = new User({
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password
-      });
-
-      bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(newUser.password, salt, (err, hash) => {
-          if (err) {
-            throw err;
-          }
-          newUser.password = hash;
-          newUser
-            .save()
-            .then(user => res.json(user))
-            .catch(err => console.log(err));
-        });
-      });
+    // Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
     }
-  });
-});
+
+    User.findOne({ email: req.body.email }).then(user => {
+      if (user) {
+        return res.status(400).json({ error: "register error" });
+      } else {
+        const newUser = new User({
+          name: req.body.name,
+          email: req.body.email,
+          password: req.body.password
+        });
+
+        if (req.body.role) {
+          newUser.role = req.body.role;
+        }
+
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(newUser.password, salt, (err, hash) => {
+            if (err) {
+              throw err;
+            }
+            newUser.password = hash;
+            newUser
+              .save()
+              .then(user => res.json(user))
+              .catch(err => console.log(err));
+          });
+        });
+      }
+    });
+  })
+);
 
 // @route GET api/users/login
 // @desc Login User / Return JWT Token
@@ -86,7 +96,8 @@ router.post("/login", (req, res) => {
         // Create JWT payload
         const payload = {
           id: user.id,
-          name: user.name
+          name: user.name,
+          role: user.role
         };
 
         // Sign Token
