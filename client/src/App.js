@@ -24,6 +24,7 @@ import AddEmployee from "./components/employee/AddUpdateEmployee";
 import Schedule from "./components/schedule/Schedule";
 import Schedules from "./components/schedule/Schedules";
 import AddSchedule from "./components/schedule/AddUpdateSchedule";
+import Register from "./components/auth/Register";
 
 // import "./App.css";
 
@@ -58,6 +59,12 @@ class App extends Component {
             <Route exact path="/" component={Login} />
             <div className="App-header">
               <Switch>
+                <PrivateRoute
+                  exact
+                  path="/register"
+                  component={Register}
+                  adminRoute={true}
+                />
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
                 <PrivateRoute
                   exact
