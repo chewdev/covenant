@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
+// const allowOnly = require("./../../services/routesHelper").allowOnly;
+// const accessLevels = require("./../../config/config").accessLevels;
 
 // Load Customer input validation
 const validateCustomerInput = require("../../validation/customer");
@@ -109,16 +111,40 @@ router.put(
             return res.status(400).json(errors);
           }
 
-          customer.company = req.body.company;
-          customer.contactnames = req.body.contactnames;
-          customer.email = req.body.email;
-          customer.address = req.body.address;
-          customer.phonenumber = req.body.phonenumber;
+          if (customer.company !== req.body.company) {
+            Customer.findOne({ company: req.body.company })
+              .then(customerExists => {
+                if (customerExists) {
+                  res.status(400).json({
+                    company:
+                      "Unable to change company name. Requested company name already exists."
+                  });
+                } else {
+                  customer.company = req.body.company;
+                  customer.contactnames = req.body.contactnames;
+                  customer.email = req.body.email;
+                  customer.address = req.body.address;
+                  customer.phonenumber = req.body.phonenumber;
 
-          customer
-            .save()
-            .then(customer => res.json(customer))
-            .catch(err => console.log(err));
+                  customer
+                    .save()
+                    .then(customer => res.json(customer))
+                    .catch(err => console.log(err));
+                }
+              })
+              .catch(err => res.status(404).json({ error: "Database Error" }));
+          } else {
+            customer.company = req.body.company;
+            customer.contactnames = req.body.contactnames;
+            customer.email = req.body.email;
+            customer.address = req.body.address;
+            customer.phonenumber = req.body.phonenumber;
+
+            customer
+              .save()
+              .then(customer => res.json(customer))
+              .catch(err => console.log(err));
+          }
         }
       })
       .catch(err =>
@@ -133,6 +159,7 @@ router.put(
 router.delete(
   "/:cust_id",
   passport.authenticate("jwt", { session: false }),
+  // allowOnly(accessLevels.admin,
   (req, res) => {
     Customer.findByIdAndRemove(req.params.cust_id)
       .then(customer => {
@@ -153,7 +180,7 @@ router.delete(
       .catch(err =>
         res.status(404).json({ cutsomernotfound: "Error finding customer." })
       );
-  }
+  } /*)*/
 );
 
 module.exports = router;
