@@ -3,7 +3,8 @@ import {
   GET_PROJECTS,
   GET_PROJECT,
   PROJECT_LOADING,
-  DELETE_PROJECT
+  DELETE_PROJECT,
+  UPDATE_PROJECTS
 } from "../actions/types";
 
 const initialState = {
@@ -35,6 +36,17 @@ export default function(state = initialState, action) {
       return {
         ...state,
         projects: [action.payload, ...state.projects]
+      };
+    case UPDATE_PROJECTS:
+      return {
+        ...state,
+        projects: state.projects.map(project => {
+          if (project._id === action.payload._id) {
+            return action.payload;
+          } else {
+            return project;
+          }
+        })
       };
     case DELETE_PROJECT:
       return {
