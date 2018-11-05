@@ -6,7 +6,8 @@ import {
   GET_PROJECT,
   PROJECT_LOADING,
   DELETE_PROJECT,
-  CLEAR_ERRORS
+  CLEAR_ERRORS,
+  UPDATE_PROJECTS
 } from "./types";
 
 // Add Project
@@ -30,7 +31,7 @@ export const addProject = (projectData, history) => dispatch => {
     );
 };
 
-// Update Customer
+// Update Project
 export const updateProject = (projectData, history) => dispatch => {
   dispatch(clearErrors());
 
@@ -45,11 +46,35 @@ export const updateProject = (projectData, history) => dispatch => {
     );
 };
 
-// Get Projects
-export const getProjects = () => dispatch => {
-  dispatch(setProjectLoading(true));
+// Set project currentstatus to 'Completed'
+export const setProjectCompleted = id => dispatch => {
   axios
-    .get("/api/projects")
+    .put(`/api/projects/${id}/complete`)
+    .then(res =>
+      dispatch({
+        type: UPDATE_PROJECTS,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Get Projects
+export const getProjects = (getCompleted = "all") => dispatch => {
+  dispatch(setProjectLoading(true));
+  let queryStr = "";
+  if (getCompleted === "complete") {
+    queryStr = "/?completed=1";
+  } else if (getCompleted === "notcomplete") {
+    queryStr = "/?completed=0";
+  }
+  axios
+    .get(`/api/projects${queryStr}`)
     .then(res =>
       dispatch({
         type: GET_PROJECTS,
