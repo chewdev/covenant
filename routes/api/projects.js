@@ -219,6 +219,7 @@ router.put(
       .then(project => {
         if (project) {
           project.currentstatus = "Completed";
+          project.date = new Date();
           project
             .save()
             .then(project => res.json(project))
@@ -362,6 +363,7 @@ router.put(
               project.customer = customer._id;
               project.projectlocation = projectlocation._id;
               project.projectname = req.body.projectname;
+              project.date = new Date();
 
               if (req.body.customerponumber) {
                 project.customerponumber = req.body.customerponumber;
