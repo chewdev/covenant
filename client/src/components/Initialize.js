@@ -17,7 +17,7 @@ class Initialize extends Component {
       this.props.getSchedules();
     }
     if (this.props.projects.projects.length === 0) {
-      this.props.getProjects();
+      this.props.getProjects("notcomplete");
     }
   }
   render() {
