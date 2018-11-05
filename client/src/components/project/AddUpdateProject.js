@@ -237,7 +237,9 @@ class AddProject extends Component {
         ? customers.customers
             .filter(
               customer =>
-                customer.company.indexOf(this.state.customer) !== -1 &&
+                customer.company
+                  .toLowerCase()
+                  .indexOf(this.state.customer.toLowerCase()) !== -1 &&
                 customer.company !== this.state.customer
             )
             .map(customer => (
