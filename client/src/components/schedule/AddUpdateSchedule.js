@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
-import TextFieldGroup from "../common/TextFieldGroup";
+import classnames from "classnames";
 import SelectListGroup from "../common/SelectListGroup";
 import Spinner from "../common/Spinner";
 import {
@@ -17,7 +17,7 @@ class AddSchedule extends Component {
     this.state = {
       project: "",
       employees: [],
-      date: "",
+      date: new Date().toISOString().slice(0, 16),
       errors: {},
       isLoading: true,
       dateError: false
@@ -54,7 +54,10 @@ class AddSchedule extends Component {
         }
         if (this.props.schedules.schedule.date) {
           date = new Date(this.props.schedules.schedule.date);
-          date = date.toLocaleString();
+          date = new Date(
+            date - date.getTimezoneOffset() * 60 * 1000
+          ).toISOString();
+          date = date.slice(0, date.length - 2);
         }
       }
 
@@ -172,14 +175,35 @@ class AddSchedule extends Component {
               options={employeeOptions}
               info="Select employees to add to schedule"
             />
-            <TextFieldGroup
-              placeholder="* Schedule Date And Time"
-              name="date"
-              value={this.state.date}
-              onChange={this.onChange}
-              error={this.state.dateError ? "Invalid date input" : errors.date}
-              info="Add date and time of scheduled appointment in the format (MM/DD/YYYY hh:mm:ss AM) - i.e. 11/22/18 02:00:00 PM"
-            />
+
+            <div className="form-group">
+              <input
+                type="datetime-local"
+                className={classnames("form-control form-control-lg", {
+                  "is-invalid": errors.date || this.state.dateError
+                })}
+                name="date"
+                value={this.state.date}
+                onChange={this.onChange}
+                id="date"
+                min="2017-01-01T00:00"
+                max="2020-12-31T23:59"
+                style={{
+                  boxShadow: "none",
+                  WebkitAppearance: "searchfield"
+                }}
+              />
+              <small className="form-text text-muted">
+                Date and time formatted as (MM/DD/YYYY hh:mm:ss AM) - i.e.
+                11/22/18 02:00:00 PM
+              </small>
+              {(errors.date && (
+                <div className="invalid-feedback">{errors.date}</div>
+              )) ||
+                (this.state.dateError && (
+                  <div className="invalid-feedback">Input date is invalid</div>
+                ))}
+            </div>
             <input
               type="submit"
               value="Submit"
