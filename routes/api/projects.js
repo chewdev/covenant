@@ -26,7 +26,16 @@ router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Project.find()
+    let dbQuery = null;
+    if (req.query && req.query.completed) {
+      if (req.query.completed === "1") {
+        dbQuery = { currentstatus: "Completed" };
+      } else {
+        dbQuery = { currentstatus: { $ne: "Completed" } };
+      }
+    }
+
+    Project.find(dbQuery)
       .populate("projectlocation")
       .populate("customer")
       .sort({ date: -1 })
@@ -95,43 +104,54 @@ router.post(
             "Customer not found. Check customer name and add customer if it does not exist."
         });
       } else {
-        ProjectLocation.findOne({
-          address: req.body.projectlocation.address
-        }).then(projectlocation => {
-          if (!projectlocation) {
-            const projectLocData = req.body.projectlocation;
-            const { errors, isValid } = validateProjectLocationInput(
-              projectLocData
-            );
+        Project.find({ projectname: { $eq: req.body.projectname } }).then(
+          projects => {
+            if (projects && projects.length > 0) {
+              res.status(404).json({
+                projectname: "This project name has already been used."
+              });
+            } else {
+              ProjectLocation.findOne({
+                address: req.body.projectlocation.address
+              }).then(projectlocation => {
+                if (!projectlocation) {
+                  const projectLocData = req.body.projectlocation;
+                  const { errors, isValid } = validateProjectLocationInput(
+                    projectLocData
+                  );
 
-            if (!isValid) {
-              return res.status(400).json(errors);
-            }
+                  if (!isValid) {
+                    return res.status(400).json(errors);
+                  }
 
-            const newProjectLocation = new ProjectLocation({
-              address: req.body.projectlocation.address
-            });
+                  const newProjectLocation = new ProjectLocation({
+                    address: req.body.projectlocation.address
+                  });
 
-            if (projectLocData.locationname) {
-              newProjectLocation.locationname = projectLocData.locationname;
-            }
-            if (projectLocData.phonenumber) {
-              newProjectLocation.phonenumber = projectLocData.phonenumber;
-            }
-            if (projectLocData.contactname) {
-              newProjectLocation.contactname = projectLocData.contactname;
-            }
+                  if (projectLocData.locationname) {
+                    newProjectLocation.locationname =
+                      projectLocData.locationname;
+                  }
+                  if (projectLocData.phonenumber) {
+                    newProjectLocation.phonenumber = projectLocData.phonenumber;
+                  }
+                  if (projectLocData.contactname) {
+                    newProjectLocation.contactname = projectLocData.contactname;
+                  }
 
-            newProjectLocation
-              .save()
-              .then(projectlocation => {
-                createNewProject(projectlocation);
-              })
-              .catch(err => console.log(err));
-          } else {
-            createNewProject(projectlocation);
+                  newProjectLocation
+                    .save()
+                    .then(projectlocation => {
+                      createNewProject(projectlocation);
+                    })
+                    .catch(err => console.log(err));
+                } else {
+                  createNewProject(projectlocation);
+                }
+              });
+            }
           }
-        });
+        );
 
         function createNewProject(projectlocation) {
           const newProject = new Project({
@@ -186,6 +206,33 @@ router.post(
   }
 );
 
+// @route PUT api/projects/:proj_id/complete
+// @desc Update project status to complete
+// @access Private route
+router.put(
+  "/:proj_id/complete",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Project.findById(req.params.proj_id)
+      .populate("projectlocation")
+      .populate("customer")
+      .then(project => {
+        if (project) {
+          project.currentstatus = "Completed";
+          project
+            .save()
+            .then(project => res.json(project))
+            .catch(err =>
+              res.status(404).json({ error: "Error finding project" })
+            );
+        } else {
+          return res.status(400).json({ error: "Project not found" });
+        }
+      })
+      .catch(err => res.status(404).json({ error: "Error finding project" }));
+  }
+);
+
 // @route PUT api/projects/:proj_id
 // @desc Update project
 // @access Private route
@@ -213,45 +260,103 @@ router.put(
                 "This customer does not exist. Please add this customer before creating or updating a project for this customer."
             });
           } else {
-            ProjectLocation.findOne({
-              address: req.body.projectlocation.address
-            }).then(projectlocation => {
-              if (!projectlocation) {
-                const projectLocData = req.body.projectlocation;
-                const { errors, isValid } = validateProjectLocationInput(
-                  projectLocData
-                );
+            if (project.projectname !== req.body.projectname) {
+              Project.find({ projectname: req.body.projectname }).then(
+                projectWithName => {
+                  if (projectWithName && projectWithName.length > 0) {
+                    res.status(400).json({
+                      projectname:
+                        "Unable to change project name to another name that already exists."
+                    });
+                  } else {
+                    ProjectLocation.findOne({
+                      address: req.body.projectlocation.address
+                    }).then(projectlocation => {
+                      if (!projectlocation) {
+                        const projectLocData = req.body.projectlocation;
+                        const {
+                          errors,
+                          isValid
+                        } = validateProjectLocationInput(projectLocData);
 
-                if (!isValid) {
-                  return res.status(400).json(errors);
-                }
+                        if (!isValid) {
+                          return res.status(400).json(errors);
+                        }
 
-                const newProjectLocation = new ProjectLocation({
-                  address: req.body.projectlocation.address
-                });
+                        const newProjectLocation = new ProjectLocation({
+                          address: req.body.projectlocation.address
+                        });
 
-                if (projectLocData.locationname) {
-                  newProjectLocation.locationname = projectLocData.locationname;
-                }
-                if (projectLocData.phonenumber) {
-                  newProjectLocation.phonenumber = projectLocData.phonenumber;
-                }
-                if (projectLocData.contactname) {
-                  newProjectLocation.contactname = projectLocData.contactname;
-                }
+                        if (projectLocData.locationname) {
+                          newProjectLocation.locationname =
+                            projectLocData.locationname;
+                        }
+                        if (projectLocData.phonenumber) {
+                          newProjectLocation.phonenumber =
+                            projectLocData.phonenumber;
+                        }
+                        if (projectLocData.contactname) {
+                          newProjectLocation.contactname =
+                            projectLocData.contactname;
+                        }
 
-                newProjectLocation
-                  .save()
-                  .then(projectlocation => {
-                    updateProject(projectlocation, project);
-                    // return res.json(project || { error: "no project" });
-                  })
-                  .catch(err => console.log(err));
-              } else {
-                // return res.json(project || { error: "no project" });
-                updateProject(projectlocation, project);
-              }
-            });
+                        newProjectLocation
+                          .save()
+                          .then(projectlocation => {
+                            updateProject(projectlocation, project);
+                            // return res.json(project || { error: "no project" });
+                          })
+                          .catch(err => console.log(err));
+                      } else {
+                        // return res.json(project || { error: "no project" });
+                        updateProject(projectlocation, project);
+                      }
+                    });
+                  }
+                }
+              );
+            } else {
+              ProjectLocation.findOne({
+                address: req.body.projectlocation.address
+              }).then(projectlocation => {
+                if (!projectlocation) {
+                  const projectLocData = req.body.projectlocation;
+                  const { errors, isValid } = validateProjectLocationInput(
+                    projectLocData
+                  );
+
+                  if (!isValid) {
+                    return res.status(400).json(errors);
+                  }
+
+                  const newProjectLocation = new ProjectLocation({
+                    address: req.body.projectlocation.address
+                  });
+
+                  if (projectLocData.locationname) {
+                    newProjectLocation.locationname =
+                      projectLocData.locationname;
+                  }
+                  if (projectLocData.phonenumber) {
+                    newProjectLocation.phonenumber = projectLocData.phonenumber;
+                  }
+                  if (projectLocData.contactname) {
+                    newProjectLocation.contactname = projectLocData.contactname;
+                  }
+
+                  newProjectLocation
+                    .save()
+                    .then(projectlocation => {
+                      updateProject(projectlocation, project);
+                      // return res.json(project || { error: "no project" });
+                    })
+                    .catch(err => console.log(err));
+                } else {
+                  // return res.json(project || { error: "no project" });
+                  updateProject(projectlocation, project);
+                }
+              });
+            }
 
             function updateProject(projectlocation, project) {
               project.customer = customer._id;
