@@ -42,18 +42,22 @@ class Employee extends Component {
       !this.props.employees.loading &&
       this.props.employees.employee !== null
     ) {
-      scheduleContent = this.props.employees.employee.schedule.map(
-        scheduleItem => (
-          <li key={scheduleItem._id} className="list-group-item">
-            <Link to={`/schedule/${scheduleItem._id}`}>
-              {scheduleItem.project.projectname}
-            </Link>{" "}
-            <span className="float-right">
-              {new Date(scheduleItem.date).toDateString()}
-            </span>
-          </li>
+      scheduleContent = this.props.employees.employee.schedule
+        .map(
+          scheduleItem =>
+            scheduleItem.project.currentstatus === "Completed" ||
+            new Date(scheduleItem.date) < new Date() ? null : (
+              <li key={scheduleItem._id} className="list-group-item">
+                <Link to={`/schedule/${scheduleItem._id}`}>
+                  {scheduleItem.project.projectname}
+                </Link>{" "}
+                <span className="float-right">
+                  {new Date(scheduleItem.date).toLocaleString()}
+                </span>
+              </li>
+            )
         )
-      );
+        .filter(item => item !== null);
       scheduleContent =
         scheduleContent.length > 0 ? (
           scheduleContent
