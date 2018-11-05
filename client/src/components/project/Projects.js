@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
 import TextFieldGroup from "../common/TextFieldGroup";
 import SelectListGroup from "../common/SelectListGroup";
-import { getProjects } from "../../actions/projectActions";
+import { getProjects, setProjectCompleted } from "../../actions/projectActions";
 
 function treatAsUTC(date) {
   var result = new Date(date);
@@ -37,6 +37,20 @@ const priorityMap = {
   "Invoiced- Awaiting Payment": 9,
   Completed: 10
 };
+const searchOptions = [
+  {
+    label: "Project Name",
+    value: "projectname"
+  },
+  {
+    label: "Customer Name",
+    value: "customer"
+  },
+  {
+    label: "Current Status",
+    value: "currentstatus"
+  }
+];
 
 const sortOptions = [
   {
@@ -53,6 +67,21 @@ const sortOptions = [
   }
 ];
 
+const showCompletedOptions = [
+  {
+    label: "Not Completed",
+    value: "notcomplete"
+  },
+  {
+    label: "Completed",
+    value: "complete"
+  },
+  {
+    label: "All",
+    value: "all"
+  }
+];
+
 class Projects extends Component {
   constructor(props) {
     super(props);
@@ -60,13 +89,20 @@ class Projects extends Component {
     this.state = {
       search: "",
       searchby: "projectname",
-      sortby: ""
+      sortby: "",
+      showCompleted: "notcomplete"
     };
 
     this.onChange = this.onChange.bind(this);
   }
   componentDidMount() {
-    this.props.getProjects();
+    this.props.getProjects(this.state.showCompleted);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.showCompleted !== this.state.showCompleted) {
+      this.props.getProjects(this.state.showCompleted);
+    }
   }
 
   onChange(e) {
@@ -76,20 +112,6 @@ class Projects extends Component {
   render() {
     const { projects, loading } = this.props.projects;
     let projectContent;
-    const searchOptions = [
-      {
-        label: "Project Name",
-        value: "projectname"
-      },
-      {
-        label: "Customer Name",
-        value: "customer"
-      },
-      {
-        label: "Current Status",
-        value: "currentstatus"
-      }
-    ];
 
     if (projects === null || loading) {
       projectContent = (
@@ -156,7 +178,20 @@ class Projects extends Component {
               {project.customer.company}
             </Link>
           </td>
-          <td>{project.currentstatus}</td>
+          <td>
+            {project.currentstatus !== "Completed" ? (
+              <button
+                className="btn btn-link btn-lg pl-0"
+                onClick={() => {
+                  this.props.setProjectCompleted(project._id);
+                }}
+              >
+                {project.currentstatus}
+              </button>
+            ) : (
+              project.currentstatus
+            )}
+          </td>
           <td>{timeBetween(project.date, Date.now())}</td>
         </tr>
       ));
@@ -205,7 +240,17 @@ class Projects extends Component {
                   <tr>
                     <th>Projects</th>
                     <th />
-                    <th />
+                    <th>
+                      <SelectListGroup
+                        name="showCompleted"
+                        value={this.state.showCompleted}
+                        onChange={this.onChange}
+                        error={null}
+                        options={showCompletedOptions}
+                        info=""
+                        style={{ marginBottom: "0" }}
+                      />
+                    </th>
                     <th>
                       <Link
                         className="btn btn-primary btn-lg btn-block"
@@ -220,7 +265,10 @@ class Projects extends Component {
                   <tr>
                     <th>Project Name</th>
                     <th>Customer</th>
-                    <th>Current Status</th>
+                    <th>
+                      Current Status <br />
+                      (Click To Complete)
+                    </th>
                     <th>Last Updated</th>
                   </tr>
                 </thead>
@@ -236,6 +284,7 @@ class Projects extends Component {
 
 Projects.propTypes = {
   getProjects: PropTypes.func.isRequired,
+  setProjectCompleted: PropTypes.func.isRequired,
   projects: PropTypes.object.isRequired
 };
 
@@ -245,5 +294,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getProjects }
+  { getProjects, setProjectCompleted }
 )(Projects);
