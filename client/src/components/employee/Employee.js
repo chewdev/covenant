@@ -94,7 +94,13 @@ class Employee extends Component {
                 <div className="list-group-item">
                   <h3 className="card-text">
                     Phone Number:{" "}
-                    {employee.phonenumber || "No Phone Number Provided"}
+                    {employee.phonenumber ? (
+                      <a href={`tel:${employee.phonenumber}`}>
+                        {employee.phonenumber}
+                      </a>
+                    ) : (
+                      null || "No Phone Number Provided"
+                    )}
                   </h3>
                 </div>
 
