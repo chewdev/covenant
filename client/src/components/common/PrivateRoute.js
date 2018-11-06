@@ -13,6 +13,7 @@ const PrivateRoute = ({ component: Component, auth, adminRoute, ...rest }) => {
   return (
     <Route
       {...rest}
+      key={rest.path}
       render={props =>
         allowed &&
         auth.isAuthenticated === true &&
