@@ -14,10 +14,16 @@ import {
 class AddSchedule extends Component {
   constructor(props) {
     super(props);
+
+    let date = new Date();
+    date = new Date(date - date.getTimezoneOffset() * 60 * 1000)
+      .toISOString()
+      .slice(0, 16);
+
     this.state = {
       project: "",
       employees: [],
-      date: new Date().toISOString().slice(0, 16),
+      date: date,
       errors: {},
       isLoading: true,
       dateError: false
