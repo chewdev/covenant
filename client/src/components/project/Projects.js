@@ -109,6 +109,10 @@ class Projects extends Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  onCompleteProject(id) {
+    this.props.setProjectCompleted(id);
+  }
+
   render() {
     const { projects, loading } = this.props.projects;
     let projectContent;
@@ -183,7 +187,7 @@ class Projects extends Component {
               <button
                 className="btn btn-link btn-lg pl-0"
                 onClick={() => {
-                  this.props.setProjectCompleted(project._id);
+                  this.onCompleteProject(project._id);
                 }}
               >
                 {project.currentstatus}
