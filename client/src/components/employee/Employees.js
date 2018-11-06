@@ -82,7 +82,13 @@ class Employees extends Component {
             <td>
               <Link to={`/employees/${employee._id}`}>{employee.name}</Link>
             </td>
-            <td>{phonenumber || "Unavailable"}</td>
+            <td>
+              {phonenumber ? (
+                <a href={`tel:${phonenumber}`}>{phonenumber}</a>
+              ) : (
+                null || "Unavailable"
+              )}
+            </td>
             <td>{employee.title || "Unavailable"}</td>
             <td>
               <Link
