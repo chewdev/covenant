@@ -10,15 +10,21 @@ import {
   updateSchedule,
   getSchedule
 } from "../../actions/scheduleActions";
+import getLocalIsoDate from "../../utils/getLocalIsoDate";
+
+// const getLocalIsoDate = providedDate => {
+//   let date = providedDate ? new Date(providedDate) : new Date();
+//   date = new Date(date - date.getTimezoneOffset() * 60 * 1000)
+//     .toISOString()
+//     .slice(0, 16);
+//   return date;
+// };
 
 class AddSchedule extends Component {
   constructor(props) {
     super(props);
 
-    let date = new Date();
-    date = new Date(date - date.getTimezoneOffset() * 60 * 1000)
-      .toISOString()
-      .slice(0, 16);
+    let date = getLocalIsoDate();
 
     this.state = {
       project: "",
@@ -59,11 +65,7 @@ class AddSchedule extends Component {
           project = this.props.schedules.schedule.project._id;
         }
         if (this.props.schedules.schedule.date) {
-          date = new Date(this.props.schedules.schedule.date);
-          date = new Date(
-            date - date.getTimezoneOffset() * 60 * 1000
-          ).toISOString();
-          date = date.slice(0, date.length - 2);
+          date = getLocalIsoDate(this.props.schedules.schedule.date);
         }
       }
 
