@@ -12,14 +12,6 @@ import {
 } from "../../actions/scheduleActions";
 import getLocalIsoDate from "../../utils/getLocalIsoDate";
 
-// const getLocalIsoDate = providedDate => {
-//   let date = providedDate ? new Date(providedDate) : new Date();
-//   date = new Date(date - date.getTimezoneOffset() * 60 * 1000)
-//     .toISOString()
-//     .slice(0, 16);
-//   return date;
-// };
-
 class AddSchedule extends Component {
   constructor(props) {
     super(props);
@@ -128,10 +120,12 @@ class AddSchedule extends Component {
   render() {
     const { errors } = this.state;
     const projectOptions = this.props.projects
-      ? this.props.projects.projects.map(project => ({
-          label: project.projectname,
-          value: project._id
-        }))
+      ? this.props.projects.projects
+          .filter(project => project.currentstatus !== "Completed")
+          .map(project => ({
+            label: project.projectname,
+            value: project._id
+          }))
       : [];
     projectOptions.unshift({ label: "* Select Project To Schedule", value: 0 });
     const employeeOptions = this.props.employees
