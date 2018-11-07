@@ -26,9 +26,11 @@ html {
 
 body {
   color: #111;
+  background: #f0f1f3;
   font-family: "Lato", sans-serif;
   font-size: $font-size-small;
   line-height: 1.6;
+  min-height: 100vh;
 }
 
 button {
@@ -37,10 +39,6 @@ button {
 
 button:disabled {
   cursor: default;
-}
-
-small {
-  font-size: 60%;
 }
 
 .table thead th {
