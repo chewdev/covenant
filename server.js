@@ -42,10 +42,6 @@ app.use("/api/projectlocations", projectlocations);
 app.use("/api/employees", employees);
 app.use("/api/schedule", schedule);
 
-app.get("/", function(req, res) {
-  res.send("hello! This is a test page!");
-});
-
 // Serve static assets if in production
 if (process.env.NODE_ENV === "production") {
   // Set static folder
