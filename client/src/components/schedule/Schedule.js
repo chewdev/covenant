@@ -86,6 +86,9 @@ class Schedule extends Component {
 
           <button
             className="btn btn-secondary col-6 mt-2"
+            disabled={
+              schedule.project.currentstatus === "Completed" ? true : false
+            }
             onClick={this.onEditSchedule.bind(this)}
           >
             Edit
