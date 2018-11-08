@@ -427,6 +427,17 @@ router.delete(
             .then(schedules => null)
             .catch(err => console.log(err));
 
+          Project.find({ projectlocation: project.projectlocation })
+            .then(projects => {
+              console.log(projects);
+              if (projects.length === 0) {
+                ProjectLocation.findByIdAndRemove(project.projectlocation)
+                  .then(projectlocation => null)
+                  .catch(err => console.log(err));
+              }
+            })
+            .catch(err => console.log(err));
+
           res.json(project);
         } else {
           res
