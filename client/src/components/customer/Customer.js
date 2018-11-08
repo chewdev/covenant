@@ -66,16 +66,13 @@ class Customer extends Component {
 
     if (customer === null) {
       customerContent = (
-        <div className="alert alert-danger">Customer not found</div>
+        <div className="alert alert-danger mx-4">Customer not found</div>
       );
     } else if (isEmpty(customer) || loading) {
       customerContent = <Spinner />;
     } else {
       customerContent = (
-        <div className="container my-4">
-          <Link to="/customers" className="btn btn-lg btn-primary mb-4">
-            Back To All Customers
-          </Link>
+        <div className="container">
           <div className="card text-center border-dark">
             <div className="card-header bg-dark text-white">Customer</div>
             <div className="card-body p-0 pt-2">
@@ -152,6 +149,14 @@ class Customer extends Component {
 
     return (
       <div className="container">
+        <div className="row my-4">
+          <div className="col-md-2" />
+          <div className="ml-4">
+            <Link to="/customers" className="btn btn-lg btn-primary ml-4">
+              Back To All Customers
+            </Link>
+          </div>
+        </div>
         <div className="row">
           <div className="col-md-8 m-auto">{customerContent}</div>
         </div>
