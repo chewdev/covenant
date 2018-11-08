@@ -59,22 +59,28 @@ class AddProject extends Component {
 
   componentWillReceiveProps(props, state) {
     if (this.props.editOrAdd !== "add" && !props.projects.loading) {
-      this.setState({
-        ...this.props.projects.project,
-        customer: this.props.projects.project.customer
-          ? this.props.projects.project.customer.company
-          : "",
-        totalamount: this.props.projects.project.totalamount
-          ? this.props.projects.project.totalamount.toString()
-          : "",
-        paidamount: this.props.projects.project.paidamount
-          ? this.props.projects.project.paidamount.toString()
-          : "",
-        steps: this.props.projects.project.nextsteps
-          ? this.props.projects.project.nextsteps.length
-          : 0,
-        isLoading: false
-      });
+      if (props.projects.project !== null) {
+        this.setState({
+          ...this.props.projects.project,
+          customer: this.props.projects.project.customer
+            ? this.props.projects.project.customer.company
+            : "",
+          totalamount: this.props.projects.project.totalamount
+            ? this.props.projects.project.totalamount.toString()
+            : "",
+          paidamount: this.props.projects.project.paidamount
+            ? this.props.projects.project.paidamount.toString()
+            : "",
+          steps: this.props.projects.project.nextsteps
+            ? this.props.projects.project.nextsteps.length
+            : 0,
+          isLoading: false
+        });
+      } else {
+        this.setState({
+          isLoading: false
+        });
+      }
     }
 
     if (props.errors) {
