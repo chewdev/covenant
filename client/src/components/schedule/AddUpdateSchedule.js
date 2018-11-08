@@ -220,7 +220,7 @@ class AddSchedule extends Component {
       <div className="container">
         <div className="row my-4">
           <div className="col-md-2" />
-          {this.props.editOrAdd === "add" ||
+          {this.props.editOrAdd !== "edit" ||
           (this.props.editOrAdd !== "add" &&
             !this.props.isLoading &&
             this.props.schedules.schedule === null) ? (
