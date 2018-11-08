@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import SelectListGroup from "../common/SelectListGroup";
@@ -47,7 +47,7 @@ class AddSchedule extends Component {
       let employees = [];
       let project = "";
       let date = "";
-      if (this.props.schedules.schedule && this.props.schedules.schedule) {
+      if (this.props.schedules.schedule) {
         if (this.props.schedules.schedule.employees) {
           employees = this.props.schedules.schedule.employees.map(
             employee => employee._id
@@ -218,6 +218,24 @@ class AddSchedule extends Component {
 
     return (
       <div className="container">
+        <div className="row my-4">
+          <div className="col-md-2" />
+          {this.props.editOrAdd === "add" ||
+          (this.props.editOrAdd !== "add" &&
+            !this.props.isLoading &&
+            this.props.schedules.schedule === null) ? (
+            <Link to="/schedule" className="btn btn-lg btn-primary ml-4">
+              Back to Schedule
+            </Link>
+          ) : (
+            <Link
+              to={`/schedule/${this.props.match.params.id}`}
+              className="btn btn-lg btn-primary ml-4"
+            >
+              Back to Schedule Item
+            </Link>
+          )}
+        </div>
         <div className="row">
           <div className="col-md-8 m-auto">{formContent}</div>
         </div>
