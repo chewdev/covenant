@@ -71,16 +71,13 @@ class Employee extends Component {
 
     if (employee === null) {
       employeeContent = (
-        <div className="alert alert-danger">Employee not found</div>
+        <div className="alert alert-danger mx-4">Employee not found</div>
       );
     } else if (isEmpty(employee) || loading) {
       employeeContent = <Spinner />;
     } else {
       employeeContent = (
-        <div className="container my-4">
-          <Link to="/employees" className="btn btn-lg btn-primary mb-4">
-            Back to All Employees
-          </Link>
+        <div className="container">
           <div className="card text-center border-dark">
             <div className="card-header bg-dark text-white">Employee</div>
             <div className="card-body p-0 pt-2">
@@ -147,6 +144,14 @@ class Employee extends Component {
 
     return (
       <div className="container">
+        <div className="row my-4">
+          <div className="col-md-2" />
+          <div className="ml-4">
+            <Link to="/employees" className="btn btn-lg btn-primary ml-4">
+              Back to All Employees
+            </Link>
+          </div>
+        </div>
         <div className="row">
           <div className="col-md-8 m-auto">{employeeContent}</div>
         </div>
