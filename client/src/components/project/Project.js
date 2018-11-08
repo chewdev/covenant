@@ -41,12 +41,14 @@ class Project extends Component {
       projectContent = (
         <div className="container my-4">
           {backLink}
-          <Link
-            to={`/projects/${this.props.match.params.id}/schedule`}
-            className="btn btn-lg btn-secondary mb-4 float-right"
-          >
-            Schedule Project
-          </Link>
+          {project.currentstatus !== "Completed" ? (
+            <Link
+              to={`/projects/${this.props.match.params.id}/schedule`}
+              className="btn btn-lg btn-secondary mb-4 float-right"
+            >
+              Schedule Project
+            </Link>
+          ) : null}
           <div className="card text-center border-d">
             <div className="card-header bg-dark text-white">Project</div>
             <div className="card-body p-0 pt-2">
