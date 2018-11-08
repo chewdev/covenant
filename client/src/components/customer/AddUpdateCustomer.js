@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import TextFieldGroup from "../common/TextFieldGroup";
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
@@ -36,14 +36,18 @@ class AddCompany extends Component {
 
   componentWillReceiveProps(props, state) {
     if (this.props.editOrAdd !== "add" && !props.customers.loading) {
-      this.setState({
-        ...this.props.customers.customer,
-        contactnames:
-          (this.props.customers.customer.contactnames &&
-            this.props.customers.customer.contactnames.join(", ")) ||
-          "",
-        isLoading: false
-      });
+      if (props.customers.customer !== null) {
+        this.setState({
+          ...this.props.customers.customer,
+          contactnames:
+            (this.props.customers.customer.contactnames &&
+              this.props.customers.customer.contactnames.join(", ")) ||
+            "",
+          isLoading: false
+        });
+      } else {
+        this.setState({ isLoading: false });
+      }
     }
 
     if (props.errors) {
@@ -79,7 +83,8 @@ class AddCompany extends Component {
     const formContent =
       this.props.editOrAdd !== "add" && this.state.isLoading ? (
         <Spinner />
-      ) : this.props.customers.customer === null ? (
+      ) : this.props.editOrAdd !== "add" &&
+      this.props.customers.customer === null ? (
         <div className="alert alert-danger">Customer not found</div>
       ) : (
         <div>
@@ -142,6 +147,24 @@ class AddCompany extends Component {
 
     return (
       <div className="container">
+        <div className="row my-4">
+          <div className="col-md-2" />
+          {this.props.editOrAdd === "add" ||
+          (this.props.editOrAdd !== "add" &&
+            !this.props.isLoading &&
+            this.props.customers.customer === null) ? (
+            <Link to="/customers" className="btn btn-lg btn-primary ml-4">
+              Back to All Customers
+            </Link>
+          ) : (
+            <Link
+              to={`/customers/${this.props.match.params.id}`}
+              className="btn btn-lg btn-primary ml-4"
+            >
+              Back to Customer
+            </Link>
+          )}
+        </div>
         <div className="row">
           <div className="col-md-8 m-auto">{formContent}</div>
         </div>
