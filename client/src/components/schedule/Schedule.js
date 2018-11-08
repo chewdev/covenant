@@ -25,7 +25,7 @@ class Schedule extends Component {
 
     if (schedule === null) {
       scheduleContent = (
-        <div className="alert alert-danger">Schedule item not found</div>
+        <div className="alert alert-danger mx-4">Schedule item not found</div>
       );
     } else if (isEmpty(schedule) || loading) {
       scheduleContent = <Spinner />;
@@ -33,10 +33,7 @@ class Schedule extends Component {
       let date = new Date(schedule.date);
       date = date.toLocaleString();
       scheduleContent = (
-        <div className="container my-4">
-          <Link to="/schedule" className="btn btn-lg btn-primary mb-4">
-            Back To Schedule
-          </Link>
+        <div className="container">
           <div className="card text-center border-dark">
             <div className="card-header bg-dark text-white">Schedule</div>
             <div className="card-body p-0 pt-2">
@@ -105,6 +102,14 @@ class Schedule extends Component {
 
     return (
       <div className="container">
+        <div className="row">
+          <div className="col-md-2" />
+          <div className="ml-4">
+            <Link to="/schedule" className="btn btn-lg btn-primary ml-4 my-4">
+              Back To Schedule
+            </Link>
+          </div>
+        </div>
         <div className="row">
           <div className="col-md-8 m-auto">{scheduleContent}</div>
         </div>
