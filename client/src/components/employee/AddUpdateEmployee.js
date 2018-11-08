@@ -75,7 +75,8 @@ class AddEmployee extends Component {
     const formContent =
       this.props.editOrAdd !== "add" && this.state.isLoading ? (
         <Spinner />
-      ) : this.props.employees.employee === null ? (
+      ) : this.props.editOrAdd !== "add" &&
+      this.props.employees.employee === null ? (
         <div className="alert alert-danger">Employee not found</div>
       ) : (
         <div>
