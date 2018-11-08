@@ -10,6 +10,7 @@ import store from "./store";
 import PrivateRoute from "./components/common/PrivateRoute";
 
 import Header from "./components/Header";
+import NotFoundPage from "./components/NotFoundPage";
 import Dashboard from "./components/dashboard/Dashboard";
 import AddCompany from "./components/customer/AddUpdateCustomer";
 import Login from "./components/auth/Login";
@@ -56,9 +57,10 @@ class App extends Component {
         <Router>
           <div className="App">
             <Header />
-            <Route exact path="/" component={Login} />
+
             <div className="App-header">
               <Switch>
+                <Route exact path="/" component={Login} />
                 <PrivateRoute
                   exact
                   path="/register"
@@ -137,6 +139,7 @@ class App extends Component {
                   component={AddSchedule}
                 />
                 <PrivateRoute exact path="/schedule/:id" component={Schedule} />
+                <Route path="*" exact component={NotFoundPage} />
               </Switch>
             </div>
           </div>
