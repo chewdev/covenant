@@ -22,19 +22,25 @@ class Project extends Component {
   render() {
     const { project, loading } = this.props.projects;
     let projectContent;
+    const backLink = (
+      <Link className="btn btn-lg btn-primary mb-4" to="/projects">
+        Back to All Projects
+      </Link>
+    );
 
     if (project === null) {
       projectContent = (
-        <div className="alert alert-danger">Project not found</div>
+        <div className="my-4">
+          {backLink}
+          <div className="alert alert-danger">Project not found</div>
+        </div>
       );
     } else if (isEmpty(project) || loading) {
       projectContent = <Spinner />;
     } else {
       projectContent = (
         <div className="container my-4">
-          <Link to="/projects" className="btn btn-lg btn-primary mb-4">
-            Back To All Projects
-          </Link>
+          {backLink}
           <Link
             to={`/projects/${this.props.match.params.id}/schedule`}
             className="btn btn-lg btn-secondary mb-4 float-right"
