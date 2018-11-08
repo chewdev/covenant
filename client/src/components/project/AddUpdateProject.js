@@ -446,6 +446,24 @@ class AddProject extends Component {
 
     return (
       <div className="container">
+        <div className="row my-4">
+          <div className="col-md-2" />
+          {this.props.editOrAdd === "add" ||
+          (this.props.editOrAdd !== "add" &&
+            !this.props.isLoading &&
+            this.props.projects.project === null) ? (
+            <Link to="/projects" className="btn btn-lg btn-primary ml-4">
+              Back to All Projects
+            </Link>
+          ) : (
+            <Link
+              to={`/projects/${this.props.match.params.id}`}
+              className="btn btn-lg btn-primary ml-4"
+            >
+              Back to Project
+            </Link>
+          )}
+        </div>
         <div className="row">
           <div className="col-md-8 m-auto">{formContent}</div>
         </div>
