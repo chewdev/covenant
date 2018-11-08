@@ -150,7 +150,7 @@ class AddSchedule extends Component {
       (this.props.editOrAdd === "edit" && this.state.isLoading) ||
       (this.props.editOrAdd === "addToProject" && this.state.isLoading) ? (
         <Spinner />
-      ) : this.props.editOrAdd !== "add" &&
+      ) : this.props.editOrAdd === "edit" &&
       this.props.schedules.schedule === null ? (
         <div className="alert alert-danger">Schedule not found</div>
       ) : (
