@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import TextFieldGroup from "../common/TextFieldGroup";
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
@@ -136,6 +136,12 @@ class AddEmployee extends Component {
 
     return (
       <div className="container">
+        <div className="row my-4">
+          <div className="col-md-2" />
+          <Link to="/employees" className="btn btn-lg btn-primary ml-4">
+            Back to All Employees
+          </Link>
+        </div>
         <div className="row">
           <div className="col-md-8 m-auto">{formContent}</div>
         </div>
