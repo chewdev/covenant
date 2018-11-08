@@ -19,72 +19,80 @@ class Header extends Component {
         <Link className="navbar-brand" to="/dashboard">
           Covenant Doors
         </Link>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon" />
-        </button>
+        {isAuthenticated && user.exp > Date.now() / 1000 ? (
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon" />
+          </button>
+        ) : null}
 
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav ml-auto">
-            <li className="nav-item dropdown">
-              <button
-                className="nav-link dropdown-toggle btn btn-link btn-lg"
-                id="navbarDropdown1"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                Add New
-              </button>
-              <div className="dropdown-menu" aria-labelledby="navbarDropdown1">
-                <Link className="dropdown-item" to="/projects/new">
-                  Project
-                </Link>
-                <Link className="dropdown-item" to="/customers/new">
-                  Customer
-                </Link>
-                <Link className="dropdown-item" to="/employees/new">
-                  Employee
-                </Link>
-                <Link className="dropdown-item" to="/schedule/new">
-                  Schedule
-                </Link>
-              </div>
-            </li>
-            <li className="nav-item dropdown">
-              <button
-                className="nav-link dropdown-toggle btn btn-link btn-lg"
-                id="navbarDropdown2"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                View
-              </button>
-              <div className="dropdown-menu" aria-labelledby="navbarDropdown2">
-                <Link className="dropdown-item" to="/projects">
-                  Projects
-                </Link>
-                <Link className="dropdown-item" to="/customers">
-                  Customers
-                </Link>
-                <Link className="dropdown-item" to="/employees">
-                  Employees
-                </Link>
-                <Link className="dropdown-item" to="/schedule">
-                  Schedule
-                </Link>
-              </div>
-            </li>
+        {isAuthenticated && user.exp > Date.now() / 1000 ? (
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav ml-auto">
+              <li className="nav-item dropdown">
+                <button
+                  className="nav-link dropdown-toggle btn btn-link btn-lg"
+                  id="navbarDropdown1"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  Add New
+                </button>
+                <div
+                  className="dropdown-menu"
+                  aria-labelledby="navbarDropdown1"
+                >
+                  <Link className="dropdown-item" to="/projects/new">
+                    Project
+                  </Link>
+                  <Link className="dropdown-item" to="/customers/new">
+                    Customer
+                  </Link>
+                  <Link className="dropdown-item" to="/employees/new">
+                    Employee
+                  </Link>
+                  <Link className="dropdown-item" to="/schedule/new">
+                    Schedule
+                  </Link>
+                </div>
+              </li>
+              <li className="nav-item dropdown">
+                <button
+                  className="nav-link dropdown-toggle btn btn-link btn-lg"
+                  id="navbarDropdown2"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  View
+                </button>
+                <div
+                  className="dropdown-menu"
+                  aria-labelledby="navbarDropdown2"
+                >
+                  <Link className="dropdown-item" to="/projects">
+                    Projects
+                  </Link>
+                  <Link className="dropdown-item" to="/customers">
+                    Customers
+                  </Link>
+                  <Link className="dropdown-item" to="/employees">
+                    Employees
+                  </Link>
+                  <Link className="dropdown-item" to="/schedule">
+                    Schedule
+                  </Link>
+                </div>
+              </li>
 
-            {isAuthenticated && user.exp > Date.now() / 1000 ? (
               <li className="nav-item dropdown">
                 <button
                   className="nav-link dropdown-toggle btn btn-link btn-lg"
@@ -113,15 +121,16 @@ class Header extends Component {
                   </button>
                 </div>
               </li>
-            ) : (
-              <li className="nav-item">
-                <Link className="nav-link btn btn-lg btn-link" to={"/"}>
-                  Login
-                </Link>
-              </li>
-            )}
-          </ul>
-        </div>
+            </ul>
+          </div>
+        ) : (
+          <Link
+            className="nav-item ml-auto nav-link btn btn-lg btn-link"
+            to={"/"}
+          >
+            Login
+          </Link>
+        )}
       </nav>
     );
   }
