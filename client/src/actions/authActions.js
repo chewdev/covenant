@@ -2,7 +2,7 @@ import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 
-import { GET_ERRORS, SET_CURRENT_USER } from "./types";
+import { GET_ERRORS, SET_CURRENT_USER, CLEAR_ERRORS } from "./types";
 
 // Register User
 export const registerUser = (userData, history) => dispatch => {
@@ -56,4 +56,30 @@ export const logoutUser = () => dispatch => {
   setAuthToken(false);
   // Set current user to {} which will set isAuthenticated to false
   dispatch(setCurrentUser({}));
+};
+
+// Update user password
+export const updatePassword = (passwordData, resolve, reject) => dispatch => {
+  axios
+    .put("/api/users/password", passwordData)
+    .then(res => {
+      const { token } = res.data;
+      localStorage.setItem("jwtToken", token);
+      setAuthToken(token);
+      const decoded = jwt_decode(token);
+      dispatch(setCurrentUser(decoded));
+      dispatch(clearErrors());
+      resolve(true);
+    })
+    .catch(err => {
+      dispatch({ type: GET_ERRORS, payload: err.response.data });
+      reject(false);
+    });
+};
+
+// Clear errors
+export const clearErrors = () => {
+  return {
+    type: CLEAR_ERRORS
+  };
 };
