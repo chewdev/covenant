@@ -113,6 +113,9 @@ class Header extends Component {
                         Add User
                       </Link>
                     )}
+                  <Link className="dropdown-item" to="/user/current">
+                    Profile
+                  </Link>
                   <button
                     className="dropdown-item"
                     onClick={this.onLogoutClick.bind(this)}
