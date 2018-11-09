@@ -10,6 +10,7 @@ const accessLevels = require("./../../config/config").accessLevels;
 // Load Input Validation
 const validateRegisterInput = require("../../validation/register");
 const validateLoginInput = require("../../validation/login");
+const validatePasswordInput = require("../../validation/password");
 
 // Load User model
 const User = require("../../models/User");
@@ -21,7 +22,7 @@ router.get("/test", (req, res) => {
   res.json({ msg: "some user" });
 });
 
-// @route GET api/users/register
+// @route POST api/users/register
 // @desc Register user
 // @access Public route
 router.post(
@@ -66,7 +67,7 @@ router.post(
   })
 );
 
-// @route GET api/users/login
+// @route POST api/users/login
 // @desc Login User / Return JWT Token
 // @access Public route
 router.post("/login", (req, res) => {
@@ -97,7 +98,8 @@ router.post("/login", (req, res) => {
         const payload = {
           id: user.id,
           name: user.name,
-          role: user.role
+          role: user.role,
+          email: user.email
         };
 
         // Sign Token
@@ -119,6 +121,63 @@ router.post("/login", (req, res) => {
     });
   });
 });
+
+// @route PUT api/users/password
+// @desc Login User / Return JWT Token
+// @access Public route
+router.put(
+  "/password",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validatePasswordInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
+    const { user } = req;
+    const currentpassword = req.body.currentpassword;
+
+    bcrypt.compare(currentpassword, user.password).then(isMatch => {
+      if (isMatch) {
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(req.body.newpassword, salt, (err, hash) => {
+            if (err) {
+              throw err;
+            }
+            user.password = hash;
+            user
+              .save()
+              .then(user => {
+                const payload = {
+                  id: user.id,
+                  name: user.name,
+                  role: user.role,
+                  email: user.email
+                };
+                jwt.sign(
+                  payload,
+                  keys.secretOrKey,
+                  { expiresIn: 7200 },
+                  (err, token) => {
+                    res.json({
+                      success: true,
+                      token: "Bearer " + token
+                    });
+                  }
+                );
+              })
+              .catch(err => console.log(err));
+          });
+        });
+      } else {
+        errors.currentpassword = "Password incorrect";
+        return res.status(400).json(errors);
+      }
+    });
+  }
+);
 
 // @route GET api/users/current
 // @desc Return current user
