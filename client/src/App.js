@@ -26,6 +26,7 @@ import Schedule from "./components/schedule/Schedule";
 import Schedules from "./components/schedule/Schedules";
 import AddSchedule from "./components/schedule/AddUpdateSchedule";
 import Register from "./components/auth/Register";
+import User from "./components/user/User";
 
 // import "./App.css";
 
@@ -61,6 +62,7 @@ class App extends Component {
             <div className="App-header">
               <Switch>
                 <Route exact path="/" component={Login} />
+                <PrivateRoute exact path="/user/current" component={User} />
                 <PrivateRoute
                   exact
                   path="/register"
