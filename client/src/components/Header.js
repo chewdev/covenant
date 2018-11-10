@@ -40,34 +40,6 @@ class Header extends Component {
               <li className="nav-item dropdown">
                 <button
                   className="nav-link dropdown-toggle btn btn-link btn-lg"
-                  id="navbarDropdown1"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  Add New
-                </button>
-                <div
-                  className="dropdown-menu"
-                  aria-labelledby="navbarDropdown1"
-                >
-                  <Link className="dropdown-item" to="/projects/new">
-                    Project
-                  </Link>
-                  <Link className="dropdown-item" to="/customers/new">
-                    Customer
-                  </Link>
-                  <Link className="dropdown-item" to="/employees/new">
-                    Employee
-                  </Link>
-                  <Link className="dropdown-item" to="/schedule/new">
-                    Schedule
-                  </Link>
-                </div>
-              </li>
-              <li className="nav-item dropdown">
-                <button
-                  className="nav-link dropdown-toggle btn btn-link btn-lg"
                   id="navbarDropdown2"
                   data-toggle="dropdown"
                   aria-haspopup="true"
@@ -82,14 +54,48 @@ class Header extends Component {
                   <Link className="dropdown-item" to="/projects">
                     Projects
                   </Link>
+                  <Link className="dropdown-item" to="/schedule">
+                    Schedule
+                  </Link>
                   <Link className="dropdown-item" to="/customers">
                     Customers
                   </Link>
                   <Link className="dropdown-item" to="/employees">
                     Employees
                   </Link>
-                  <Link className="dropdown-item" to="/schedule">
+                  <Link className="dropdown-item" to="/projectlocations">
+                    Project Locations
+                  </Link>
+                </div>
+              </li>
+              <li className="nav-item dropdown">
+                <button
+                  className="nav-link dropdown-toggle btn btn-link btn-lg"
+                  id="navbarDropdown1"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  Add New
+                </button>
+                <div
+                  className="dropdown-menu"
+                  aria-labelledby="navbarDropdown1"
+                >
+                  <Link className="dropdown-item" to="/projects/new">
+                    Project
+                  </Link>
+                  <Link className="dropdown-item" to="/schedule/new">
                     Schedule
+                  </Link>
+                  <Link className="dropdown-item" to="/customers/new">
+                    Customer
+                  </Link>
+                  <Link className="dropdown-item" to="/employees/new">
+                    Employee
+                  </Link>
+                  <Link className="dropdown-item" to="/projectlocations/new">
+                    Project Location
                   </Link>
                 </div>
               </li>
