@@ -2,14 +2,18 @@ import {
   ADD_PROJECTLOCATION,
   GET_PROJECTLOCATIONS,
   GET_PROJECTLOCATION,
+  GET_PROJECTLOCATION_PROJECTS,
   PROJECTLOCATION_LOADING,
+  PROJECTLOCATIONPROJECTS_LOADING,
   DELETE_PROJECTLOCATION
 } from "../actions/types";
 
 const initialState = {
   projectlocations: [],
   projectlocation: {},
-  loading: false
+  projectlocationprojects: [],
+  loading: false,
+  projectsloading: false
 };
 
 export default function(state = initialState, action) {
@@ -18,6 +22,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         loading: true
+      };
+    case PROJECTLOCATIONPROJECTS_LOADING:
+      return {
+        ...state,
+        projectsloading: true
       };
     case GET_PROJECTLOCATIONS:
       return {
@@ -30,6 +39,12 @@ export default function(state = initialState, action) {
         ...state,
         projectlocation: action.payload,
         loading: false
+      };
+    case GET_PROJECTLOCATION_PROJECTS:
+      return {
+        ...state,
+        projectlocationprojects: action.payload,
+        projectsloading: false
       };
     case ADD_PROJECTLOCATION:
       return {
