@@ -19,6 +19,9 @@ import Customer from "./components/customer/Customer";
 import Projects from "./components/project/Projects";
 import Project from "./components/project/Project";
 import AddProject from "./components/project/AddUpdateProject";
+import ProjectLocations from "./components/projectlocation/ProjectLocations";
+import ProjectLocation from "./components/projectlocation/ProjectLocation";
+import AddProjectLocation from "./components/projectlocation/AddUpdateProjectLocation";
 import Employee from "./components/employee/Employee";
 import Employees from "./components/employee/Employees";
 import AddEmployee from "./components/employee/AddUpdateEmployee";
@@ -109,6 +112,28 @@ class App extends Component {
                   component={AddSchedule}
                 />
                 <PrivateRoute exact path="/projects/:id" component={Project} />
+                <PrivateRoute
+                  exact
+                  path="/projectlocations"
+                  component={ProjectLocations}
+                />
+                <PrivateRoute
+                  exact
+                  editOrAdd={"add"}
+                  path="/projectlocations/new"
+                  component={AddProjectLocation}
+                />
+                <PrivateRoute
+                  exact
+                  editOrAdd={"edit"}
+                  path="/projectlocations/:id/edit"
+                  component={AddProjectLocation}
+                />
+                <PrivateRoute
+                  exact
+                  path="/projectlocations/:id"
+                  component={ProjectLocation}
+                />
                 <PrivateRoute exact path="/employees" component={Employees} />
                 <PrivateRoute
                   exact
