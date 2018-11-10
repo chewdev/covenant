@@ -53,7 +53,7 @@ export default class Dashboard extends Component {
                         </Link>
                       </div>
                     </div>
-                    <div className="row">
+                    <div className="row mb-4">
                       <div className="col-6">
                         <h3 className="card-text">
                           <u>Customers</u>
@@ -83,6 +83,25 @@ export default class Dashboard extends Component {
                         </Link>
                         <Link
                           to="/employees"
+                          className="btn btn-secondary btn-block btn-lg"
+                        >
+                          View All
+                        </Link>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-md-6 m-auto">
+                        <h3 className="card-text">
+                          <u>Project Locations</u>
+                        </h3>
+                        <Link
+                          to="/projectlocations/new"
+                          className="btn btn-primary btn-block btn-lg"
+                        >
+                          New
+                        </Link>
+                        <Link
+                          to="/projectlocations"
                           className="btn btn-secondary btn-block btn-lg"
                         >
                           View All
