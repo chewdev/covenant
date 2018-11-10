@@ -1,8 +1,19 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import Profile from "../user/User";
+import PropTypes from "prop-types";
+import { logoutUser } from "../../actions/authActions";
 
-export default class Dashboard extends Component {
+class Dashboard extends Component {
+  onLogoutClick(e) {
+    e.preventDefault();
+    this.props.logoutUser();
+    this.props.history.push("/");
+  }
+
   render() {
+    const { isAuthenticated, user } = this.props.auth;
     return (
       <div className="container mt-4">
         <div className="row">
@@ -116,7 +127,44 @@ export default class Dashboard extends Component {
             </div>
           </div>
         </div>
+        <Profile />
+        <div
+          className="row"
+          style={{ display: "flex", justifyContent: "center" }}
+        >
+          {isAuthenticated &&
+          user.exp > Date.now() / 1000 &&
+          user.role === 4 ? (
+            <div className="col-4 px-2">
+              <Link to="/register" className="btn btn-primary btn-block mb-4 ">
+                Add User
+              </Link>
+            </div>
+          ) : null}
+          <div className="col-4">
+            <button
+              onClick={this.onLogoutClick.bind(this)}
+              className="btn btn-dark btn-block mb-4 mt-0 "
+            >
+              Logout
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
 }
+
+Dashboard.propTypes = {
+  logoutUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(
+  mapStateToProps,
+  { logoutUser }
+)(withRouter(Dashboard));
