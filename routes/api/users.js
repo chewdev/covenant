@@ -87,12 +87,42 @@ router.post("/login", (req, res) => {
     if (!user) {
       errors.email = "User not found";
       return res.status(404).json(errors);
+    } else if (user.isPermanentlyBlocked) {
+      errors.email =
+        "This user has been permanently blocked. If you believe this is an error, please contact the administrator.";
+      return res.status(400).json(errors);
+    } else if (user.isTemporarilyBlocked) {
+      const currDate = new Date();
+      const blockedUntil = new Date(user.isBlockedUntil);
+      const secondsUntilUnblocked = (blockedUntil - currDate) / 1000;
+      if (secondsUntilUnblocked > 0) {
+        const seconds = Math.floor(secondsUntilUnblocked % 60);
+        let minutes = 0;
+        if (secondsUntilUnblocked >= 60) {
+          minutes = Math.floor(secondsUntilUnblocked / 60);
+        }
+        errors.email = `Too many failed login attempts. User has been temporarily blocked. Please try again in ${minutes} minute${
+          minutes !== 1 ? "s" : ""
+        } and ${seconds} second${seconds !== 1 ? "s" : ""}`;
+        return res.status(400).json(errors);
+      } else {
+        user.isTemporarilyBlocked = false;
+        user.failedLoginAttempts = 0;
+        user.isBlockedUntil = null;
+      }
     }
 
     //Check Password
     bcrypt.compare(password, user.password).then(isMatch => {
       if (isMatch) {
         // User Matched
+        if (user.failedLoginAttempts > 0) {
+          user.failedLoginAttempts = 0;
+          user
+            .save()
+            .then(user => null)
+            .catch(err => console.log(err));
+        }
 
         // Create JWT payload
         const payload = {
@@ -115,7 +145,21 @@ router.post("/login", (req, res) => {
           }
         );
       } else {
+        user.failedLoginAttempts = user.failedLoginAttempts + 1;
+        if (user.failedLoginAttempts >= 10) {
+          user.isTemporarilyBlocked = true;
+          let blockedUntil = new Date();
+          blockedUntil = blockedUntil.setMinutes(blockedUntil.getMinutes() + 5);
+          blockedUntil = new Date(blockedUntil);
+          user.isBlockedUntil = blockedUntil;
+          errors.email =
+            "Too many failed login attempts. User has been temporarily blocked.";
+        }
         errors.password = "Password incorrect";
+        user
+          .save()
+          .then(user => null)
+          .catch(err => console.log(err));
         return res.status(400).json(errors);
       }
     });
