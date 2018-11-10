@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 
 const ProjectLocation = require("../../models/ProjectLocation");
+const Project = require("../../models/Project");
 
 const validateProjectLocationInput = require("../../validation/projectlocation");
 
@@ -14,7 +15,7 @@ router.get("/test", (req, res) => {
 });
 
 // @route GET api/projectslocations
-// @desc Get projects locations
+// @desc Get project locations
 // @access Private
 router.get(
   "/",
@@ -22,9 +23,100 @@ router.get(
   (req, res) => {
     ProjectLocation.find()
       .sort({ date: -1 })
-      .then(projects => res.json(projects))
+      .then(projectlocations => res.json(projectlocations))
       .catch(err =>
-        res.status(404).json({ noprojectsfound: "No projects found" })
+        res
+          .status(404)
+          .json({ noprojectlocationsfound: "No project locations found" })
+      );
+  }
+);
+
+// @route POST api/projectslocations
+// @desc Add project location
+// @access Private
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateProjectLocationInput(req.body);
+    if (!isValid) {
+      res.status(400).json(errors);
+    }
+    ProjectLocation.find({ address: req.body.address })
+      .then(projectlocation => {
+        if (projectlocation && projectlocation.length > 0) {
+          res.status(400).json({
+            errors: {
+              address: "This project location has already been added"
+            }
+          });
+        } else {
+          const newProjectLocation = new ProjectLocation({
+            address: req.body.address,
+            locationname: req.body.locationname,
+            contactname: req.body.contactname,
+            phonenumber: req.body.phonenumber
+          });
+
+          newProjectLocation
+            .save()
+            .then(projectlocation => res.json({ projectlocation }))
+            .catch(err =>
+              res.status(404).json({
+                errors: { projectlocation: "Error adding to database." }
+              })
+            );
+        }
+      })
+      .catch(err =>
+        res
+          .status(404)
+          .json({ noprojectlocationsfound: "No project locations found" })
+      );
+  }
+);
+
+// @route GET api/projectslocations/:projloc_id/projects
+// @desc Get projects by project location
+// @access Private
+router.get(
+  "/:projloc_id/projects",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    ProjectLocation.findById(req.params.projloc_id)
+      .then(projectlocation => {
+        if (!projectlocation) {
+          res
+            .status(404)
+            .json({ projectlocationerror: "Project location not found." });
+        } else {
+          Project.find({ projectlocation: projectlocation._id })
+            .then(projects => res.json(projects))
+            .catch(err =>
+              res.status(400).json({ projectserror: "Error finding projects" })
+            );
+        }
+      })
+      .catch(err =>
+        res.status(404).json({ projectserror: "Error finding projects" })
+      );
+  }
+);
+
+// @route GET api/projectslocations
+// @desc Get project locations
+// @access Private
+router.get(
+  "/:projloc_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    ProjectLocation.findById(req.params.projloc_id)
+      .then(projectlocation => res.json(projectlocation))
+      .catch(err =>
+        res
+          .status(404)
+          .json({ noprojectlocationsfound: "No project locations found" })
       );
   }
 );
@@ -37,7 +129,17 @@ router.delete(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     ProjectLocation.findByIdAndRemove(req.params.loc_id)
-      .then(projectlocation => res.json(projectlocation))
+      .then(projectlocation => {
+        if (projectlocation) {
+          Project.deleteMany({ projectlocation: projectlocation._id })
+            .then(projects => res.json(projectlocation))
+            .catch(err => console.log(err));
+        } else {
+          return res
+            .status(404)
+            .json({ projectlocationerror: "Project location not found" });
+        }
+      })
       .catch(err =>
         res.status(404).json({
           projectlocationnotfound: "This project location was not found"
@@ -67,24 +169,33 @@ router.put(
             return res.status(400).json(errors);
           }
 
-          projectlocation.address = req.body.address;
+          ProjectLocation.find({ address: req.body.address }).then(
+            projectlocations => {
+              if (projectlocations && projectlocations.length > 0) {
+                const alreadyExists = projectlocations.filter(
+                  projectlocation =>
+                    projectlocation._id.toString() !== req.body.id
+                );
+                if (alreadyExists.length > 0) {
+                  return res.status(400).json({
+                    address:
+                      "Unable to change to an address that already exists"
+                  });
+                }
+              }
+              projectlocation.address = req.body.address;
+              projectlocation.locationname = req.body.locationname;
+              projectlocation.phonenumber = req.body.phonenumber;
+              projectlocation.contactname = req.body.contactname;
 
-          if (req.body.locationname) {
-            projectlocation.locationname = req.body.locationname;
-          }
-          if (req.body.phonenumber) {
-            projectlocation.phonenumber = req.body.phonenumber;
-          }
-          if (req.body.contactname) {
-            projectlocation.contactname = req.body.contactname;
-          }
-
-          projectlocation
-            .save()
-            .then(projectlocation => {
-              res.json(projectlocation);
-            })
-            .catch(err => console.log(err));
+              projectlocation
+                .save()
+                .then(projectlocation => {
+                  res.json(projectlocation);
+                })
+                .catch(err => console.log(err));
+            }
+          );
         }
       })
       .catch(err => {
