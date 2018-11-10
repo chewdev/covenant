@@ -111,7 +111,7 @@ export const getProjectLocationProjects = (id, resolve) => dispatch => {
 };
 
 // Delete Project Location
-export const deleteProjectLocation = id => dispatch => {
+export const deleteProjectLocation = (id, history) => dispatch => {
   axios
     .delete(`/api/projectlocations/${id}`)
     .then(res =>
@@ -120,6 +120,7 @@ export const deleteProjectLocation = id => dispatch => {
         payload: id
       })
     )
+    .then(() => history.push("/projectlocations"))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
