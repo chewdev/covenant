@@ -20,6 +20,21 @@ const UserSchema = new Schema({
     type: Number,
     default: userRoles.user
   },
+  failedLoginAttempts: {
+    type: Number,
+    default: 0
+  },
+  isTemporarilyBlocked: {
+    type: Boolean,
+    default: false
+  },
+  isBlockedUntil: {
+    type: Date
+  },
+  isPermanentlyBlocked: {
+    type: Boolean,
+    default: false
+  },
   date: {
     type: Date,
     default: Date.now
