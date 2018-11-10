@@ -117,10 +117,12 @@ class ProjectLocation extends Component {
                   <h3 className="card-text">
                     <u>Address</u>
                   </h3>
-                  <p className="card-text">
-                    {<address>{projectlocation.address}</address> ||
-                      "No Address Provided"}
-                  </p>
+
+                  {(
+                    <address className="card-text">
+                      {projectlocation.address}
+                    </address>
+                  ) || <p className="card-text">"No Address Provided"</p>}
                 </div>
                 <div className="list-group-item">
                   <h3 className="card-text">
