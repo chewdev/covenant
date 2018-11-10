@@ -3,6 +3,7 @@ import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logoutUser } from "../actions/authActions";
+import HeaderLogo from "./HeaderLogo";
 
 class Header extends Component {
   onLogoutClick(e) {
@@ -17,7 +18,7 @@ class Header extends Component {
     return (
       <nav className="navbar navbar-expand-sm navbar-light bg-light">
         <Link className="navbar-brand" to="/dashboard">
-          Covenant Doors
+          <HeaderLogo style={{ height: "40px", width: "135px" }} />
         </Link>
         {isAuthenticated && user.exp > Date.now() / 1000 ? (
           <button
