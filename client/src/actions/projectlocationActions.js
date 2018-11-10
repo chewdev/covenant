@@ -4,13 +4,18 @@ import {
   GET_ERRORS,
   GET_PROJECTLOCATIONS,
   GET_PROJECTLOCATION,
+  GET_PROJECTLOCATION_PROJECTS,
   PROJECTLOCATION_LOADING,
+  PROJECTLOCATIONPROJECTS_LOADING,
   DELETE_PROJECTLOCATION,
   CLEAR_ERRORS
 } from "./types";
 
 // Add Project Location
-export const addProjectLocation = projectLocationData => dispatch => {
+export const addProjectLocation = (
+  projectLocationData,
+  history
+) => dispatch => {
   dispatch(clearErrors());
 
   axios
@@ -21,6 +26,7 @@ export const addProjectLocation = projectLocationData => dispatch => {
         payload: res.data
       })
     )
+    .then(() => history.push("/projectlocations"))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
@@ -67,6 +73,43 @@ export const getProjectLocation = id => dispatch => {
     );
 };
 
+// Update Project Location
+export const updateProjectLocation = (
+  projectLocationData,
+  history
+) => dispatch => {
+  dispatch(clearErrors());
+  axios
+    .put(`/api/projectlocations/${projectLocationData.id}`, projectLocationData)
+    .then(res => history.push(`/projectlocations/${projectLocationData.id}`))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Get Project Location Projects
+export const getProjectLocationProjects = (id, resolve) => dispatch => {
+  dispatch(setProjectLocationProjectsLoading());
+  axios
+    .get(`/api/projectlocations/${id}/projects`)
+    .then(res =>
+      dispatch({
+        type: GET_PROJECTLOCATION_PROJECTS,
+        payload: res.data
+      })
+    )
+    .then(() => resolve())
+    .catch(err =>
+      dispatch({
+        type: GET_PROJECTLOCATION_PROJECTS,
+        payload: null
+      })
+    );
+};
+
 // Delete Project Location
 export const deleteProjectLocation = id => dispatch => {
   axios
@@ -89,6 +132,12 @@ export const deleteProjectLocation = id => dispatch => {
 export const setProjectLocationLoading = () => {
   return {
     type: PROJECTLOCATION_LOADING
+  };
+};
+
+export const setProjectLocationProjectsLoading = () => {
+  return {
+    type: PROJECTLOCATIONPROJECTS_LOADING
   };
 };
 
