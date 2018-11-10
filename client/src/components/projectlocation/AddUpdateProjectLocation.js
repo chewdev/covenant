@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import TextFieldGroup from "../common/TextFieldGroup";
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
 import Spinner from "../common/Spinner";
+import { clearErrors } from "../../actions/projectlocationActions";
 import {
   addProjectLocation,
   updateProjectLocation,
@@ -20,7 +21,8 @@ class AddProjectLocation extends Component {
       address: "",
       phonenumber: "",
       errors: {},
-      isLoading: true
+      isLoading: true,
+      hasReceivedData: false
     };
 
     this.onChange = this.onChange.bind(this);
@@ -33,16 +35,26 @@ class AddProjectLocation extends Component {
     }
   }
 
+  componentWillUnmount() {
+    if (Object.keys(this.state.errors).length > 0) {
+      this.props.dispatchClearErrors();
+    }
+  }
+
   componentWillReceiveProps(props, state) {
-    if (this.props.editOrAdd !== "add" && !props.projectlocations.loading) {
+    if (
+      this.props.editOrAdd !== "add" &&
+      !props.projectlocations.loading &&
+      !this.state.hasReceivedData
+    ) {
       if (props.projectlocations.projectlocation !== null) {
         this.setState({
-          locationname: this.props.projectlocations.projectlocation
-            .locationname,
-          contactname: this.props.projectlocations.projectlocation.contactname,
-          address: this.props.projectlocations.projectlocation.address,
-          phonenumber: this.props.projectlocations.projectlocation.phonenumber,
-          isLoading: false
+          locationname: props.projectlocations.projectlocation.locationname,
+          contactname: props.projectlocations.projectlocation.contactname,
+          address: props.projectlocations.projectlocation.address,
+          phonenumber: props.projectlocations.projectlocation.phonenumber,
+          isLoading: false,
+          hasReceivedData: true
         });
       } else {
         this.setState({ isLoading: false });
@@ -180,7 +192,14 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
+const dispatchClearErrors = () => dispatch => dispatch(clearErrors());
+
 export default connect(
   mapStateToProps,
-  { addProjectLocation, updateProjectLocation, getProjectLocation }
+  {
+    addProjectLocation,
+    updateProjectLocation,
+    getProjectLocation,
+    dispatchClearErrors
+  }
 )(withRouter(AddProjectLocation));
