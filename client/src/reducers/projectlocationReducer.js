@@ -4,6 +4,7 @@ import {
   GET_PROJECTLOCATION,
   GET_PROJECTLOCATION_PROJECTS,
   PROJECTLOCATION_LOADING,
+  PROJECTLOCATIONS_LOADING,
   PROJECTLOCATIONPROJECTS_LOADING,
   DELETE_PROJECTLOCATION
 } from "../actions/types";
@@ -12,7 +13,8 @@ const initialState = {
   projectlocations: [],
   projectlocation: {},
   projectlocationprojects: [],
-  loading: false,
+  projectlocationsloading: false,
+  projectlocationloading: false,
   projectsloading: false
 };
 
@@ -21,7 +23,12 @@ export default function(state = initialState, action) {
     case PROJECTLOCATION_LOADING:
       return {
         ...state,
-        loading: true
+        projectlocationloading: true
+      };
+    case PROJECTLOCATIONS_LOADING:
+      return {
+        ...state,
+        projectlocationsloading: true
       };
     case PROJECTLOCATIONPROJECTS_LOADING:
       return {
@@ -32,13 +39,13 @@ export default function(state = initialState, action) {
       return {
         ...state,
         projectlocations: action.payload,
-        loading: false
+        projectlocationsloading: false
       };
     case GET_PROJECTLOCATION:
       return {
         ...state,
         projectlocation: action.payload,
-        loading: false
+        projectlocationloading: false
       };
     case GET_PROJECTLOCATION_PROJECTS:
       return {
