@@ -26,10 +26,13 @@ class ProjectLocations extends Component {
   }
 
   render() {
-    const { projectlocations, loading } = this.props.projectlocations;
+    const {
+      projectlocations,
+      projectlocationsloading
+    } = this.props.projectlocations;
     let projLocContent;
 
-    if (projectlocations === null || loading) {
+    if (projectlocations === null || projectlocationsloading) {
       projLocContent = (
         <tr>
           <td />
