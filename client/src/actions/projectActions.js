@@ -5,6 +5,7 @@ import {
   GET_PROJECTS,
   GET_PROJECT,
   PROJECT_LOADING,
+  PROJECTS_LOADING,
   DELETE_PROJECT,
   CLEAR_ERRORS,
   UPDATE_PROJECTS
@@ -66,7 +67,7 @@ export const setProjectCompleted = id => dispatch => {
 
 // Get Projects
 export const getProjects = (getCompleted = "all") => dispatch => {
-  dispatch(setProjectLoading(true));
+  dispatch(setProjectsLoading(true));
   let queryStr = "";
   if (getCompleted === "complete") {
     queryStr = "/?completed=1";
@@ -81,7 +82,6 @@ export const getProjects = (getCompleted = "all") => dispatch => {
         payload: res.data
       })
     )
-    .then(() => dispatch(setProjectLoading(false)))
     .catch(err =>
       dispatch({
         type: GET_PROJECTS,
@@ -101,7 +101,6 @@ export const getProject = id => dispatch => {
         payload: res.data
       })
     )
-    .then(() => dispatch(setProjectLoading(false)))
     .catch(err =>
       dispatch({
         type: GET_PROJECT,
@@ -112,7 +111,7 @@ export const getProject = id => dispatch => {
 
 // Get Customer Projects
 export const getCustomerProjects = (id, resolve) => dispatch => {
-  dispatch(setProjectLoading(true));
+  dispatch(setProjectsLoading(true));
   axios
     .get(`/api/projects/customer/${id}`)
     .then(res =>
@@ -121,7 +120,6 @@ export const getCustomerProjects = (id, resolve) => dispatch => {
         payload: res.data
       })
     )
-    .then(() => dispatch(setProjectLoading(false)))
     .then(() => resolve())
     .catch(err =>
       dispatch({
@@ -154,6 +152,12 @@ export const deleteProject = (id, history) => dispatch => {
 export const setProjectLoading = isLoading => {
   return {
     type: PROJECT_LOADING,
+    payload: isLoading
+  };
+};
+export const setProjectsLoading = isLoading => {
+  return {
+    type: PROJECTS_LOADING,
     payload: isLoading
   };
 };
