@@ -3,13 +3,15 @@ import {
   GET_CUSTOMERS,
   GET_CUSTOMER,
   CUSTOMER_LOADING,
+  CUSTOMERS_LOADING,
   DELETE_CUSTOMER
 } from "../actions/types";
 
 const initialState = {
   customers: [],
   customer: {},
-  loading: true
+  customerloading: true,
+  customersloading: true
 };
 
 export default function(state = initialState, action) {
@@ -17,19 +19,24 @@ export default function(state = initialState, action) {
     case CUSTOMER_LOADING:
       return {
         ...state,
-        loading: action.payload
+        customerloading: action.payload
+      };
+    case CUSTOMERS_LOADING:
+      return {
+        ...state,
+        customersloading: action.payload
       };
     case GET_CUSTOMERS:
       return {
         ...state,
         customers: action.payload,
-        loading: false
+        customersloading: false
       };
     case GET_CUSTOMER:
       return {
         ...state,
         customer: action.payload,
-        loading: false
+        customerloading: false
       };
     case ADD_CUSTOMER:
       return {
