@@ -44,7 +44,7 @@ class AddProjectLocation extends Component {
   componentWillReceiveProps(props, state) {
     if (
       this.props.editOrAdd !== "add" &&
-      !props.projectlocations.loading &&
+      !props.projectlocations.projectlocationloading &&
       !this.state.hasReceivedData
     ) {
       if (props.projectlocations.projectlocation !== null) {
