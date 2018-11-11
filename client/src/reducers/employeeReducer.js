@@ -3,13 +3,15 @@ import {
   GET_EMPLOYEES,
   GET_EMPLOYEE,
   EMPLOYEE_LOADING,
+  EMPLOYEES_LOADING,
   DELETE_EMPLOYEE
 } from "../actions/types";
 
 const initialState = {
   employees: [],
   employee: {},
-  loading: true
+  employeeloading: true,
+  employeesloading: true
 };
 
 export default function(state = initialState, action) {
@@ -17,19 +19,24 @@ export default function(state = initialState, action) {
     case EMPLOYEE_LOADING:
       return {
         ...state,
-        loading: action.payload
+        employeeloading: action.payload
+      };
+    case EMPLOYEES_LOADING:
+      return {
+        ...state,
+        employeesloading: action.payload
       };
     case GET_EMPLOYEES:
       return {
         ...state,
         employees: action.payload,
-        loading: false
+        employeesloading: false
       };
     case GET_EMPLOYEE:
       return {
         ...state,
         employee: action.payload,
-        loading: false
+        employeeloading: false
       };
     case ADD_EMPLOYEE:
       return {
