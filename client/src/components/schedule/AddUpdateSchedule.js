@@ -8,7 +8,8 @@ import Spinner from "../common/Spinner";
 import {
   addSchedule,
   updateSchedule,
-  getSchedule
+  getSchedule,
+  clearErrors
 } from "../../actions/scheduleActions";
 import getLocalIsoDate from "../../utils/getLocalIsoDate";
 
@@ -24,7 +25,8 @@ class AddSchedule extends Component {
       date: date,
       errors: {},
       isLoading: true,
-      dateError: false
+      dateError: false,
+      hasReceivedData: false
     };
 
     this.onChange = this.onChange.bind(this);
@@ -42,22 +44,32 @@ class AddSchedule extends Component {
     }
   }
 
+  componentWillUnmount() {
+    if (Object.keys(this.state.errors).length > 0) {
+      this.props.dispatchClearErrors();
+    }
+  }
+
   componentWillReceiveProps(props, state) {
-    if (this.props.editOrAdd === "edit" && !props.schedules.loading) {
+    if (
+      this.props.editOrAdd === "edit" &&
+      !props.schedules.scheduleloading &&
+      !this.state.hasReceivedData
+    ) {
       let employees = [];
       let project = "";
       let date = "";
-      if (this.props.schedules.schedule) {
-        if (this.props.schedules.schedule.employees) {
-          employees = this.props.schedules.schedule.employees.map(
+      if (props.schedules.schedule) {
+        if (props.schedules.schedule.employees) {
+          employees = props.schedules.schedule.employees.map(
             employee => employee._id
           );
         }
-        if (this.props.schedules.schedule.project) {
-          project = this.props.schedules.schedule.project._id;
+        if (props.schedules.schedule.project) {
+          project = props.schedules.schedule.project._id;
         }
-        if (this.props.schedules.schedule.date) {
-          date = getLocalIsoDate(this.props.schedules.schedule.date);
+        if (props.schedules.schedule.date) {
+          date = getLocalIsoDate(props.schedules.schedule.date);
         }
       }
 
@@ -65,7 +77,8 @@ class AddSchedule extends Component {
         date,
         employees,
         project,
-        isLoading: false
+        isLoading: false,
+        hasReceivedData: true
       });
     }
 
@@ -262,7 +275,9 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
+const dispatchClearErrors = () => dispatch => dispatch(clearErrors());
+
 export default connect(
   mapStateToProps,
-  { addSchedule, updateSchedule, getSchedule }
+  { addSchedule, updateSchedule, getSchedule, dispatchClearErrors }
 )(withRouter(AddSchedule));
