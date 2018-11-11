@@ -3,13 +3,15 @@ import {
   GET_SCHEDULES,
   GET_SCHEDULE,
   SCHEDULE_LOADING,
+  SCHEDULES_LOADING,
   DELETE_SCHEDULE
 } from "../actions/types";
 
 const initialState = {
   schedules: [],
   schedule: {},
-  loading: true
+  scheduleloading: true,
+  schedulesloading: true
 };
 
 export default function(state = initialState, action) {
@@ -17,19 +19,24 @@ export default function(state = initialState, action) {
     case SCHEDULE_LOADING:
       return {
         ...state,
-        loading: action.payload
+        scheduleloading: action.payload
+      };
+    case SCHEDULES_LOADING:
+      return {
+        ...state,
+        schedulesloading: action.payload
       };
     case GET_SCHEDULES:
       return {
         ...state,
         schedules: action.payload,
-        loading: false
+        schedulesloading: false
       };
     case GET_SCHEDULE:
       return {
         ...state,
         schedule: action.payload,
-        loading: false
+        scheduleloading: false
       };
     case ADD_SCHEDULE:
       return {
