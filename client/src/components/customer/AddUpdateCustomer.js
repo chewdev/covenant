@@ -8,7 +8,8 @@ import Spinner from "../common/Spinner";
 import {
   addCustomer,
   updateCustomer,
-  getCustomer
+  getCustomer,
+  clearErrors
 } from "../../actions/customerActions";
 
 class AddCompany extends Component {
@@ -21,7 +22,8 @@ class AddCompany extends Component {
       phonenumber: "",
       contactnames: "",
       errors: {},
-      isLoading: true
+      isLoading: true,
+      hasReceivedData: false
     };
 
     this.onChange = this.onChange.bind(this);
@@ -34,16 +36,27 @@ class AddCompany extends Component {
     }
   }
 
+  componentWillUnmount() {
+    if (Object.keys(this.state.errors).length > 0) {
+      this.props.dispatchClearErrors();
+    }
+  }
+
   componentWillReceiveProps(props, state) {
-    if (this.props.editOrAdd !== "add" && !props.customers.loading) {
+    if (
+      this.props.editOrAdd !== "add" &&
+      !props.customers.customerloading &&
+      !this.state.hasReceivedData
+    ) {
       if (props.customers.customer !== null) {
         this.setState({
-          ...this.props.customers.customer,
+          ...props.customers.customer,
           contactnames:
-            (this.props.customers.customer.contactnames &&
-              this.props.customers.customer.contactnames.join(", ")) ||
+            (props.customers.customer.contactnames &&
+              props.customers.customer.contactnames.join(", ")) ||
             "",
-          isLoading: false
+          isLoading: false,
+          hasReceivedData: true
         });
       } else {
         this.setState({ isLoading: false });
@@ -187,7 +200,9 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
+const dispatchClearErrors = () => dispatch => dispatch(clearErrors());
+
 export default connect(
   mapStateToProps,
-  { addCustomer, updateCustomer, getCustomer }
+  { addCustomer, updateCustomer, getCustomer, dispatchClearErrors }
 )(withRouter(AddCompany));
