@@ -5,6 +5,7 @@ import {
   GET_SCHEDULES,
   GET_SCHEDULE,
   SCHEDULE_LOADING,
+  SCHEDULES_LOADING,
   DELETE_SCHEDULE,
   CLEAR_ERRORS
 } from "./types";
@@ -47,7 +48,7 @@ export const updateSchedule = (scheduleData, history) => dispatch => {
 
 // Get Schedule
 export const getSchedules = () => dispatch => {
-  dispatch(setScheduleLoading(true));
+  dispatch(setSchedulesLoading(true));
   axios
     .get("/api/schedule")
     .then(res =>
@@ -56,7 +57,6 @@ export const getSchedules = () => dispatch => {
         payload: res.data
       })
     )
-    .then(() => dispatch(setScheduleLoading(false)))
     .catch(err =>
       dispatch({
         type: GET_SCHEDULES,
@@ -76,7 +76,6 @@ export const getSchedule = id => dispatch => {
         payload: res.data
       })
     )
-    .then(() => dispatch(setScheduleLoading(false)))
     .catch(err =>
       dispatch({
         type: GET_SCHEDULE,
@@ -104,10 +103,18 @@ export const deleteSchedule = (id, history) => dispatch => {
     );
 };
 
-// Set loading state
+// Set schedule loading state
 export const setScheduleLoading = isLoading => {
   return {
     type: SCHEDULE_LOADING,
+    payload: isLoading
+  };
+};
+
+// Set schedules loading state
+export const setSchedulesLoading = isLoading => {
+  return {
+    type: SCHEDULES_LOADING,
     payload: isLoading
   };
 };
