@@ -8,7 +8,8 @@ import Spinner from "../common/Spinner";
 import {
   addEmployee,
   updateEmployee,
-  getEmployee
+  getEmployee,
+  clearErrors
 } from "../../actions/employeeActions";
 
 class AddEmployee extends Component {
@@ -21,7 +22,8 @@ class AddEmployee extends Component {
       email: "",
       title: "",
       errors: {},
-      isLoading: true
+      isLoading: true,
+      hasReceivedData: false
     };
 
     this.onChange = this.onChange.bind(this);
@@ -34,11 +36,22 @@ class AddEmployee extends Component {
     }
   }
 
+  componentWillUnmount() {
+    if (Object.keys(this.state.errors).length > 0) {
+      this.props.dispatchClearErrors();
+    }
+  }
+
   componentWillReceiveProps(props, state) {
-    if (this.props.editOrAdd !== "add" && !props.employees.loading) {
+    if (
+      this.props.editOrAdd !== "add" &&
+      !props.employees.employeeloading &&
+      !this.state.hasReceivedData
+    ) {
       this.setState({
         ...this.props.employees.employee,
-        isLoading: false
+        isLoading: false,
+        hasReceivedData: true
       });
     }
 
@@ -177,7 +190,9 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
+const dispatchClearErrors = () => dispatch => dispatch(clearErrors());
+
 export default connect(
   mapStateToProps,
-  { addEmployee, updateEmployee, getEmployee }
+  { addEmployee, updateEmployee, getEmployee, dispatchClearErrors }
 )(withRouter(AddEmployee));
