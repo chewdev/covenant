@@ -91,6 +91,9 @@ class AddSchedule extends Component {
     e.preventDefault();
 
     const date = new Date(this.state.date);
+    const localTime = new Date();
+    const offset = localTime.getTimezoneOffset();
+
     if (
       date &&
       Object.prototype.toString.call(date) === "[object Date]" &&
@@ -99,7 +102,8 @@ class AddSchedule extends Component {
       const scheduleData = {
         project: this.state.project,
         employees: this.state.employees,
-        date: this.state.date
+        date: this.state.date,
+        offset
       };
 
       if (this.props.editOrAdd !== "edit") {

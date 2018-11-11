@@ -66,7 +66,12 @@ router.post(
                   "Some or all employees provided were not found. Please ensure all employees have been added before scheduling work"
               });
             } else {
+              const serverDate = new Date();
+              const serverOffset = serverDate.getTimezoneOffset();
+              const hoursOffset = (req.body.offset - serverOffset) / 60;
+
               let date = new Date(req.body.date);
+              date.setHours(date.getHours() + hoursOffset);
               date = date.toGMTString();
               const newSchedule = new Schedule({
                 project: req.body.project,
@@ -196,8 +201,14 @@ router.put(
 
                     schedule.project = req.body.project;
                     schedule.employees = req.body.employees;
+                    const serverDate = new Date();
+                    const serverOffset = serverDate.getTimezoneOffset();
+                    const hoursOffset = (req.body.offset - serverOffset) / 60;
+
                     let date = new Date(req.body.date);
+                    date.setHours(date.getHours() + hoursOffset);
                     date = date.toGMTString();
+
                     schedule.date = date;
 
                     schedule
