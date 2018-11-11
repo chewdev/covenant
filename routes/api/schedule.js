@@ -66,10 +66,12 @@ router.post(
                   "Some or all employees provided were not found. Please ensure all employees have been added before scheduling work"
               });
             } else {
+              let date = new Date(req.body.date);
+              date = date.toGMTString();
               const newSchedule = new Schedule({
                 project: req.body.project,
                 employees: req.body.employees,
-                date: req.body.date
+                date: date
               });
 
               newSchedule
@@ -194,7 +196,9 @@ router.put(
 
                     schedule.project = req.body.project;
                     schedule.employees = req.body.employees;
-                    schedule.date = req.body.date;
+                    let date = new Date(req.body.date);
+                    date = date.toGMTString();
+                    schedule.date = date;
 
                     schedule
                       .save()
