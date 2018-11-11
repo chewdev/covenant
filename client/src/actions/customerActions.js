@@ -5,6 +5,7 @@ import {
   GET_CUSTOMERS,
   GET_CUSTOMER,
   CUSTOMER_LOADING,
+  CUSTOMERS_LOADING,
   DELETE_CUSTOMER,
   CLEAR_ERRORS
 } from "./types";
@@ -47,7 +48,7 @@ export const updateCustomer = (customerData, history) => dispatch => {
 
 // Get Customers
 export const getCustomers = () => dispatch => {
-  dispatch(setCustomerLoading(true));
+  dispatch(setCustomersLoading(true));
   axios
     .get("/api/customers")
     .then(res =>
@@ -56,7 +57,6 @@ export const getCustomers = () => dispatch => {
         payload: res.data
       })
     )
-    .then(() => dispatch(setCustomerLoading(false)))
     .catch(err =>
       dispatch({
         type: GET_CUSTOMERS,
@@ -76,7 +76,6 @@ export const getCustomer = id => dispatch => {
         payload: res.data
       })
     )
-    .then(() => dispatch(setCustomerLoading(false)))
     .catch(err =>
       dispatch({
         type: GET_CUSTOMER,
@@ -108,6 +107,13 @@ export const deleteCustomer = (id, history) => dispatch => {
 export const setCustomerLoading = isLoading => {
   return {
     type: CUSTOMER_LOADING,
+    payload: isLoading
+  };
+};
+
+export const setCustomersLoading = isLoading => {
+  return {
+    type: CUSTOMERS_LOADING,
     payload: isLoading
   };
 };
