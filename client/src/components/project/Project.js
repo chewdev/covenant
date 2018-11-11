@@ -20,7 +20,7 @@ class Project extends Component {
   }
 
   render() {
-    const { project, loading } = this.props.projects;
+    const { project, projectloading } = this.props.projects;
     let projectContent;
     const backLink = (
       <Link className="btn btn-lg btn-primary mb-4" to="/projects">
@@ -35,7 +35,7 @@ class Project extends Component {
           <div className="alert alert-danger">Project not found</div>
         </div>
       );
-    } else if (isEmpty(project) || loading) {
+    } else if (isEmpty(project) || projectloading) {
       projectContent = <Spinner />;
     } else {
       projectContent = (
