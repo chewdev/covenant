@@ -54,7 +54,7 @@ class ProjectLocation extends Component {
   render() {
     const {
       projectlocation,
-      loading,
+      projectlocationloading,
       projectlocationprojects,
       projectsloading
     } = this.props.projectlocations;
@@ -97,7 +97,7 @@ class ProjectLocation extends Component {
           Project location not found
         </div>
       );
-    } else if (isEmpty(projectlocation) || loading) {
+    } else if (isEmpty(projectlocation) || projectlocationloading) {
       projLocContent = <Spinner />;
     } else {
       projLocContent = (
