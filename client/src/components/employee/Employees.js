@@ -28,7 +28,7 @@ class Employees extends Component {
   }
 
   render() {
-    const { employees, loading } = this.props.employees;
+    const { employees, employeesloading } = this.props.employees;
     let employeeContent;
 
     const searchOptions = [
@@ -42,7 +42,7 @@ class Employees extends Component {
       }
     ];
 
-    if (employees === null || loading) {
+    if (employees === null || employeesloading) {
       employeeContent = (
         <tr>
           <td />
