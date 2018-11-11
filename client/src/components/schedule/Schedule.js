@@ -20,14 +20,14 @@ class Schedule extends Component {
   }
 
   render() {
-    const { schedule, loading } = this.props.schedules;
+    const { schedule, scheduleloading } = this.props.schedules;
     let scheduleContent;
 
     if (schedule === null) {
       scheduleContent = (
         <div className="alert alert-danger mx-4">Schedule item not found</div>
       );
-    } else if (isEmpty(schedule) || loading) {
+    } else if (isEmpty(schedule) || scheduleloading) {
       scheduleContent = <Spinner />;
     } else {
       let date = new Date(schedule.date);
