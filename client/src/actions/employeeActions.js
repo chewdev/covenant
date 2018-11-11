@@ -5,6 +5,7 @@ import {
   GET_EMPLOYEES,
   GET_EMPLOYEE,
   EMPLOYEE_LOADING,
+  EMPLOYEES_LOADING,
   DELETE_EMPLOYEE,
   CLEAR_ERRORS
 } from "./types";
@@ -47,7 +48,7 @@ export const updateEmployee = (employeeData, history) => dispatch => {
 
 // Get Employees
 export const getEmployees = () => dispatch => {
-  dispatch(setEmployeeLoading(true));
+  dispatch(setEmployeesLoading(true));
   axios
     .get("/api/employees")
     .then(res =>
@@ -56,7 +57,6 @@ export const getEmployees = () => dispatch => {
         payload: res.data
       })
     )
-    .then(() => dispatch(setEmployeeLoading(false)))
     .catch(err =>
       dispatch({
         type: GET_EMPLOYEES,
@@ -76,7 +76,6 @@ export const getEmployee = id => dispatch => {
         payload: res.data
       })
     )
-    .then(() => dispatch(setEmployeeLoading(false)))
     .catch(err =>
       dispatch({
         type: GET_EMPLOYEE,
@@ -108,6 +107,13 @@ export const deleteEmployee = (id, history) => dispatch => {
 export const setEmployeeLoading = isLoading => {
   return {
     type: EMPLOYEE_LOADING,
+    payload: isLoading
+  };
+};
+
+export const setEmployeesLoading = isLoading => {
+  return {
+    type: EMPLOYEES_LOADING,
     payload: isLoading
   };
 };
