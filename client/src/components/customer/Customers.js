@@ -26,10 +26,10 @@ class Customers extends Component {
   }
 
   render() {
-    const { customers, loading } = this.props.customers;
+    const { customers, customersloading } = this.props.customers;
     let customerContent;
 
-    if (customers === null || loading) {
+    if (customers === null || customersloading) {
       customerContent = (
         <tr>
           <td />
