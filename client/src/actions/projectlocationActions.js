@@ -6,6 +6,7 @@ import {
   GET_PROJECTLOCATION,
   GET_PROJECTLOCATION_PROJECTS,
   PROJECTLOCATION_LOADING,
+  PROJECTLOCATIONS_LOADING,
   PROJECTLOCATIONPROJECTS_LOADING,
   DELETE_PROJECTLOCATION,
   CLEAR_ERRORS
@@ -37,7 +38,7 @@ export const addProjectLocation = (
 
 // Get Project Locations
 export const getProjectLocations = () => dispatch => {
-  dispatch(setProjectLocationLoading());
+  dispatch(setProjectLocationsLoading());
   axios
     .get("/api/projectlocations")
     .then(res =>
@@ -133,6 +134,11 @@ export const deleteProjectLocation = (id, history) => dispatch => {
 export const setProjectLocationLoading = () => {
   return {
     type: PROJECTLOCATION_LOADING
+  };
+};
+export const setProjectLocationsLoading = () => {
+  return {
+    type: PROJECTLOCATIONS_LOADING
   };
 };
 
