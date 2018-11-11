@@ -51,9 +51,9 @@ class Schedules extends Component {
   }
 
   render() {
-    const { schedules, schedLoading } = this.props.schedules;
-    const { projects, projLoading } = this.props.projects;
-    const { employees, emplLoading } = this.props.employees;
+    const { schedules, schedulesloading: schedLoading } = this.props.schedules;
+    const { projects, loading: projLoading } = this.props.projects;
+    const { employees, loading: emplLoading } = this.props.employees;
     let scheduleContent;
     let month;
     if (
