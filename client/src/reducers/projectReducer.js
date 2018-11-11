@@ -3,6 +3,7 @@ import {
   GET_PROJECTS,
   GET_PROJECT,
   PROJECT_LOADING,
+  PROJECTS_LOADING,
   DELETE_PROJECT,
   UPDATE_PROJECTS
 } from "../actions/types";
@@ -10,7 +11,8 @@ import {
 const initialState = {
   projects: [],
   project: {},
-  loading: true
+  projectloading: true,
+  projectsloading: true
 };
 
 export default function(state = initialState, action) {
@@ -18,19 +20,24 @@ export default function(state = initialState, action) {
     case PROJECT_LOADING:
       return {
         ...state,
-        loading: action.payload
+        projectloading: action.payload
+      };
+    case PROJECTS_LOADING:
+      return {
+        ...state,
+        projectsloading: action.payload
       };
     case GET_PROJECTS:
       return {
         ...state,
         projects: action.payload,
-        loading: false
+        projectsloading: false
       };
     case GET_PROJECT:
       return {
         ...state,
         project: action.payload,
-        loading: false
+        projectloading: false
       };
     case ADD_PROJECT:
       return {
