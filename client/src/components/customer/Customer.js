@@ -41,26 +41,40 @@ class Customer extends Component {
   }
 
   render() {
-    const { customer, loading } = this.props.customers;
+    const { customer, customerloading } = this.props.customers;
     let customerContent;
     let projectContent = null;
 
-    if (
-      this.state.showProjects &&
-      !this.props.projects.loading &&
-      this.props.projects.projects !== null
-    ) {
-      projectContent = this.props.projects.projects.map(project => (
-        <li key={project._id} className="list-group-item">
-          <Link to={`/projects/${project._id}`}>{project.projectname}</Link>
+    if (this.state.showProjects) {
+      projectContent = (
+        <li className="list-group-item">
+          <Spinner />
         </li>
-      ));
-      projectContent =
-        projectContent.length > 0 ? (
-          projectContent
-        ) : (
-          <li className="list-group-item text-muted">No Projects Available</li>
-        );
+      );
+      if (!this.props.projects.projectsloading) {
+        if (this.props.projects.projects !== null) {
+          projectContent = this.props.projects.projects.map(project => (
+            <li key={project._id} className="list-group-item">
+              <Link to={`/projects/${project._id}`}>{project.projectname}</Link>
+            </li>
+          ));
+          projectContent =
+            projectContent.length > 0 ? (
+              projectContent
+            ) : (
+              <li className="list-group-item text-muted">
+                No Projects Available
+              </li>
+            );
+        } else {
+          projectContent = (
+            <li className="list-group-item text-muted">
+              No Projects Available
+            </li>
+          );
+        }
+      }
+
       projectContent = <ul className="list-group">{projectContent}</ul>;
     }
 
@@ -68,7 +82,7 @@ class Customer extends Component {
       customerContent = (
         <div className="alert alert-danger mx-4">Customer not found</div>
       );
-    } else if (isEmpty(customer) || loading) {
+    } else if (isEmpty(customer) || customerloading) {
       customerContent = <Spinner />;
     } else {
       customerContent = (
