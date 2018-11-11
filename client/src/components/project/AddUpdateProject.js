@@ -10,7 +10,8 @@ import classnames from "classnames";
 import {
   addProject,
   updateProject,
-  getProject
+  getProject,
+  clearErrors
 } from "../../actions/projectActions";
 import { getCustomers } from "../../actions/customerActions";
 
@@ -37,6 +38,7 @@ class AddProject extends Component {
       paidamount: "",
       errors: {},
       isLoading: true,
+      hasReceivedData: false,
       steps: 0,
       customersearch: ""
     };
@@ -57,24 +59,35 @@ class AddProject extends Component {
     this.props.getCustomers();
   }
 
+  componentWillUnmount() {
+    if (Object.keys(this.state.errors).length > 0) {
+      this.props.dispatchClearErrors();
+    }
+  }
+
   componentWillReceiveProps(props, state) {
-    if (this.props.editOrAdd !== "add" && !props.projects.loading) {
+    if (
+      this.props.editOrAdd !== "add" &&
+      !props.projects.projectloading &&
+      !this.state.hasReceivedData
+    ) {
       if (props.projects.project !== null) {
         this.setState({
-          ...this.props.projects.project,
-          customer: this.props.projects.project.customer
-            ? this.props.projects.project.customer.company
+          ...props.projects.project,
+          customer: props.projects.project.customer
+            ? props.projects.project.customer.company
             : "",
-          totalamount: this.props.projects.project.totalamount
-            ? this.props.projects.project.totalamount.toString()
+          totalamount: props.projects.project.totalamount
+            ? props.projects.project.totalamount.toString()
             : "",
-          paidamount: this.props.projects.project.paidamount
-            ? this.props.projects.project.paidamount.toString()
+          paidamount: props.projects.project.paidamount
+            ? props.projects.project.paidamount.toString()
             : "",
-          steps: this.props.projects.project.nextsteps
-            ? this.props.projects.project.nextsteps.length
+          steps: props.projects.project.nextsteps
+            ? props.projects.project.nextsteps.length
             : 0,
-          isLoading: false
+          isLoading: false,
+          hasReceivedData: true
         });
       } else {
         this.setState({
@@ -488,7 +501,9 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
+const dispatchClearErrors = () => dispatch => dispatch(clearErrors());
+
 export default connect(
   mapStateToProps,
-  { addProject, updateProject, getProject, getCustomers }
+  { addProject, updateProject, getProject, getCustomers, dispatchClearErrors }
 )(withRouter(AddProject));
