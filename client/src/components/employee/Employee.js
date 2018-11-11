@@ -32,14 +32,14 @@ class Employee extends Component {
   }
 
   render() {
-    const { employee, loading } = this.props.employees;
+    const { employee, employeeloading } = this.props.employees;
     let employeeContent;
 
     let scheduleContent = null;
 
     if (
       this.state.showSchedule &&
-      !this.props.employees.loading &&
+      !employeeloading &&
       this.props.employees.employee !== null
     ) {
       scheduleContent = this.props.employees.employee.schedule
@@ -73,7 +73,7 @@ class Employee extends Component {
       employeeContent = (
         <div className="alert alert-danger mx-4">Employee not found</div>
       );
-    } else if (isEmpty(employee) || loading) {
+    } else if (isEmpty(employee) || employeeloading) {
       employeeContent = <Spinner />;
     } else {
       employeeContent = (
