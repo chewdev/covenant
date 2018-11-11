@@ -114,10 +114,10 @@ class Projects extends Component {
   }
 
   render() {
-    const { projects, loading } = this.props.projects;
+    const { projects, projectsloading } = this.props.projects;
     let projectContent;
 
-    if (projects === null || loading) {
+    if (projects === null || projectsloading) {
       projectContent = (
         <tr>
           <td />
