@@ -40,6 +40,16 @@ module.exports = function validateScheduleInput(data) {
     }
   }
 
+  if (!data.offset) {
+    errors.offset = "Timezome offset is required.";
+  } else {
+    if (typeof data.offset !== "number") {
+      errors.offset = "Timezone offset must be a number";
+    } else if (data.offset < -840 || data.offset > 720) {
+      errors.offset = "Invalid timezone offset provided";
+    }
+  }
+
   return {
     errors,
     isValid: isEmpty(errors)
