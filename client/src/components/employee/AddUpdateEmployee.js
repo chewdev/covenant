@@ -49,7 +49,7 @@ class AddEmployee extends Component {
       !this.state.hasReceivedData
     ) {
       this.setState({
-        ...this.props.employees.employee,
+        ...props.employees.employee,
         isLoading: false,
         hasReceivedData: true
       });
