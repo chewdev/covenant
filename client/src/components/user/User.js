@@ -69,43 +69,41 @@ class User extends Component {
       );
     } else {
       userContent = (
-        <div className="container">
-          <div className="card text-center border-dark">
-            <div className="card-header bg-dark text-white">User Info</div>
-            <div className="card-body p-0 pt-2">
-              <div className="card-title text-primary">
-                <h2>
-                  <strong>{user.name || "Name Unavailable"}</strong>
-                </h2>
+        <div className="card text-center border-dark">
+          <div className="card-header bg-dark text-white">User Info</div>
+          <div className="card-body p-0 pt-2">
+            <div className="card-title text-primary">
+              <h2>
+                <strong>{user.name || "Name Unavailable"}</strong>
+              </h2>
+            </div>
+            <div className="list-group">
+              <div className="list-group-item">
+                <h3 className="card-text">Email: {user.email}</h3>
               </div>
-              <div className="list-group">
-                <div className="list-group-item">
-                  <h3 className="card-text">Email: {user.email}</h3>
-                </div>
 
-                <div className="list-group-item">
-                  <h3 className="card-text">Password: ********</h3>
-                  <button
-                    className="btn btn-secondary"
-                    onClick={this.toggleUpdateBox}
-                  >
-                    Update Password
-                  </button>
-                </div>
-                {this.state.passwordDidUpdate ? (
-                  <div className="alert alert-success">Password Updated</div>
-                ) : null}
-                {this.state.updateBoxIsOpen ? (
-                  <UpdatePassword
-                    onChange={this.onChange}
-                    errors={errors}
-                    onSubmit={this.onSubmit}
-                    currentpassword={this.state.currentpassword}
-                    newpassword={this.state.newpassword}
-                    newpassword2={this.state.newpassword2}
-                  />
-                ) : null}
+              <div className="list-group-item">
+                <h3 className="card-text">Password: ********</h3>
+                <button
+                  className="btn btn-secondary"
+                  onClick={this.toggleUpdateBox}
+                >
+                  Update Password
+                </button>
               </div>
+              {this.state.passwordDidUpdate ? (
+                <div className="alert alert-success">Password Updated</div>
+              ) : null}
+              {this.state.updateBoxIsOpen ? (
+                <UpdatePassword
+                  onChange={this.onChange}
+                  errors={errors}
+                  onSubmit={this.onSubmit}
+                  currentpassword={this.state.currentpassword}
+                  newpassword={this.state.newpassword}
+                  newpassword2={this.state.newpassword2}
+                />
+              ) : null}
             </div>
           </div>
         </div>
