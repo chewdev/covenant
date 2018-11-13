@@ -46,6 +46,26 @@ export const updateSchedule = (scheduleData, history) => dispatch => {
     );
 };
 
+// Set Schedule Status to Complete
+export const setScheduleComplete = (id, history) => dispatch => {
+  dispatch(clearErrors());
+
+  axios
+    .put(`/api/schedule/${id}/complete`)
+    .then(res =>
+      dispatch({
+        type: GET_SCHEDULE,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 // Get Schedule
 export const getSchedules = () => dispatch => {
   dispatch(setSchedulesLoading(true));
