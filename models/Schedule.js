@@ -17,6 +17,13 @@ const ScheduleSchema = new Schema({
   date: {
     type: Date,
     required: true
+  },
+  notes: {
+    type: String
+  },
+  isComplete: {
+    type: Boolean,
+    default: false
   }
 });
 
