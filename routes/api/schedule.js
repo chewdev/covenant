@@ -76,7 +76,9 @@ router.post(
               const newSchedule = new Schedule({
                 project: req.body.project,
                 employees: req.body.employees,
-                date: date
+                date: date,
+                notes: req.body.notes,
+                isComplete: req.body.isComplete
               });
 
               newSchedule
@@ -121,6 +123,40 @@ router.get(
             .json({ error: "Scheduled appointment not found." });
         } else {
           return res.json(schedule);
+        }
+      })
+      .catch(err =>
+        res.status(404).json({ error: "Scheduled appointment not found." })
+      );
+  }
+);
+
+// @route PUT api/schedule/:sched_id/complete
+// @desc Update schedule item status to complete
+// @access Private route
+router.put(
+  "/:sched_id/complete",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Schedule.findById(req.params.sched_id)
+      .populate("employees")
+      .populate("project")
+      .then(schedule => {
+        if (!schedule) {
+          return res.status(400).json({
+            error:
+              "Scheduled appointment not found. Unable to mark as complete."
+          });
+        } else {
+          schedule.isComplete = true;
+          schedule
+            .save()
+            .then(schedule => res.json(schedule))
+            .catch(err =>
+              res.status(400).json({
+                error: "Error updating scheduled appointment to complete."
+              })
+            );
         }
       })
       .catch(err =>
@@ -210,6 +246,8 @@ router.put(
                     date = date.toGMTString();
 
                     schedule.date = date;
+                    schedule.isComplete = req.body.isComplete;
+                    schedule.notes = req.body.notes;
 
                     schedule
                       .save()
