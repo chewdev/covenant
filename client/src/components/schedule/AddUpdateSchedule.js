@@ -11,6 +11,8 @@ import {
   getSchedule,
   clearErrors
 } from "../../actions/scheduleActions";
+import { getProjects } from "../../actions/projectActions";
+import { getEmployees } from "../../actions/employeeActions";
 import getLocalIsoDate from "../../utils/getLocalIsoDate";
 
 class AddSchedule extends Component {
@@ -35,6 +37,18 @@ class AddSchedule extends Component {
   }
 
   componentDidMount() {
+    if (
+      this.props.projects.projects === null ||
+      this.props.projects.projects.length === 0
+    ) {
+      this.props.getProjects("notcomplete");
+    }
+    if (
+      this.props.employees.employees === null ||
+      this.props.employees.employees.length === 0
+    ) {
+      this.props.getEmployees();
+    }
     if (this.props.editOrAdd === "edit") {
       this.props.getSchedule(this.props.match.params.id);
     } else if (this.props.editOrAdd === "addToProject") {
@@ -164,8 +178,10 @@ class AddSchedule extends Component {
     });
 
     const formContent =
-      (this.props.editOrAdd === "edit" && this.state.isLoading) ||
-      (this.props.editOrAdd === "addToProject" && this.state.isLoading) ? (
+      (["edit", "addToProject"].includes(this.props.editOrAdd) &&
+        this.state.isLoading) ||
+      this.props.projects.projectsloading ||
+      this.props.employees.employeesloading ? (
         <Spinner />
       ) : this.props.editOrAdd === "edit" &&
       this.props.schedules.schedule === null ? (
@@ -283,5 +299,12 @@ const dispatchClearErrors = () => dispatch => dispatch(clearErrors());
 
 export default connect(
   mapStateToProps,
-  { addSchedule, updateSchedule, getSchedule, dispatchClearErrors }
+  {
+    addSchedule,
+    updateSchedule,
+    getSchedule,
+    getProjects,
+    getEmployees,
+    dispatchClearErrors
+  }
 )(withRouter(AddSchedule));
