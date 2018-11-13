@@ -4,6 +4,7 @@ import { withRouter, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import SelectListGroup from "../common/SelectListGroup";
+import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
 import Spinner from "../common/Spinner";
 import {
   addSchedule,
@@ -25,6 +26,8 @@ class AddSchedule extends Component {
       project: "",
       employees: [],
       date: date,
+      isComplete: "false",
+      notes: "",
       errors: {},
       isLoading: true,
       dateError: false,
@@ -92,7 +95,9 @@ class AddSchedule extends Component {
         employees,
         project,
         isLoading: false,
-        hasReceivedData: true
+        hasReceivedData: true,
+        isComplete: props.schedules.schedule.isComplete ? "true" : "false",
+        notes: props.schedules.schedule.notes || ""
       });
     }
 
@@ -117,7 +122,9 @@ class AddSchedule extends Component {
         project: this.state.project,
         employees: this.state.employees,
         date: this.state.date,
-        offset
+        offset,
+        isComplete: this.state.isComplete,
+        notes: this.state.notes
       };
 
       if (this.props.editOrAdd !== "edit") {
@@ -240,6 +247,31 @@ class AddSchedule extends Component {
                   <div className="invalid-feedback">Input date is invalid</div>
                 ))}
             </div>
+            <TextAreaFieldGroup
+              placeholder="Add Notes"
+              name="notes"
+              value={this.state.notes}
+              onChange={this.onChange}
+              error={errors.notes}
+              info="Add notes about this appointment"
+            />
+            <SelectListGroup
+              name="isComplete"
+              value={this.state.isComplete}
+              onChange={this.onChange}
+              error={errors.isComplete}
+              options={[
+                {
+                  label: "Not Complete",
+                  value: "false"
+                },
+                {
+                  label: "Complete",
+                  value: "true"
+                }
+              ]}
+              info="Select employees to add to schedule"
+            />
             <input
               type="submit"
               value="Submit"
