@@ -3,10 +3,22 @@ import PropTypes from "prop-types";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
-import { getSchedule, deleteSchedule } from "../../actions/scheduleActions";
+import {
+  getSchedule,
+  deleteSchedule,
+  setScheduleComplete
+} from "../../actions/scheduleActions";
 import isEmpty from "../../validation/is-empty";
 
 class Schedule extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showTip: false
+    };
+  }
+
   componentDidMount() {
     this.props.getSchedule(this.props.match.params.id);
   }
@@ -17,6 +29,18 @@ class Schedule extends Component {
 
   onDeleteSchedule() {
     this.props.deleteSchedule(this.props.match.params.id, this.props.history);
+  }
+
+  showTip() {
+    this.setState({ showTip: true });
+  }
+
+  hideTip() {
+    this.setState({ showTip: false });
+  }
+
+  completeSchedule() {
+    this.props.setScheduleComplete(this.props.match.params.id);
   }
 
   render() {
@@ -77,6 +101,34 @@ class Schedule extends Component {
                     )}
                   </ul>
                 </div>
+                <div className="list-group-item">
+                  <h3>
+                    <u>Notes</u>
+                  </h3>
+                  <p>{schedule.notes || "No notes added."}</p>
+                </div>
+                <div className="list-group-item">
+                  <h3 className="card-text">
+                    Current Status:{" "}
+                    {schedule.isComplete ? (
+                      "Complete"
+                    ) : (
+                      <div style={{ display: "inline-block" }}>
+                        <button
+                          onClick={this.completeSchedule.bind(this)}
+                          className="btn btn-outline-primary btn-lg"
+                          style={{ width: "15rem" }}
+                          onMouseEnter={this.showTip.bind(this)}
+                          onMouseOut={this.hideTip.bind(this)}
+                        >
+                          {this.state.showTip
+                            ? "Click To Complete"
+                            : "Not Complete"}
+                        </button>
+                      </div>
+                    )}
+                  </h3>
+                </div>
               </div>
             </div>
           </div>
@@ -121,6 +173,7 @@ class Schedule extends Component {
 Schedule.propTypes = {
   getSchedule: PropTypes.func.isRequired,
   deleteSchedule: PropTypes.func.isRequired,
+  setScheduleComplete: PropTypes.func.isRequired,
   schedules: PropTypes.object.isRequired
 };
 
@@ -130,5 +183,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getSchedule, deleteSchedule }
+  { getSchedule, deleteSchedule, setScheduleComplete }
 )(withRouter(Schedule));
