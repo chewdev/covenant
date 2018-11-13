@@ -47,7 +47,7 @@ export const updateSchedule = (scheduleData, history) => dispatch => {
 };
 
 // Set Schedule Status to Complete
-export const setScheduleComplete = (id, history) => dispatch => {
+export const setScheduleComplete = id => dispatch => {
   dispatch(clearErrors());
 
   axios
