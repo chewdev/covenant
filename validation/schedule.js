@@ -9,6 +9,7 @@ module.exports = function validateScheduleInput(data) {
     employee => !isEmpty(employee) && typeof employee === "string"
   );
   data.project = !isEmpty(data.project) ? data.project : "";
+  data.notes = !isEmpty(data.notes) ? data.notes : "";
 
   const invalidEmployees = data.employees.some(
     employee => !validator.isLength(employee, { min: 2, max: 50 })
@@ -48,6 +49,14 @@ module.exports = function validateScheduleInput(data) {
     } else if (data.offset < -840 || data.offset > 720) {
       errors.offset = "Invalid timezone offset provided";
     }
+  }
+
+  if (!validator.isBoolean(data.isComplete)) {
+    errors.isComplete = "Must be true or false.";
+  }
+
+  if (data.notes && !validator.isLength(data.notes, { min: 1, max: 500 })) {
+    errors.notes = "Notes must be between 1 and 500 characters";
   }
 
   return {
