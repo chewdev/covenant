@@ -146,6 +146,14 @@ class Schedules extends Component {
         return (
           <tr className="text-dark" key={schedule._id}>
             <td>
+              <Link
+                className="btn btn-secondary"
+                to={`/schedule/${schedule._id}`}
+              >
+                Open Item
+              </Link>
+            </td>
+            <td>
               <Link to={`/projects/${schedule.project}`}>{projectName}</Link>
             </td>
             <td>
@@ -154,14 +162,6 @@ class Schedules extends Component {
                 : "N/A"}
             </td>
             <td>{date || "Unavailable"}</td>
-            <td>
-              <Link
-                className="btn btn-secondary"
-                to={`/schedule/${schedule._id}`}
-              >
-                View
-              </Link>
-            </td>
           </tr>
         );
       });
@@ -209,7 +209,7 @@ class Schedules extends Component {
                 <thead>
                   <tr>
                     <th>
-                      Schedule (
+                      Schedule <br /> (
                       {`${month ? month : ""} ${
                         month ? this.state.currYear : ""
                       }`}
@@ -230,10 +230,10 @@ class Schedules extends Component {
                 </thead>
                 <thead className="thead-dark">
                   <tr>
-                    <th>Project Name</th>
+                    <th>Schedule</th>
+                    <th>Project</th>
                     <th>Employees</th>
                     <th>Date</th>
-                    <th>View</th>
                   </tr>
                 </thead>
                 <tbody>{scheduleContent}</tbody>
