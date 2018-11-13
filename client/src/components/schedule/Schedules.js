@@ -7,6 +7,22 @@ import { getSchedules } from "../../actions/scheduleActions";
 import { getProjects } from "../../actions/projectActions";
 import { getEmployees } from "../../actions/employeeActions";
 import TextFieldGroup from "../common/TextFieldGroup";
+import SelectListGroup from "../common/SelectListGroup";
+
+const showCompletedOptions = [
+  {
+    label: "Not Completed",
+    value: "notcomplete"
+  },
+  {
+    label: "Completed",
+    value: "complete"
+  },
+  {
+    label: "All",
+    value: "all"
+  }
+];
 
 class Schedules extends Component {
   constructor(props) {
@@ -17,7 +33,8 @@ class Schedules extends Component {
     this.state = {
       currMonth: this.date.getMonth(),
       currYear: this.date.getFullYear(),
-      search: ""
+      search: "",
+      showCompleted: "notcomplete"
     };
 
     this.onNextMonth = this.onNextMonth.bind(this);
@@ -100,6 +117,16 @@ class Schedules extends Component {
         const scheduleDate = new Date(schedule.date);
         return scheduleDate >= startDate && scheduleDate < endDate;
       });
+
+      if (this.state.showCompleted === "notcomplete") {
+        filteredSchedules = filteredSchedules.filter(
+          schedule => schedule.isComplete !== true
+        );
+      } else if (this.state.showCompleted === "complete") {
+        filteredSchedules = filteredSchedules.filter(
+          schedule => schedule.isComplete
+        );
+      }
 
       scheduleContent = filteredSchedules.map(schedule => {
         const schedProject = projects.find(project => {
@@ -216,7 +243,17 @@ class Schedules extends Component {
                       )
                     </th>
                     <th />
-                    <th />
+                    <th style={{ minWidth: "12rem" }}>
+                      <SelectListGroup
+                        name="showCompleted"
+                        value={this.state.showCompleted}
+                        onChange={this.onChange}
+                        error={null}
+                        options={showCompletedOptions}
+                        info=""
+                        style={{ marginBottom: "0" }}
+                      />
+                    </th>
                     <th>
                       {" "}
                       <Link
