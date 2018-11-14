@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
+import ConfirmRemoveModal from "../common/ConfirmRemoveModal";
 import {
   getSchedule,
   deleteSchedule,
@@ -15,7 +16,8 @@ class Schedule extends Component {
     super(props);
 
     this.state = {
-      showTip: false
+      showTip: false,
+      showModal: false
     };
   }
 
@@ -29,6 +31,14 @@ class Schedule extends Component {
 
   onDeleteSchedule() {
     this.props.deleteSchedule(this.props.match.params.id, this.props.history);
+  }
+
+  onShowModal() {
+    this.setState({ showModal: true });
+  }
+
+  onCloseModal() {
+    this.setState({ showModal: false });
   }
 
   showTip() {
@@ -117,7 +127,7 @@ class Schedule extends Component {
                         <button
                           onClick={this.completeSchedule.bind(this)}
                           className="btn btn-outline-primary btn-lg"
-                          style={{ width: "15rem" }}
+                          style={{ width: "15rem", transition: "all .5s" }}
                           onMouseEnter={this.showTip.bind(this)}
                           onMouseOut={this.hideTip.bind(this)}
                         >
@@ -144,7 +154,7 @@ class Schedule extends Component {
           </button>
           <button
             className="btn btn-dark col-6 mt-2"
-            onClick={this.onDeleteSchedule.bind(this)}
+            onClick={this.onShowModal.bind(this)}
           >
             Remove
           </button>
@@ -154,6 +164,11 @@ class Schedule extends Component {
 
     return (
       <div className="container">
+        <ConfirmRemoveModal
+          show={this.state.showModal}
+          onClose={this.onCloseModal.bind(this)}
+          onConfirm={this.onDeleteSchedule.bind(this)}
+        />
         <div className="row">
           <div className="col-md-2" />
           <div className="ml-4">
