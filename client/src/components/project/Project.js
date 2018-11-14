@@ -3,10 +3,18 @@ import PropTypes from "prop-types";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import isEmpty from "../../validation/is-empty";
+import ConfirmRemoveModal from "../common/ConfirmRemoveModal";
 import Spinner from "../common/Spinner";
 import { getProject, deleteProject } from "../../actions/projectActions";
 
 class Project extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showModal: false
+    };
+  }
   componentDidMount() {
     this.props.getProject(this.props.match.params.id);
   }
@@ -17,6 +25,14 @@ class Project extends Component {
 
   onDeleteProject() {
     this.props.deleteProject(this.props.match.params.id, this.props.history);
+  }
+
+  onShowModal() {
+    this.setState({ showModal: true });
+  }
+
+  onCloseModal() {
+    this.setState({ showModal: false });
   }
 
   render() {
@@ -150,7 +166,7 @@ class Project extends Component {
           </button>
           <button
             className="btn btn-dark col-6"
-            onClick={this.onDeleteProject.bind(this)}
+            onClick={this.onShowModal.bind(this)}
           >
             Remove
           </button>
@@ -160,6 +176,11 @@ class Project extends Component {
 
     return (
       <div className="container">
+        <ConfirmRemoveModal
+          show={this.state.showModal}
+          onClose={this.onCloseModal.bind(this)}
+          onConfirm={this.onDeleteProject.bind(this)}
+        />
         <div className="row">
           <div className="col-md-8 m-auto">{projectContent}</div>
         </div>
