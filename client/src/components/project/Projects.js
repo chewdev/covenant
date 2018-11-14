@@ -2,85 +2,17 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import Spinner from "../common/Spinner";
+import SpinnerRow from "../common/SpinnerRow";
 import TextFieldGroup from "../common/TextFieldGroup";
 import SelectListGroup from "../common/SelectListGroup";
 import { getProjects, setProjectCompleted } from "../../actions/projectActions";
-
-function treatAsUTC(date) {
-  var result = new Date(date);
-  result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
-  return result;
-}
-
-function timeBetween(startDate, endDate) {
-  var millisecondsPerHour = 60 * 60 * 1000;
-  let hoursBetween = Math.round(
-    (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerHour
-  );
-  if (hoursBetween >= 24) {
-    return `${Math.floor(hoursBetween / 24)} Days Ago`;
-  } else {
-    return `${hoursBetween} Hours Ago`;
-  }
-}
-const priorityMap = {
-  "Request Received": 0,
-  "Needs Bid- Simple": 1,
-  "Needs Bid- Complicated": 2,
-  "Bid Sent- Awaiting Approval": 3,
-  "Need To Order Parts": 4,
-  "Waiting on Parts": 5,
-  "Need To Schedule": 6,
-  "Scheduled- Waiting": 7,
-  "Needs Invoice": 8,
-  "Invoiced- Awaiting Payment": 9,
-  Completed: 10
-};
-const searchOptions = [
-  {
-    label: "Project Name",
-    value: "projectname"
-  },
-  {
-    label: "Customer Name",
-    value: "customer"
-  },
-  {
-    label: "Current Status",
-    value: "currentstatus"
-  }
-];
-
-const sortOptions = [
-  {
-    label: "Last Updated - Newest",
-    value: "datenew"
-  },
-  {
-    label: "Last Updated - Oldest",
-    value: "dateold"
-  },
-  {
-    label: "Priority",
-    value: "priority"
-  }
-];
-
-const showCompletedOptions = [
-  {
-    label: "Not Completed",
-    value: "notcomplete"
-  },
-  {
-    label: "Completed",
-    value: "complete"
-  },
-  {
-    label: "All",
-    value: "all"
-  }
-];
+import { timeBetween } from "../../utils/time";
+import {
+  searchOptions,
+  sortOptions,
+  showCompletedOptions,
+  priorityMap
+} from "./projectSelectOptions";
 
 class Projects extends Component {
   constructor(props) {
@@ -118,16 +50,7 @@ class Projects extends Component {
     let projectContent;
 
     if (projects === null || projectsloading) {
-      projectContent = (
-        <tr>
-          <td />
-          <td>
-            <Spinner />
-          </td>
-          <td />
-          <td />
-        </tr>
-      );
+      projectContent = <SpinnerRow />;
     } else {
       let filteredProjects = projects;
       if (this.state.search) {
