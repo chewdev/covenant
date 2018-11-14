@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
+import ConfirmRemoveModal from "../common/ConfirmRemoveModal";
 import { getCustomer, deleteCustomer } from "../../actions/customerActions";
 import { getCustomerProjects } from "../../actions/projectActions";
 import isEmpty from "../../validation/is-empty";
@@ -13,7 +14,8 @@ class Customer extends Component {
 
     this.state = {
       showProjects: false,
-      projectsLoaded: false
+      projectsLoaded: false,
+      showModal: false
     };
   }
 
@@ -23,6 +25,14 @@ class Customer extends Component {
 
   onEditCustomer() {
     this.props.history.push(`/customers/${this.props.match.params.id}/edit`);
+  }
+
+  onShowModal() {
+    this.setState({ showModal: true });
+  }
+
+  onCloseModal() {
+    this.setState({ showModal: false });
   }
 
   onDeleteCustomer() {
@@ -153,7 +163,7 @@ class Customer extends Component {
           </button>
           <button
             className="btn btn-dark col-6 mt-2"
-            onClick={this.onDeleteCustomer.bind(this)}
+            onClick={this.onShowModal.bind(this)}
           >
             Remove
           </button>
@@ -163,6 +173,11 @@ class Customer extends Component {
 
     return (
       <div className="container">
+        <ConfirmRemoveModal
+          show={this.state.showModal}
+          onClose={this.onCloseModal.bind(this)}
+          onConfirm={this.onDeleteCustomer.bind(this)}
+        />
         <div className="row my-4">
           <div className="col-md-2" />
           <div className="ml-4">
