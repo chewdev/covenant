@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import Spinner from "../common/Spinner";
+import SpinnerRow from "../common/SpinnerRow";
 import { getSchedules } from "../../actions/scheduleActions";
 import { getProjects } from "../../actions/projectActions";
 import { getEmployees } from "../../actions/employeeActions";
@@ -81,16 +81,7 @@ class Schedules extends Component {
       employees === null ||
       emplLoading
     ) {
-      scheduleContent = (
-        <tr>
-          <td />
-          <td>
-            <Spinner />
-          </td>
-          <td />
-          <td />
-        </tr>
-      );
+      scheduleContent = <SpinnerRow />;
     } else {
       const months = [
         "January",

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import Spinner from "../common/Spinner";
+import SpinnerRow from "../common/SpinnerRow";
 import TextFieldGroup from "../common/TextFieldGroup";
 import SelectListGroup from "../common/SelectListGroup";
 import { getEmployees } from "../../actions/employeeActions";
@@ -43,16 +43,7 @@ class Employees extends Component {
     ];
 
     if (employees === null || employeesloading) {
-      employeeContent = (
-        <tr>
-          <td />
-          <td>
-            <Spinner />
-          </td>
-          <td />
-          <td />
-        </tr>
-      );
+      employeeContent = <SpinnerRow />;
     } else {
       let filteredEmployees = employees;
       if (this.state.search) {

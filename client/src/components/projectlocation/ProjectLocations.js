@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import Spinner from "../common/Spinner";
+import SpinnerRow from "../common/SpinnerRow";
 import TextFieldGroup from "../common/TextFieldGroup";
 import { getProjectLocations } from "../../actions/projectlocationActions";
 
@@ -50,16 +50,7 @@ class ProjectLocations extends Component {
       projectlocationsloading ||
       !this.state.hasReceivedData
     ) {
-      projLocContent = (
-        <tr>
-          <td />
-          <td>
-            <Spinner />
-          </td>
-          <td />
-          <td />
-        </tr>
-      );
+      projLocContent = <SpinnerRow />;
     } else {
       let filteredProjLocs = projectlocations;
       if (this.state.search) {
