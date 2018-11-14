@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import Spinner from "../common/Spinner";
+import SpinnerRow from "../common/SpinnerRow";
 import TextFieldGroup from "../common/TextFieldGroup";
 import { getCustomers } from "../../actions/customerActions";
 
@@ -30,16 +30,7 @@ class Customers extends Component {
     let customerContent;
 
     if (customers === null || customersloading) {
-      customerContent = (
-        <tr>
-          <td />
-          <td>
-            <Spinner />
-          </td>
-          <td />
-          <td />
-        </tr>
-      );
+      customerContent = <SpinnerRow />;
     } else {
       let filteredCustomers = customers;
       if (this.state.search) {
