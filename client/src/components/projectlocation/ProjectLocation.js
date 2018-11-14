@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
+import ConfirmRemoveModal from "../common/ConfirmRemoveModal";
 import {
   getProjectLocation,
   getProjectLocationProjects,
@@ -16,7 +17,8 @@ class ProjectLocation extends Component {
 
     this.state = {
       showProjects: false,
-      projectsLoaded: false
+      projectsLoaded: false,
+      showModal: false
     };
   }
 
@@ -35,6 +37,14 @@ class ProjectLocation extends Component {
       this.props.match.params.id,
       this.props.history
     );
+  }
+
+  onShowModal() {
+    this.setState({ showModal: true });
+  }
+
+  onCloseModal() {
+    this.setState({ showModal: false });
   }
 
   onShowProjects() {
@@ -156,7 +166,7 @@ class ProjectLocation extends Component {
           </button>
           <button
             className="btn btn-dark col-6 mt-2"
-            onClick={this.onDeleteProjLoc.bind(this)}
+            onClick={this.onShowModal.bind(this)}
           >
             Remove
           </button>
@@ -166,6 +176,11 @@ class ProjectLocation extends Component {
 
     return (
       <div className="container">
+        <ConfirmRemoveModal
+          show={this.state.showModal}
+          onClose={this.onCloseModal.bind(this)}
+          onConfirm={this.onDeleteProjLoc.bind(this)}
+        />
         <div className="row my-4">
           <div className="col-md-2" />
           <div className="ml-4">
