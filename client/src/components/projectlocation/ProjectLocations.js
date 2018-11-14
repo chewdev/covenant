@@ -11,7 +11,8 @@ class ProjectLocations extends Component {
     super(props);
 
     this.state = {
-      search: ""
+      search: "",
+      hasReceivedData: false
     };
 
     this.onChange = this.onChange.bind(this);
@@ -19,6 +20,18 @@ class ProjectLocations extends Component {
 
   componentDidMount() {
     this.props.getProjectLocations();
+  }
+
+  shouldComponentUpdate(props, state) {
+    if (
+      !this.state.hasReceivedData &&
+      props.projectlocations &&
+      !props.projectlocations.projectlocationsloading
+    ) {
+      this.setState({ hasReceivedData: true });
+    }
+
+    return true;
   }
 
   onChange(e) {
@@ -32,7 +45,11 @@ class ProjectLocations extends Component {
     } = this.props.projectlocations;
     let projLocContent;
 
-    if (projectlocations === null || projectlocationsloading) {
+    if (
+      projectlocations === null ||
+      projectlocationsloading ||
+      !this.state.hasReceivedData
+    ) {
       projLocContent = (
         <tr>
           <td />
