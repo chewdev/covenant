@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
+import ConfirmRemoveModal from "../common/ConfirmRemoveModal";
 import { getEmployee, deleteEmployee } from "../../actions/employeeActions";
 import isEmpty from "../../validation/is-empty";
 
@@ -11,7 +12,8 @@ class Employee extends Component {
     super(props);
 
     this.state = {
-      showSchedule: false
+      showSchedule: false,
+      showModal: false
     };
   }
 
@@ -25,6 +27,14 @@ class Employee extends Component {
 
   onDeleteEmployee() {
     this.props.deleteEmployee(this.props.match.params.id, this.props.history);
+  }
+
+  onShowModal() {
+    this.setState({ showModal: true });
+  }
+
+  onCloseModal() {
+    this.setState({ showModal: false });
   }
 
   onShowSchedule() {
@@ -134,7 +144,7 @@ class Employee extends Component {
           </button>
           <button
             className="btn btn-dark col-6 mt-2"
-            onClick={this.onDeleteEmployee.bind(this)}
+            onClick={this.onShowModal.bind(this)}
           >
             Remove
           </button>
@@ -144,6 +154,11 @@ class Employee extends Component {
 
     return (
       <div className="container">
+        <ConfirmRemoveModal
+          show={this.state.showModal}
+          onClose={this.onCloseModal.bind(this)}
+          onConfirm={this.onDeleteEmployee.bind(this)}
+        />
         <div className="row my-4">
           <div className="col-md-2" />
           <div className="ml-4">
