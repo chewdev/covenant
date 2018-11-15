@@ -98,17 +98,25 @@ class Projects extends Component {
       projectContent = filteredProjects.map(project => (
         <tr className="text-dark" key={project._id}>
           <td>
-            <Link to={`/projects/${project._id}`}>{project.projectname}</Link>
+            <Link
+              to={`/projects/${project._id}`}
+              className="btn btn-link btn-lg btn-link-mod pl-0"
+            >
+              {project.projectname}
+            </Link>
           </td>
           <td>
-            <Link to={`/customers/${project.customer._id}`}>
+            <Link
+              to={`/customers/${project.customer._id}`}
+              className="btn btn-link btn-lg btn-link-mod pl-0"
+            >
               {project.customer.company}
             </Link>
           </td>
           <td>
             {project.currentstatus !== "Completed" ? (
               <button
-                className="btn btn-link btn-lg pl-0"
+                className="btn btn-link btn-lg btn-link-mod pl-0"
                 onClick={() => {
                   this.onCompleteProject(project._id);
                 }}
@@ -127,30 +135,66 @@ class Projects extends Component {
     return (
       <div className="container mt-4">
         <div className="row">
-          <div className="col-sm-8 col-6 px-1">
-            <TextFieldGroup
-              placeholder="Search"
-              name="search"
-              value={this.state.search}
-              onChange={this.onChange}
-              error={null}
-              info=""
-            />
-          </div>
-          <div className="col-sm-4 col-6 px-1">
-            <SelectListGroup
-              name="searchby"
-              value={this.state.searchby}
-              onChange={this.onChange}
-              error={null}
-              options={searchOptions}
-              info="Search by"
-            />
+          <div className="col-sm-8 col-12 px-4">
+            <div className="form-group">
+              <div className="input-group">
+                <div className="input-group-prepend">
+                  <button
+                    className="btn btn-secondary dropdown-toggle"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    {
+                      {
+                        projectname: "Project Name",
+                        customer: "Customer",
+                        currentstatus: "Current Status"
+                      }[this.state.searchby]
+                    }
+                  </button>
+                  <div className="dropdown-menu">
+                    <button
+                      className="dropdown-item"
+                      onClick={() => {
+                        this.setState({ searchby: "projectname" });
+                      }}
+                    >
+                      Project Name
+                    </button>
+                    <button
+                      className="dropdown-item"
+                      onClick={() => {
+                        this.setState({ searchby: "customer" });
+                      }}
+                    >
+                      Customer
+                    </button>
+                    <button
+                      className="dropdown-item"
+                      onClick={() => {
+                        this.setState({ searchby: "currentstatus" });
+                      }}
+                    >
+                      Current Status
+                    </button>
+                  </div>
+                </div>
+                <input
+                  type="text"
+                  className="form-control form-control-lg"
+                  placeholder="Search"
+                  name="search"
+                  value={this.state.search || ""}
+                  onChange={this.onChange}
+                />
+              </div>
+              <small className="form-text text-muted">Search By</small>
+            </div>
           </div>
 
-          <div className="col-sm-8 col-6" />
-
-          <div className="col-sm-4 col-6 px-1">
+          <div className="col-8 col-sm-4 px-4">
             <SelectListGroup
               name="sortby"
               value={this.state.sortby}
