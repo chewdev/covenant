@@ -3,8 +3,6 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import SpinnerRow from "../common/SpinnerRow";
-import TextFieldGroup from "../common/TextFieldGroup";
-import SelectListGroup from "../common/SelectListGroup";
 import { getEmployees } from "../../actions/employeeActions";
 
 class Employees extends Component {
@@ -30,17 +28,6 @@ class Employees extends Component {
   render() {
     const { employees, employeesloading } = this.props.employees;
     let employeeContent;
-
-    const searchOptions = [
-      {
-        label: "Name",
-        value: "name"
-      },
-      {
-        label: "Title",
-        value: "title"
-      }
-    ];
 
     if (employees === null || employeesloading) {
       employeeContent = <SpinnerRow />;
@@ -71,11 +58,21 @@ class Employees extends Component {
         return (
           <tr className="text-dark" key={employee._id}>
             <td>
-              <Link to={`/employees/${employee._id}`}>{employee.name}</Link>
+              <Link
+                to={`/employees/${employee._id}`}
+                className="btn btn-link btn-lg btn-link-mod pl-0"
+              >
+                {employee.name}
+              </Link>
             </td>
             <td>
               {phonenumber ? (
-                <a href={`tel:${phonenumber}`}>{phonenumber}</a>
+                <a
+                  href={`tel:${phonenumber}`}
+                  className="btn btn-link btn-lg btn-link-mod pl-0"
+                >
+                  {phonenumber}
+                </a>
               ) : (
                 null || "Unavailable"
               )}
@@ -97,25 +94,54 @@ class Employees extends Component {
     return (
       <div className="container mt-4">
         <div className="row">
-          <div className="col-sm-9 col-12">
-            <TextFieldGroup
-              placeholder="Search"
-              name="search"
-              value={this.state.search}
-              onChange={this.onChange}
-              error={null}
-              info=""
-            />
-          </div>
-          <div className="col-sm-3 col-6">
-            <SelectListGroup
-              name="searchby"
-              value={this.state.searchby}
-              onChange={this.onChange}
-              error={null}
-              options={searchOptions}
-              info="Search by"
-            />
+          <div className="col-12">
+            <div className="form-group">
+              <div className="input-group">
+                <div className="input-group-prepend">
+                  <button
+                    className="btn btn-secondary dropdown-toggle"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    {
+                      {
+                        name: "Name",
+                        title: "Title"
+                      }[this.state.searchby]
+                    }
+                  </button>
+                  <div className="dropdown-menu">
+                    <button
+                      className="dropdown-item"
+                      onClick={() => {
+                        this.setState({ searchby: "name" });
+                      }}
+                    >
+                      Name
+                    </button>
+                    <button
+                      className="dropdown-item"
+                      onClick={() => {
+                        this.setState({ searchby: "title" });
+                      }}
+                    >
+                      Title
+                    </button>
+                  </div>
+                </div>
+                <input
+                  type="text"
+                  className="form-control form-control-lg"
+                  placeholder="Search"
+                  name="search"
+                  value={this.state.search || ""}
+                  onChange={this.onChange}
+                />
+              </div>
+              <small className="form-text text-muted">Search By</small>
+            </div>
           </div>
           <div className="col">
             <div className="table-responsive">
