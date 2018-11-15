@@ -2,10 +2,6 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-
-  &:focus {
-    outline: none;
-  }
 }
 
 html {
@@ -39,6 +35,12 @@ button {
 
 button:disabled {
   cursor: default;
+}
+
+.btn-link-mod {
+  word-wrap: break-word;
+  white-space: normal;
+  text-align: left;
 }
 
 .table thead th {
