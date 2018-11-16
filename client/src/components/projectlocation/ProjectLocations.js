@@ -1,10 +1,15 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import SpinnerRow from "../common/SpinnerRow";
 import TextFieldGroup from "../common/TextFieldGroup";
 import { getProjectLocations } from "../../actions/projectlocationActions";
+import projectlocationSelector from "../../selectors/projectlocation";
+import TableHead from "../common/TableHead";
+import CovTable from "../common/CovTable";
+import ProjectLocationTableRow from "./ProjectLocationTableRow";
+import AddLink from "../common/LgBlockPrimaryBtnLink";
+import ContainerRow from "../common/ContainerRow";
 
 class ProjectLocations extends Component {
   constructor(props) {
@@ -52,94 +57,50 @@ class ProjectLocations extends Component {
     ) {
       projLocContent = <SpinnerRow />;
     } else {
-      let filteredProjLocs = projectlocations;
-      if (this.state.search) {
-        filteredProjLocs = filteredProjLocs.filter(
-          projectlocation =>
-            projectlocation.locationname &&
-            projectlocation.locationname
-              .toLowerCase()
-              .indexOf(this.state.search.toLowerCase()) !== -1
-        );
-      }
-
-      projLocContent = filteredProjLocs.map(projLoc => {
-        const phonenumber = !projLoc.phonenumber
-          ? null
-          : projLoc.phonenumber.length === 10
-            ? `(${projLoc.phonenumber.slice(0, 3)}) ${projLoc.phonenumber.slice(
-                3,
-                6
-              )}-${projLoc.phonenumber.slice(6)}`
-            : projLoc.phonenumber;
-        return (
-          <tr className="text-dark" key={projLoc._id}>
-            <td>
-              <Link to={`/projectlocations/${projLoc._id}`}>
-                {projLoc.address}
-              </Link>
-            </td>
-            <td>{projLoc.locationname || "Unavailable"}</td>
-            <td>{projLoc.contactname || "Unavailable"}</td>
-            <td>
-              <a
-                className="btn btn-link btn-lg p-0"
-                href={`tel:${phonenumber}`}
-              >
-                {phonenumber}
-              </a>
-            </td>
-          </tr>
-        );
-      });
+      projLocContent = projectlocationSelector(
+        projectlocations,
+        this.state.search
+      ).map(projectlocation => (
+        <ProjectLocationTableRow
+          projectlocation={projectlocation}
+          key={projectlocation._id}
+        />
+      ));
     }
 
     return (
-      <div className="container mt-4">
-        <div className="row">
-          <div className="col-12">
-            <TextFieldGroup
-              placeholder="Search"
-              name="search"
-              value={this.state.search}
-              onChange={this.onChange}
-              error={null}
-              info="Search By Location Name"
-            />
-          </div>
-          <div className="col">
-            <div className="table-responsive">
-              <table className="table table-striped border border-dark">
-                <thead>
-                  <tr>
-                    <th>Project Locations</th>
-                    <th />
-                    <th />
-                    <th>
-                      {" "}
-                      <Link
-                        className="btn btn-primary btn-lg btn-block"
-                        to={"/projectlocations/new"}
-                      >
-                        Add Project Location
-                      </Link>{" "}
-                    </th>
-                  </tr>
-                </thead>
-                <thead className="thead-dark">
-                  <tr>
-                    <th>Location Address</th>
-                    <th>Location Name</th>
-                    <th>Contact</th>
-                    <th>Phone Number</th>
-                  </tr>
-                </thead>
-                <tbody>{projLocContent}</tbody>
-              </table>
-            </div>
-          </div>
+      <ContainerRow>
+        <div className="col-12">
+          <TextFieldGroup
+            placeholder="Search"
+            name="search"
+            value={this.state.search}
+            onChange={this.onChange}
+            error={null}
+            info="Search By Location Name"
+          />
         </div>
-      </div>
+        <CovTable>
+          <TableHead
+            thArray={[
+              "Project Locations",
+              null,
+              null,
+              <AddLink to="/projectlocations/new" text="Add Project Location" />
+            ]}
+          />
+          <TableHead
+            classes="thead-dark"
+            thArray={[
+              "Location Address",
+              "Location Name",
+              "Contact",
+              "Phone Number"
+            ]}
+          />
+          <tbody>{projLocContent}</tbody>
+        </CovTable>
+      </ContainerRow>
     );
   }
 }
