@@ -8,6 +8,13 @@ import { getProjects } from "../../actions/projectActions";
 import { getEmployees } from "../../actions/employeeActions";
 import TextFieldGroup from "../common/TextFieldGroup";
 import SelectListGroup from "../common/SelectListGroup";
+import scheduleSelector from "../../selectors/schedules";
+import ContainerRow from "../common/ContainerRow";
+import CovTable from "../common/CovTable";
+import TableHead from "../common/TableHead";
+import AddLink from "../common/LgBlockPrimaryBtnLink";
+import TableRow from "../common/TableRow";
+import ScheduleTableRow from "./ScheduleTableRow";
 
 const showCompletedOptions = [
   {
@@ -162,114 +169,83 @@ class Schedules extends Component {
         date = date ? date.toLocaleString() : date;
 
         return (
-          <tr className="text-dark" key={schedule._id}>
-            <td>
-              <Link
-                className="btn btn-secondary"
-                to={`/schedule/${schedule._id}`}
-              >
-                Open Item
-              </Link>
-            </td>
-            <td>
-              <Link to={`/projects/${schedule.project}`}>{projectName}</Link>
-            </td>
-            <td>
-              {schedEmployees && schedEmployees.length > 0
-                ? schedEmployees
-                : "N/A"}
-            </td>
-            <td>{date || "Unavailable"}</td>
-          </tr>
+          <ScheduleTableRow
+            key={schedule._id}
+            schedule={schedule}
+            projectName={projectName}
+            date={date}
+            schedEmployees={schedEmployees}
+          />
         );
       });
       scheduleContent =
         scheduleContent.length > 0 ? (
           scheduleContent
         ) : (
-          <tr className="text-dark">
-            <td>No Projects Scheduled This Month</td>
-            <td />
-            <td />
-            <td />
-          </tr>
+          <TableRow
+            classes="text-dark"
+            tdArray={["No Projects Scheduled This Month", null, null, null]}
+          />
         );
     }
 
     return (
-      <div className="container mt-4">
-        <div className="row">
-          <div className="col-12">
-            <TextFieldGroup
-              placeholder="Search"
-              name="search"
-              value={this.state.search}
-              onChange={this.onChange}
-              error={null}
-              info="Search By Project Name"
-            />
-          </div>
-          <div className="col">
-            <div className="table-responsive">
-              <button
-                onClick={this.onPrevMonth}
-                className="btn btn-primary btn-lg mb-4 mr-4"
-              >
-                Previous Month
-              </button>
-              <button
-                onClick={this.onNextMonth}
-                className="btn btn-primary btn-lg mb-4"
-              >
-                Next Month
-              </button>
-              <table className="table table-striped border border-dark">
-                <thead>
-                  <tr>
-                    <th>
-                      Schedule <br /> (
-                      {`${month ? month : ""} ${
-                        month ? this.state.currYear : ""
-                      }`}
-                      )
-                    </th>
-                    <th />
-                    <th style={{ minWidth: "12rem" }}>
-                      <SelectListGroup
-                        name="showCompleted"
-                        value={this.state.showCompleted}
-                        onChange={this.onChange}
-                        error={null}
-                        options={showCompletedOptions}
-                        info=""
-                        style={{ marginBottom: "0" }}
-                      />
-                    </th>
-                    <th>
-                      {" "}
-                      <Link
-                        className="btn btn-primary btn-lg btn-block"
-                        to={"/schedule/new"}
-                      >
-                        Add To Schedule
-                      </Link>{" "}
-                    </th>
-                  </tr>
-                </thead>
-                <thead className="thead-dark">
-                  <tr>
-                    <th>Schedule</th>
-                    <th>Project</th>
-                    <th>Employees</th>
-                    <th>Date</th>
-                  </tr>
-                </thead>
-                <tbody>{scheduleContent}</tbody>
-              </table>
-            </div>
-          </div>
+      <ContainerRow>
+        <div className="col-12">
+          <TextFieldGroup
+            placeholder="Search"
+            name="search"
+            value={this.state.search}
+            onChange={this.onChange}
+            error={null}
+            info="Search By Project Name"
+          />
         </div>
-      </div>
+        <div className="col-12">
+          <button
+            onClick={this.onPrevMonth}
+            className="btn btn-primary btn-lg mb-4 mr-4"
+          >
+            Previous Month
+          </button>
+          <button
+            onClick={this.onNextMonth}
+            className="btn btn-primary btn-lg mb-4"
+          >
+            Next Month
+          </button>
+        </div>
+        <CovTable>
+          <TableHead
+            thArray={[
+              <React.Fragment>
+                Schedule <br />{" "}
+                <span style={{ whiteSpace: "nowrap" }}>
+                  ({`${month ? month : ""} ${month ? this.state.currYear : ""}`}
+                  )
+                </span>
+              </React.Fragment>,
+              null,
+              <SelectListGroup
+                name="showCompleted"
+                value={this.state.showCompleted}
+                onChange={this.onChange}
+                error={null}
+                options={showCompletedOptions}
+                info=""
+                style={{ marginBottom: "0", minWidth: "12rem" }}
+              />,
+              <AddLink text="Add To Schedule" to={"/schedule/new"} />
+            ]}
+          />
+          <TableHead
+            classes="thead-dark"
+            thArray={["Schedule", "Project", "Employees", "Date"]}
+          />
+
+          <tbody>{scheduleContent}</tbody>
+        </CovTable>
+      </ContainerRow>
     );
   }
 }
