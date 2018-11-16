@@ -30,10 +30,7 @@ class Dashboard extends Component {
             <div className="col-md-8 m-auto">
               <div className="card text-center border-dark">
                 <div className="card-header bg-dark text-white">Dashboard</div>
-                <div className="card-body p-0 pt-2">
-                  <div className="card-title text-secondary">
-                    <h2>What would you like to do?</h2>
-                  </div>
+                <div className="card-body p-0">
                   <div className="list-group">
                     <div className="list-group-item">
                       <div className="row mt-4">
