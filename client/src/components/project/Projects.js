@@ -3,16 +3,15 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import SpinnerRow from "../common/SpinnerRow";
-import TextFieldGroup from "../common/TextFieldGroup";
 import SelectListGroup from "../common/SelectListGroup";
 import { getProjects, setProjectCompleted } from "../../actions/projectActions";
-import { timeBetween } from "../../utils/time";
-import {
-  searchOptions,
-  sortOptions,
-  showCompletedOptions,
-  priorityMap
-} from "./projectSelectOptions";
+import { sortOptions, showCompletedOptions } from "./projectSelectOptions";
+import projectSelector from "../../selectors/projects";
+import TableHead from "../common/TableHead";
+import CovTable from "../common/CovTable";
+import ProjectTableRow from "./ProjectTableRow";
+import AddLink from "../common/LgBlockPrimaryBtnLink";
+import ContainerRow from "../common/ContainerRow";
 
 class Projects extends Component {
   constructor(props) {
@@ -20,8 +19,8 @@ class Projects extends Component {
 
     this.state = {
       search: "",
-      searchby: "projectname",
-      sortby: "",
+      searchBy: "projectname",
+      sortBy: "datenew",
       showCompleted: "notcomplete"
     };
 
@@ -52,203 +51,120 @@ class Projects extends Component {
     if (projects === null || projectsloading) {
       projectContent = <SpinnerRow />;
     } else {
-      let filteredProjects = projects;
-      if (this.state.search) {
-        if (
-          this.state.searchby === "customer" &&
-          projects[0] &&
-          projects[0]["customer"] &&
-          projects[0]["customer"]["company"]
-        ) {
-          filteredProjects = projects.filter(
-            project =>
-              project["customer"]["company"]
-                .toLowerCase()
-                .indexOf(this.state.search.toLowerCase()) !== -1
-          );
-        } else if (
-          this.state.searchby !== "customer" &&
-          projects[0] &&
-          projects[0][this.state.searchby]
-        ) {
-          filteredProjects = projects.filter(
-            project =>
-              project[this.state.searchby]
-                .toLowerCase()
-                .indexOf(this.state.search.toLowerCase()) !== -1
-          );
-        }
-      }
-
-      if (this.state.sortby === "priority") {
-        filteredProjects.sort(
-          (proj1, proj2) =>
-            priorityMap[proj1.currentstatus] - priorityMap[proj2.currentstatus]
-        );
-      } else if (this.state.sortby === "datenew") {
-        filteredProjects.sort(
-          (proj1, proj2) => new Date(proj2.date) - new Date(proj1.date)
-        );
-      } else if (this.state.sortby === "dateold") {
-        filteredProjects.sort(
-          (proj1, proj2) => new Date(proj1.date) - new Date(proj2.date)
-        );
-      }
-
-      projectContent = filteredProjects.map(project => (
-        <tr className="text-dark" key={project._id}>
-          <td>
-            <Link
-              to={`/projects/${project._id}`}
-              className="btn btn-link btn-lg btn-link-mod pl-0"
-            >
-              {project.projectname}
-            </Link>
-          </td>
-          <td>
-            <Link
-              to={`/customers/${project.customer._id}`}
-              className="btn btn-link btn-lg btn-link-mod pl-0"
-            >
-              {project.customer.company}
-            </Link>
-          </td>
-          <td>
-            {project.currentstatus !== "Completed" ? (
-              <button
-                className="btn btn-link btn-lg btn-link-mod pl-0"
-                onClick={() => {
-                  this.onCompleteProject(project._id);
-                }}
-              >
-                {project.currentstatus}
-              </button>
-            ) : (
-              project.currentstatus
-            )}
-          </td>
-          <td>{timeBetween(project.date, Date.now())}</td>
-        </tr>
-      ));
+      projectContent = projectSelector(projects || [], { ...this.state }).map(
+        project => (
+          <ProjectTableRow
+            project={project}
+            key={project._id}
+            onCompleteProject={this.onCompleteProject.bind(this)}
+          />
+        )
+      );
     }
 
     return (
-      <div className="container mt-4">
-        <div className="row">
-          <div className="col-sm-8 col-12 px-4">
-            <div className="form-group">
-              <div className="input-group">
-                <div className="input-group-prepend">
-                  <button
-                    className="btn btn-secondary dropdown-toggle"
-                    type="button"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                  >
+      <ContainerRow>
+        <div className="col-sm-8 col-12 px-4">
+          <div className="form-group">
+            <div className="input-group">
+              <div className="input-group-prepend">
+                <button
+                  className="btn btn-secondary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  {
                     {
-                      {
-                        projectname: "Project Name",
-                        customer: "Customer",
-                        currentstatus: "Current Status"
-                      }[this.state.searchby]
-                    }
+                      projectname: "Project Name",
+                      customer: "Customer",
+                      currentstatus: "Current Status"
+                    }[this.state.searchBy]
+                  }
+                </button>
+                <div className="dropdown-menu">
+                  <button
+                    className="dropdown-item"
+                    onClick={() => {
+                      this.setState({ searchBy: "projectname" });
+                    }}
+                  >
+                    Project Name
                   </button>
-                  <div className="dropdown-menu">
-                    <button
-                      className="dropdown-item"
-                      onClick={() => {
-                        this.setState({ searchby: "projectname" });
-                      }}
-                    >
-                      Project Name
-                    </button>
-                    <button
-                      className="dropdown-item"
-                      onClick={() => {
-                        this.setState({ searchby: "customer" });
-                      }}
-                    >
-                      Customer
-                    </button>
-                    <button
-                      className="dropdown-item"
-                      onClick={() => {
-                        this.setState({ searchby: "currentstatus" });
-                      }}
-                    >
-                      Current Status
-                    </button>
-                  </div>
+                  <button
+                    className="dropdown-item"
+                    onClick={() => {
+                      this.setState({ searchBy: "customer" });
+                    }}
+                  >
+                    Customer
+                  </button>
+                  <button
+                    className="dropdown-item"
+                    onClick={() => {
+                      this.setState({ searchBy: "currentstatus" });
+                    }}
+                  >
+                    Current Status
+                  </button>
                 </div>
-                <input
-                  type="text"
-                  className="form-control form-control-lg"
-                  placeholder="Search"
-                  name="search"
-                  value={this.state.search || ""}
-                  onChange={this.onChange}
-                />
               </div>
-              <small className="form-text text-muted">Search By</small>
+              <input
+                type="text"
+                className="form-control form-control-lg"
+                placeholder="Search"
+                name="search"
+                value={this.state.search || ""}
+                onChange={this.onChange}
+              />
             </div>
-          </div>
-
-          <div className="col-8 col-sm-4 px-4">
-            <SelectListGroup
-              name="sortby"
-              value={this.state.sortby}
-              onChange={this.onChange}
-              error={null}
-              options={sortOptions}
-              info="Sort By"
-            />
-          </div>
-          <div className="col">
-            <div className="table-responsive">
-              <table className="table table-striped border border-dark">
-                <thead>
-                  <tr>
-                    <th>Projects</th>
-                    <th />
-                    <th>
-                      <SelectListGroup
-                        name="showCompleted"
-                        value={this.state.showCompleted}
-                        onChange={this.onChange}
-                        error={null}
-                        options={showCompletedOptions}
-                        info=""
-                        style={{ marginBottom: "0" }}
-                      />
-                    </th>
-                    <th>
-                      <Link
-                        className="btn btn-primary btn-lg btn-block"
-                        to={"/projects/new"}
-                      >
-                        Add Project
-                      </Link>
-                    </th>
-                  </tr>
-                </thead>
-                <thead className="thead-dark">
-                  <tr>
-                    <th>Project Name</th>
-                    <th>Customer</th>
-                    <th>
-                      Current Status <br />
-                      (Click To Complete)
-                    </th>
-                    <th>Last Updated</th>
-                  </tr>
-                </thead>
-                <tbody>{projectContent}</tbody>
-              </table>
-            </div>
+            <small className="form-text text-muted">Search By</small>
           </div>
         </div>
-      </div>
+
+        <div className="col-8 col-sm-4 px-4">
+          <SelectListGroup
+            name="sortBy"
+            value={this.state.sortBy}
+            onChange={this.onChange}
+            error={null}
+            options={sortOptions}
+            info="Sort By"
+          />
+        </div>
+        <CovTable>
+          <TableHead
+            thArray={[
+              "Projects",
+              null,
+              <SelectListGroup
+                name="showCompleted"
+                value={this.state.showCompleted}
+                onChange={this.onChange}
+                error={null}
+                options={showCompletedOptions}
+                info=""
+                style={{ marginBottom: "0" }}
+              />,
+              <AddLink text="Add Project" to={"/projects/new"} />
+            ]}
+          />
+          <TableHead
+            classes="thead-dark"
+            thArray={[
+              "Project Name",
+              "Customer",
+              <React.Fragment>
+                Current Status <br /> (Click To Complete)
+              </React.Fragment>,
+              "Last Updated"
+            ]}
+          />
+
+          <tbody>{projectContent}</tbody>
+        </CovTable>
+      </ContainerRow>
     );
   }
 }
