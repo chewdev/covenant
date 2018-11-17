@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function ListGroupItemh3p({ h3, pArray }) {
+export default function ListGroupItemh3p({ h3, pArray, link }) {
   return (
     <React.Fragment>
       <h3>
@@ -12,6 +12,7 @@ export default function ListGroupItemh3p({ h3, pArray }) {
             {pValue}
           </p>
         ))}
+      {link}
     </React.Fragment>
   );
 }
