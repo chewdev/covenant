@@ -6,31 +6,43 @@ import isEmpty from "../../validation/is-empty";
 import ConfirmRemoveModal from "../common/ConfirmRemoveModal";
 import Spinner from "../common/Spinner";
 import { getProject, deleteProject } from "../../actions/projectActions";
+import ListGroupItemh3p from "../common/ListGroupItemh3p";
+import PayItem from "./PayItem";
+import POItem from "./POItem";
+import CardHeader from "../common/CardHeader";
+import CardHeaderLink from "../common/CardHeaderLink";
+import CardFooter from "../common/CardFooter";
+import TwoColumnItemRow from "../common/TwoColumnItemRow";
+
+function TwoOrOneColumn(a, b, aItem, bItem) {
+  return a && b ? (
+    <div className="list-group-item px-0">
+      <TwoColumnItemRow items={[aItem, bItem]} />
+    </div>
+  ) : a ? (
+    <div className="list-group-item">{aItem}</div>
+  ) : b ? (
+    <div className="list-group-item">{bItem}</div>
+  ) : null;
+}
 
 class Project extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       showModal: false
     };
   }
+
   componentDidMount() {
     this.props.getProject(this.props.match.params.id);
   }
-
-  onEditProject() {
-    this.props.history.push(`/projects/${this.props.match.params.id}/edit`);
-  }
-
   onDeleteProject() {
     this.props.deleteProject(this.props.match.params.id, this.props.history);
   }
-
   onShowModal() {
     this.setState({ showModal: true });
   }
-
   onCloseModal() {
     this.setState({ showModal: false });
   }
@@ -38,138 +50,144 @@ class Project extends Component {
   render() {
     const { project, projectloading } = this.props.projects;
     let projectContent;
-    const backLink = (
-      <Link className="btn btn-lg btn-primary mb-4" to="/projects">
-        Back to All Projects
-      </Link>
-    );
-
     if (project === null) {
       projectContent = (
         <div className="my-4">
-          {backLink}
+          <Link className="btn btn-outline-dark mb-2" to="/projects">
+            Back to Projects
+          </Link>
           <div className="alert alert-danger">Project not found</div>
         </div>
       );
     } else if (isEmpty(project) || projectloading) {
       projectContent = <Spinner />;
     } else {
+      const {
+        currentstatus,
+        nextsteps,
+        projectname,
+        customer,
+        projectlocation,
+        customerponumber,
+        locationponumber,
+        covenantponumber,
+        estimatenumber,
+        invoicenumber,
+        totalamount,
+        paidamount
+      } = project;
+      const estimateItem = (
+        <ListGroupItemh3p h3="Estimate #" pArray={[estimatenumber]} />
+      );
+      const invoiceItem = (
+        <ListGroupItemh3p h3="Invoice #" pArray={[invoicenumber]} />
+      );
+      const customerItem = (
+        <ListGroupItemh3p
+          h3="Customer"
+          link={
+            <Link to={`/customers/${customer._id}`} className="text-primary">
+              {customer.company}
+            </Link>
+          }
+        />
+      );
+      const projectLocItem = (
+        <ListGroupItemh3p
+          h3="Project Location"
+          link={
+            <Link
+              className="text-primary"
+              to={`/projectlocations/${projectlocation._id}`}
+            >
+              {projectlocation.address}
+            </Link>
+          }
+        />
+      );
+      const hasPOs = !!(
+        customerponumber ||
+        locationponumber ||
+        covenantponumber
+      );
+      const hasAmounts = !!(totalamount || paidamount);
+      const poItem = <POItem project={project} />;
+      const payItem = <PayItem project={project} />;
+
       projectContent = (
         <div className="container my-4">
-          {backLink}
-          {project.currentstatus !== "Completed" ? (
-            <Link
-              to={`/projects/${this.props.match.params.id}/schedule`}
-              className="btn btn-lg btn-secondary mb-4 float-right"
-            >
-              Schedule Project
-            </Link>
-          ) : null}
-          <div className="card text-center border-d">
-            <div className="card-header bg-dark text-white">Project</div>
-            <div className="card-body p-0 pt-2">
-              <h2 className="card-title text-primary">
-                <strong>{project.projectname}</strong>
-              </h2>
+          <div className="card text-center border-dark">
+            <CardHeader
+              links={[
+                <CardHeaderLink to="/projects" text="Back to Projects" />,
+                currentstatus !== "Completed" ? (
+                  <CardHeaderLink
+                    text="Schedule Project"
+                    to={`/projects/${this.props.match.params.id}/schedule`}
+                  />
+                ) : (
+                  <div />
+                )
+              ]}
+              title={projectname}
+            />
+            <div className="card-body p-0">
               <div className="list-group">
                 <div className="list-group-item">
-                  <h3>
-                    Customer:{" "}
-                    <Link to={`/customers/${project.customer._id}`}>
-                      {project.customer.company}
-                    </Link>
-                  </h3>
+                  <ListGroupItemh3p
+                    h3="Current Status"
+                    pArray={[currentstatus]}
+                  />
                 </div>
-                <div className="list-group-item">
-                  <h3>
-                    <u>Project Location</u>
-                  </h3>
-                  <p>{project.projectlocation.address}</p>
-                </div>
-                <div className="list-group-item">
-                  <h3>Current Status: {project.currentstatus || ""}</h3>
-                </div>
-                {project.estimatenumber && (
-                  <div className="list-group-item">
-                    <h3>Estimate #: {project.estimatenumber}</h3>
-                  </div>
+                {TwoOrOneColumn(
+                  customer.company,
+                  projectlocation.address,
+                  customerItem,
+                  projectLocItem
                 )}
-                {project.invoicenumber && (
-                  <div className="list-group-item">
-                    <h3>Invoice #: {project.invoicenumber}</h3>
-                  </div>
+
+                {TwoOrOneColumn(
+                  estimatenumber,
+                  invoicenumber,
+                  estimateItem,
+                  invoiceItem
                 )}
-                {(project.customerponumber ||
-                  project.locationponumber ||
-                  project.covenantponumber) && (
-                  <div className="list-group-item">
-                    <h3>
-                      <u>PO #'s</u>
-                    </h3>
-                    {project.customerponumber ? (
-                      <p>Customer: {project.customerponumber}</p>
-                    ) : null}
-                    {project.locationponumber ? (
-                      <p>Location: {project.locationponumber}</p>
-                    ) : null}
-                    {project.covenantponumber ? (
-                      <p>Covenant: {project.covenantponumber}</p>
-                    ) : null}
-                  </div>
-                )}
-                {project.nextsteps &&
-                  project.nextsteps.length > 0 && (
+                {TwoOrOneColumn(hasPOs, hasAmounts, poItem, payItem)}
+
+                {nextsteps &&
+                  nextsteps.length > 0 && (
                     <div className="list-group-item">
-                      <h3>
-                        <u>Next Steps</u>
-                      </h3>
-                      <ul style={{ listStyleType: "none" }}>
-                        {project.nextsteps.map((nextstep, i) => (
-                          <li key={i}>{nextstep}</li>
+                      <h3>Next Steps</h3>
+
+                      <ul
+                        style={{
+                          listStyleType: "none",
+                          width: "80%",
+                          fontSize: "14px"
+                        }}
+                        className="list-group list-group-flush text-left m-auto"
+                      >
+                        {nextsteps.map((nextstep, i) => (
+                          <li className="list-group-item px-0" key={i}>
+                            <div
+                              className="my-3 px-4 mx-0 border-primary"
+                              style={{ borderLeft: "4px solid" }}
+                            >
+                              {nextstep}
+                            </div>
+                          </li>
                         ))}
                       </ul>
                     </div>
                   )}
 
-                {(project.totalamount || project.paidamount) && (
-                  <div className="list-group-item">
-                    <h3>
-                      <u>Payment Status</u>
-                    </h3>
-                    {project.totalamount && (
-                      <p>Total Due: ${project.totalamount}</p>
-                    )}
-                    {project.totalamount && (
-                      <p>Amount Paid: ${project.paidamount || 0}</p>
-                    )}
-                    {project.totalamount && (
-                      <p>
-                        Remaining Balance: $
-                        {(
-                          parseFloat(project.totalamount) -
-                          (project.paidamount
-                            ? parseFloat(project.paidamount)
-                            : 0)
-                        ).toFixed(2)}
-                      </p>
-                    )}
-                  </div>
-                )}
+                <CardFooter
+                  to={`/projects/${this.props.match.params.id}/edit`}
+                  onClick={this.onShowModal.bind(this)}
+                />
               </div>
             </div>
           </div>
-          <button
-            className="btn btn-secondary col-6"
-            onClick={this.onEditProject.bind(this)}
-          >
-            Edit
-          </button>
-          <button
-            className="btn btn-dark col-6"
-            onClick={this.onShowModal.bind(this)}
-          >
-            Remove
-          </button>
         </div>
       );
     }
@@ -182,7 +200,7 @@ class Project extends Component {
           onConfirm={this.onDeleteProject.bind(this)}
         />
         <div className="row">
-          <div className="col-md-8 m-auto">{projectContent}</div>
+          <div className="col-12 m-auto">{projectContent}</div>
         </div>
       </div>
     );
