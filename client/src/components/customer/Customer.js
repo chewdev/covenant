@@ -4,6 +4,11 @@ import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
 import ConfirmRemoveModal from "../common/ConfirmRemoveModal";
+import CardFooter from "../common/CardFooter";
+import CardHeader from "../common/CardHeader";
+import CardHeaderLink from "../common/CardHeaderLink";
+import ListGroupItemh3p from "../common/ListGroupItemh3p";
+import TwoColumnItemRow from "../common/TwoColumnItemRow";
 import { getCustomer, deleteCustomer } from "../../actions/customerActions";
 import { getCustomerProjects } from "../../actions/projectActions";
 import isEmpty from "../../validation/is-empty";
@@ -96,34 +101,37 @@ class Customer extends Component {
       customerContent = <Spinner />;
     } else {
       customerContent = (
-        <div className="container">
+        <React.Fragment>
           <div className="card text-center border-dark">
-            <div className="card-header bg-dark text-white">Customer</div>
-            <div className="card-body p-0 pt-2">
-              <h2 className="card-title text-primary">
-                <strong>{customer.company}</strong>
-              </h2>
+            <CardHeader
+              links={[
+                <CardHeaderLink to="/customers" text="Back to Customers" />,
+                <div />
+              ]}
+              title={customer.company}
+            />
+            <div className="card-body p-0">
               <div className="list-group">
                 <div className="list-group-item">
-                  <h3 className="card-text">
-                    Email: {customer.email || "No Email Provided"}
-                  </h3>
+                  <TwoColumnItemRow
+                    items={[
+                      <ListGroupItemh3p
+                        h3="Email"
+                        pArray={[customer.email || "Not Provided"]}
+                      />,
+                      <ListGroupItemh3p
+                        h3="Phone Number"
+                        pArray={[customer.phonenumber || "Not Provided"]}
+                      />
+                    ]}
+                  />
                 </div>
 
                 <div className="list-group-item">
-                  <h3 className="card-text">
-                    Phone Number:{" "}
-                    {customer.phonenumber || "No Phone Number Provided"}
-                  </h3>
-                </div>
-
-                <div className="list-group-item">
-                  <h3 className="card-text">
-                    <u>Address</u>
-                  </h3>
-                  <p className="card-text">
-                    {customer.address || "No Address Provided"}
-                  </p>
+                  <ListGroupItemh3p
+                    h3="Address"
+                    pArray={[customer.address || "Not Provided"]}
+                  />
                 </div>
 
                 <div className="list-group-item">
@@ -144,51 +152,33 @@ class Customer extends Component {
                     )}
                   </ul>
                 </div>
+                <CardFooter
+                  to={`/customers/${this.props.match.params.id}/edit`}
+                  onClick={this.onShowModal.bind(this)}
+                />
               </div>
             </div>
           </div>
-
           <button
-            className="btn btn-primary btn-block"
+            className="btn btn-secondary btn-block mt-4"
             onClick={this.onShowProjects.bind(this)}
           >
             Show Projects
           </button>
           {projectContent}
-          <button
-            className="btn btn-secondary col-6 mt-2"
-            onClick={this.onEditCustomer.bind(this)}
-          >
-            Edit
-          </button>
-          <button
-            className="btn btn-dark col-6 mt-2"
-            onClick={this.onShowModal.bind(this)}
-          >
-            Remove
-          </button>
-        </div>
+        </React.Fragment>
       );
     }
 
     return (
-      <div className="container">
+      <div className="container my-4 px-0 px-sm-3">
         <ConfirmRemoveModal
           show={this.state.showModal}
           onClose={this.onCloseModal.bind(this)}
           onConfirm={this.onDeleteCustomer.bind(this)}
         />
-        <div className="row my-4">
-          <div className="col-md-2" />
-          <div className="ml-4">
-            <Link to="/customers" className="btn btn-lg btn-primary ml-4">
-              Back To All Customers
-            </Link>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-md-8 m-auto">{customerContent}</div>
-        </div>
+
+        {customerContent}
       </div>
     );
   }
