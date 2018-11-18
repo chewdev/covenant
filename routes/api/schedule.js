@@ -165,6 +165,72 @@ router.put(
   }
 );
 
+// @route PUT api/schedule/:sched_id/checkin
+// @desc Update schedule item checkin time
+// @access Private route
+router.put(
+  "/:sched_id/checkin",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Schedule.findById(req.params.sched_id)
+      .populate("employees")
+      .populate("project")
+      .then(schedule => {
+        if (!schedule) {
+          return res.status(400).json({
+            error: "Scheduled appointment not found. Unable to check in."
+          });
+        } else {
+          schedule.checkin = new Date();
+          schedule
+            .save()
+            .then(schedule => res.json(schedule))
+            .catch(err =>
+              res.status(400).json({
+                error: "Error updating scheduled appointment check in."
+              })
+            );
+        }
+      })
+      .catch(err =>
+        res.status(404).json({ error: "Scheduled appointment not found." })
+      );
+  }
+);
+
+// @route PUT api/schedule/:sched_id/checkout
+// @desc Update schedule item checkout time
+// @access Private route
+router.put(
+  "/:sched_id/checkout",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Schedule.findById(req.params.sched_id)
+      .populate("employees")
+      .populate("project")
+      .then(schedule => {
+        if (!schedule) {
+          return res.status(400).json({
+            error: "Scheduled appointment not found. Unable to check out."
+          });
+        } else {
+          schedule.checkout = new Date();
+          schedule
+            .save()
+            .then(schedule => res.json(schedule))
+            .catch(err =>
+              res.status(400).json({
+                error: "Error updating scheduled appointment check out."
+              })
+            );
+        }
+      })
+      .catch(err =>
+        res.status(404).json({ error: "Scheduled appointment not found." })
+      );
+  }
+);
+
 // @route PUT api/schedule/:sched_id
 // @desc Update a schedule
 // @access Private route
