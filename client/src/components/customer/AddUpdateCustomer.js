@@ -115,6 +115,7 @@ class AddCompany extends Component {
               value={this.state.company}
               onChange={this.onChange}
               error={errors.company}
+              autofocus={true}
               info="A company name or the main contact's name"
             />
             <TextFieldGroup
