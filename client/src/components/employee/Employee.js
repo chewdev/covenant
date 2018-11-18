@@ -4,6 +4,11 @@ import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
 import ConfirmRemoveModal from "../common/ConfirmRemoveModal";
+import CardFooter from "../common/CardFooter";
+import CardHeader from "../common/CardHeader";
+import CardHeaderLink from "../common/CardHeaderLink";
+import ListGroupItemh3p from "../common/ListGroupItemh3p";
+import TwoColumnItemRow from "../common/TwoColumnItemRow";
 import { getEmployee, deleteEmployee } from "../../actions/employeeActions";
 import isEmpty from "../../validation/is-empty";
 
@@ -55,8 +60,7 @@ class Employee extends Component {
       scheduleContent = this.props.employees.employee.schedule
         .map(
           scheduleItem =>
-            scheduleItem.project.currentstatus === "Completed" ||
-            new Date(scheduleItem.date) < new Date() ? null : (
+            scheduleItem.isComplete ? null : (
               <li key={scheduleItem._id} className="list-group-item">
                 <Link to={`/schedule/${scheduleItem._id}`}>
                   {scheduleItem.project.projectname}
@@ -87,88 +91,88 @@ class Employee extends Component {
       employeeContent = <Spinner />;
     } else {
       employeeContent = (
-        <div className="container">
+        <React.Fragment>
           <div className="card text-center border-dark">
-            <div className="card-header bg-dark text-white">Employee</div>
-            <div className="card-body p-0 pt-2">
-              <div className="card-title text-primary">
-                <h2>
-                  <strong>{employee.name}</strong>
-                </h2>
-                <p>({employee.title})</p>
-              </div>
-              <div className="list-group">
-                <div className="list-group-item">
-                  <h3 className="card-text">
-                    Phone Number:{" "}
+            <CardHeader
+              links={[
+                <CardHeaderLink to="/employees" text="Back to Employees" />,
+                <div />
+              ]}
+              title={employee.name}
+            />
+            <div className="card-body p-0 mt-3">
+              <TwoColumnItemRow
+                items={[
+                  <ListGroupItemh3p
+                    h3="Title"
+                    pArray={[employee.title || "Not Provided"]}
+                  />,
+                  <ListGroupItemh3p
+                    h3="Email"
+                    pArray={[employee.email || "Not Provided"]}
+                  />
+                ]}
+              />
+
+              <TwoColumnItemRow
+                items={[
+                  <React.Fragment>
+                    <h3 className="card-text">
+                      <u>Phone Number</u>
+                    </h3>
                     {employee.phonenumber ? (
-                      <a href={`tel:${employee.phonenumber}`}>
-                        {employee.phonenumber}
-                      </a>
+                      <div className="mb-3">
+                        <a href={`tel:${employee.phonenumber}`}>
+                          {employee.phonenumber}
+                        </a>
+                      </div>
                     ) : (
-                      null || "No Phone Number Provided"
+                      <p className="text-secondary">Not Provided</p>
                     )}
-                  </h3>
-                </div>
+                  </React.Fragment>,
+                  <React.Fragment>
+                    <h3 className="card-text">
+                      <u>Address</u>
+                    </h3>
 
-                <div className="list-group-item">
-                  <h3 className="card-text">
-                    Email: {employee.email || "No Email Provided"}
-                  </h3>
-                </div>
+                    {employee.address ? (
+                      <address className="card-text text-secondary mb-3">
+                        {employee.address}
+                      </address>
+                    ) : (
+                      <p className="text-secondary">"No Address Provided"</p>
+                    )}
+                  </React.Fragment>
+                ]}
+              />
 
-                <div className="list-group-item">
-                  <h3 className="card-text">
-                    <u>Address</u>
-                  </h3>
-                  <p className="card-text">
-                    {employee.address || "No Address Provided"}
-                  </p>
-                </div>
-              </div>
+              <CardFooter
+                to={`/employees/${this.props.match.params.id}/edit`}
+                onClick={this.onShowModal.bind(this)}
+              />
             </div>
           </div>
 
           <button
-            className="btn btn-primary btn-block"
+            className="btn btn-secondary btn-block mt-4"
             onClick={this.onShowSchedule.bind(this)}
           >
             Show Schedule
           </button>
           {scheduleContent}
-          <button
-            className="btn btn-secondary col-6 mt-2"
-            onClick={this.onEditEmployee.bind(this)}
-          >
-            Edit
-          </button>
-          <button
-            className="btn btn-dark col-6 mt-2"
-            onClick={this.onShowModal.bind(this)}
-          >
-            Remove
-          </button>
-        </div>
+        </React.Fragment>
       );
     }
 
     return (
-      <div className="container">
+      <div className="container my-4 px-0 px-sm-4">
         <ConfirmRemoveModal
           show={this.state.showModal}
           onClose={this.onCloseModal.bind(this)}
           onConfirm={this.onDeleteEmployee.bind(this)}
         />
-        <div className="row my-4">
-          <div className="col-md-2" />
-          <div className="ml-4">
-            <Link to="/employees" className="btn btn-lg btn-primary ml-4">
-              Back to All Employees
-            </Link>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-md-8 m-auto">{employeeContent}</div>
+        <div className="row mx-0">
+          <div className="col-md-8 m-auto px-0">{employeeContent}</div>
         </div>
       </div>
     );
