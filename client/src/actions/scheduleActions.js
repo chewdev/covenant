@@ -66,6 +66,46 @@ export const setScheduleComplete = id => dispatch => {
     );
 };
 
+// Check in for Schedule
+export const checkInSchedule = id => dispatch => {
+  dispatch(clearErrors());
+
+  axios
+    .put(`/api/schedule/${id}/checkin`)
+    .then(res =>
+      dispatch({
+        type: GET_SCHEDULE,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Check out of Schedule
+export const checkOutSchedule = id => dispatch => {
+  dispatch(clearErrors());
+
+  axios
+    .put(`/api/schedule/${id}/checkout`)
+    .then(res =>
+      dispatch({
+        type: GET_SCHEDULE,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 // Get Schedule
 export const getSchedules = () => dispatch => {
   dispatch(setSchedulesLoading(true));
