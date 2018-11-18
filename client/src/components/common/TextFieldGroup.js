@@ -11,7 +11,8 @@ const TextFieldGroup = ({
   info,
   type,
   onChange,
-  disabled
+  disabled,
+  autofocus
 }) => {
   return (
     <div className="form-group">
@@ -20,6 +21,7 @@ const TextFieldGroup = ({
         className={classnames("form-control form-control-lg", {
           "is-invalid": error
         })}
+        autoFocus={autofocus || false}
         placeholder={placeholder}
         name={name}
         value={value || ""}
