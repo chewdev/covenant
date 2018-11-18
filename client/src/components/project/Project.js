@@ -115,77 +115,75 @@ class Project extends Component {
       const payItem = <PayItem project={project} />;
 
       projectContent = (
-        <div className="container my-4">
-          <div className="card text-center border-dark">
-            <CardHeader
-              links={[
-                <CardHeaderLink to="/projects" text="Back to Projects" />,
-                currentstatus !== "Completed" ? (
-                  <CardHeaderLink
-                    text="Schedule Project"
-                    to={`/projects/${this.props.match.params.id}/schedule`}
-                  />
-                ) : (
-                  <div />
-                )
-              ]}
-              title={projectname}
-            />
-            <div className="card-body p-0">
-              <div className="list-group">
-                <div className="list-group-item">
-                  <ListGroupItemh3p
-                    h3="Current Status"
-                    pArray={[currentstatus]}
-                  />
-                </div>
-                {TwoOrOneColumn(
-                  customer.company,
-                  projectlocation.address,
-                  customerItem,
-                  projectLocItem
-                )}
-
-                {TwoOrOneColumn(
-                  estimatenumber,
-                  invoicenumber,
-                  estimateItem,
-                  invoiceItem
-                )}
-                {TwoOrOneColumn(hasPOs, hasAmounts, poItem, payItem)}
-
-                {nextsteps &&
-                  nextsteps.length > 0 && (
-                    <div className="list-group-item">
-                      <h3>Next Steps</h3>
-
-                      <ul
-                        style={{
-                          listStyleType: "none",
-                          width: "80%",
-                          fontSize: "14px"
-                        }}
-                        className="list-group list-group-flush text-left m-auto"
-                      >
-                        {nextsteps.map((nextstep, i) => (
-                          <li className="list-group-item px-0" key={i}>
-                            <div
-                              className="my-3 px-4 mx-0 border-primary"
-                              style={{ borderLeft: "4px solid" }}
-                            >
-                              {nextstep}
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                <CardFooter
-                  to={`/projects/${this.props.match.params.id}/edit`}
-                  onClick={this.onShowModal.bind(this)}
+        <div className="card text-center border-dark">
+          <CardHeader
+            links={[
+              <CardHeaderLink to="/projects" text="Back to Projects" />,
+              currentstatus !== "Completed" ? (
+                <CardHeaderLink
+                  text="Schedule Project"
+                  to={`/projects/${this.props.match.params.id}/schedule`}
+                />
+              ) : (
+                <div />
+              )
+            ]}
+            title={projectname}
+          />
+          <div className="card-body p-0">
+            <div className="list-group">
+              <div className="list-group-item">
+                <ListGroupItemh3p
+                  h3="Current Status"
+                  pArray={[currentstatus]}
                 />
               </div>
+              {TwoOrOneColumn(
+                customer.company,
+                projectlocation.address,
+                customerItem,
+                projectLocItem
+              )}
+
+              {TwoOrOneColumn(
+                estimatenumber,
+                invoicenumber,
+                estimateItem,
+                invoiceItem
+              )}
+              {TwoOrOneColumn(hasPOs, hasAmounts, poItem, payItem)}
+
+              {nextsteps &&
+                nextsteps.length > 0 && (
+                  <div className="list-group-item">
+                    <h3>Next Steps</h3>
+
+                    <ul
+                      style={{
+                        listStyleType: "none",
+                        width: "80%",
+                        fontSize: "14px"
+                      }}
+                      className="list-group list-group-flush text-left m-auto"
+                    >
+                      {nextsteps.map((nextstep, i) => (
+                        <li className="list-group-item px-0" key={i}>
+                          <div
+                            className="my-3 px-4 mx-0 border-primary"
+                            style={{ borderLeft: "4px solid" }}
+                          >
+                            {nextstep}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+              <CardFooter
+                to={`/projects/${this.props.match.params.id}/edit`}
+                onClick={this.onShowModal.bind(this)}
+              />
             </div>
           </div>
         </div>
@@ -193,15 +191,13 @@ class Project extends Component {
     }
 
     return (
-      <div className="container">
+      <div className="container px-0 px-sm-3 my-4">
         <ConfirmRemoveModal
           show={this.state.showModal}
           onClose={this.onCloseModal.bind(this)}
           onConfirm={this.onDeleteProject.bind(this)}
         />
-        <div className="row">
-          <div className="col-12 m-auto">{projectContent}</div>
-        </div>
+        {projectContent}
       </div>
     );
   }
