@@ -4,6 +4,11 @@ import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
 import ConfirmRemoveModal from "../common/ConfirmRemoveModal";
+import CardFooter from "../common/CardFooter";
+import CardHeader from "../common/CardHeader";
+import CardHeaderLink from "../common/CardHeaderLink";
+import ListGroupItemh3p from "../common/ListGroupItemh3p";
+import TwoColumnItemRow from "../common/TwoColumnItemRow";
 import {
   getProjectLocation,
   getProjectLocationProjects,
@@ -111,17 +116,21 @@ class ProjectLocation extends Component {
       projLocContent = <Spinner />;
     } else {
       projLocContent = (
-        <div className="container">
+        <React.Fragment>
           <div className="card text-center border-dark">
-            <div className="card-header bg-dark text-white">
-              Project Location
-            </div>
-            <div className="card-body p-0 pt-2">
-              <h2 className="card-title text-primary">
-                <strong>
-                  {projectlocation.locationname || "Location Name Not Provided"}
-                </strong>
-              </h2>
+            <CardHeader
+              links={[
+                <CardHeaderLink
+                  to="/projectlocations"
+                  text="Back to Project Locations"
+                />,
+                <div />
+              ]}
+              title={
+                projectlocation.locationname || "Location Name Not Provided"
+              }
+            />
+            <div className="card-body p-0">
               <div className="list-group">
                 <div className="list-group-item">
                   <h3 className="card-text">
@@ -129,72 +138,56 @@ class ProjectLocation extends Component {
                   </h3>
 
                   {(
-                    <address className="card-text">
+                    <address className="card-text text-secondary">
                       {projectlocation.address}
                     </address>
-                  ) || <p className="card-text">"No Address Provided"</p>}
+                  ) || (
+                    <p className="card-text text-secondary">
+                      "No Address Provided"
+                    </p>
+                  )}
                 </div>
                 <div className="list-group-item">
-                  <h3 className="card-text">
-                    Contact:{" "}
-                    {projectlocation.contactname || "No Contact Provided"}
-                  </h3>
+                  <TwoColumnItemRow
+                    items={[
+                      <ListGroupItemh3p
+                        h3="Contact"
+                        pArray={[projectlocation.contactname || "Not Provided"]}
+                      />,
+                      <ListGroupItemh3p
+                        h3="Phone Number"
+                        pArray={[projectlocation.phonenumber || "Not Provided"]}
+                      />
+                    ]}
+                  />
                 </div>
-
-                <div className="list-group-item">
-                  <h3 className="card-text">
-                    Phone Number:{" "}
-                    {projectlocation.phonenumber || "No Phone Number Provided"}
-                  </h3>
-                </div>
+                <CardFooter
+                  to={`/projectlocations/${this.props.match.params.id}/edit`}
+                  onClick={this.onShowModal.bind(this)}
+                />
               </div>
             </div>
           </div>
 
           <button
-            className="btn btn-primary btn-block"
+            className="btn btn-secondary btn-block mt-4"
             onClick={this.onShowProjects.bind(this)}
           >
             Show Projects
           </button>
           {projectContent}
-          <button
-            className="btn btn-secondary col-6 mt-2"
-            onClick={this.onEditProjLoc.bind(this)}
-          >
-            Edit
-          </button>
-          <button
-            className="btn btn-dark col-6 mt-2"
-            onClick={this.onShowModal.bind(this)}
-          >
-            Remove
-          </button>
-        </div>
+        </React.Fragment>
       );
     }
 
     return (
-      <div className="container">
+      <div className="container my-4 px-0 px-sm-3">
         <ConfirmRemoveModal
           show={this.state.showModal}
           onClose={this.onCloseModal.bind(this)}
           onConfirm={this.onDeleteProjLoc.bind(this)}
         />
-        <div className="row my-4">
-          <div className="col-md-2" />
-          <div className="ml-4">
-            <Link
-              to="/projectlocations"
-              className="btn btn-lg btn-primary ml-4"
-            >
-              Back To All Project Locations
-            </Link>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-md-8 m-auto">{projLocContent}</div>
-        </div>
+        {projLocContent}
       </div>
     );
   }
