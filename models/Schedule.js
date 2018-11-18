@@ -24,6 +24,12 @@ const ScheduleSchema = new Schema({
   isComplete: {
     type: Boolean,
     default: false
+  },
+  checkin: {
+    type: Date
+  },
+  checkout: {
+    type: Date
   }
 });
 
