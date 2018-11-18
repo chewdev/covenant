@@ -102,6 +102,7 @@ class AddEmployee extends Component {
             <TextFieldGroup
               placeholder="* Employee's name"
               name="name"
+              autofocus={true}
               value={this.state.name}
               onChange={this.onChange}
               error={errors.name}
