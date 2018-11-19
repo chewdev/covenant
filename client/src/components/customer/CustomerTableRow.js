@@ -11,10 +11,7 @@ export default function CustomerTableRow({ customer }) {
         <Link to={`/customers/${customer._id}`}>{customer.company}</Link>,
         formatPhoneNumber(customer.phonenumber) || "Unavailable",
         customer.email || "Unavailable",
-        <Link
-          className="btn btn-secondary"
-          to={`/customers/${customer._id}/edit`}
-        >
+        <Link className="btn btn-dark" to={`/customers/${customer._id}/edit`}>
           Update
         </Link>
       ]}
