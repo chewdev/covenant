@@ -303,6 +303,7 @@ class AddProject extends Component {
               <input
                 type="text"
                 autoComplete="off"
+                autoFocus={true}
                 className={classnames("form-control form-control-lg", {
                   "is-invalid": errors.customer
                 })}
@@ -334,7 +335,7 @@ class AddProject extends Component {
               </ul>
             </div>
 
-            <Link className="btn btn-secondary mb-4" to={"/customers/new"}>
+            <Link className="btn btn-dark mb-4" to={"/customers/new"}>
               Add Customer
             </Link>
             <TextFieldGroup
@@ -465,13 +466,16 @@ class AddProject extends Component {
           (this.props.editOrAdd !== "add" &&
             !this.props.isLoading &&
             this.props.projects.project === null) ? (
-            <Link to="/projects" className="btn btn-lg btn-primary ml-4">
+            <Link
+              to="/projects"
+              className="btn btn-lg btn-outline-primary ml-4"
+            >
               Back to All Projects
             </Link>
           ) : (
             <Link
               to={`/projects/${this.props.match.params.id}`}
-              className="btn btn-lg btn-primary ml-4"
+              className="btn btn-lg btn-outline-primary ml-4"
             >
               Back to Project
             </Link>
