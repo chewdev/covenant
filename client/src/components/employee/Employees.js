@@ -48,7 +48,7 @@ class Employees extends Component {
             <div className="input-group">
               <div className="input-group-prepend">
                 <button
-                  className="btn btn-secondary dropdown-toggle"
+                  className="btn btn-dark dropdown-toggle"
                   type="button"
                   data-toggle="dropdown"
                   aria-haspopup="true"
