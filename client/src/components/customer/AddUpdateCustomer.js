@@ -167,13 +167,16 @@ class AddCompany extends Component {
           (this.props.editOrAdd !== "add" &&
             !this.props.isLoading &&
             this.props.customers.customer === null) ? (
-            <Link to="/customers" className="btn btn-lg btn-primary ml-4">
+            <Link
+              to="/customers"
+              className="btn btn-lg btn-outline-primary ml-4"
+            >
               Back to All Customers
             </Link>
           ) : (
             <Link
               to={`/customers/${this.props.match.params.id}`}
-              className="btn btn-lg btn-primary ml-4"
+              className="btn btn-lg btn-outline-primary ml-4"
             >
               Back to Customer
             </Link>
