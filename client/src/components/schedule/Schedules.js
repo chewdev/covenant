@@ -8,7 +8,6 @@ import { getProjects } from "../../actions/projectActions";
 import { getEmployees } from "../../actions/employeeActions";
 import TextFieldGroup from "../common/TextFieldGroup";
 import SelectListGroup from "../common/SelectListGroup";
-import scheduleSelector from "../../selectors/schedules";
 import ContainerRow from "../common/ContainerRow";
 import CovTable from "../common/CovTable";
 import TableHead from "../common/TableHead";
@@ -204,13 +203,13 @@ class Schedules extends Component {
         <div className="col-12">
           <button
             onClick={this.onPrevMonth}
-            className="btn btn-primary btn-lg mb-4 mr-4"
+            className="btn btn-dark btn-lg mb-4 mr-4"
           >
             Previous Month
           </button>
           <button
             onClick={this.onNextMonth}
-            className="btn btn-primary btn-lg mb-4"
+            className="btn btn-dark btn-lg mb-4"
           >
             Next Month
           </button>
