@@ -222,6 +222,7 @@ class AddSchedule extends Component {
                 onChange={this.onChange}
                 error={errors.project}
                 options={projectOptions}
+                autofocus={true}
                 info="Select a project to schedule"
               />
               <div>{selectedEmployees.join(", ")}</div>
@@ -306,13 +307,16 @@ class AddSchedule extends Component {
           (this.props.editOrAdd !== "add" &&
             !this.props.isLoading &&
             this.props.schedules.schedule === null) ? (
-            <Link to="/schedule" className="btn btn-lg btn-primary ml-4">
+            <Link
+              to="/schedule"
+              className="btn btn-lg btn-outline-primary ml-4"
+            >
               Back to Schedule
             </Link>
           ) : (
             <Link
               to={`/schedule/${this.props.match.params.id}`}
-              className="btn btn-lg btn-primary ml-4"
+              className="btn btn-lg btn-outline-primary ml-4"
             >
               Back to Schedule Item
             </Link>
