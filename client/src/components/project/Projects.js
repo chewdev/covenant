@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import SpinnerRow from "../common/SpinnerRow";
 import SelectListGroup from "../common/SelectListGroup";
@@ -69,7 +68,7 @@ class Projects extends Component {
             <div className="input-group">
               <div className="input-group-prepend">
                 <button
-                  className="btn btn-secondary dropdown-toggle"
+                  className="btn btn-dark dropdown-toggle"
                   type="button"
                   data-toggle="dropdown"
                   aria-haspopup="true"
@@ -145,7 +144,7 @@ class Projects extends Component {
                 error={null}
                 options={showCompletedOptions}
                 info=""
-                style={{ marginBottom: "0" }}
+                style={{ marginBottom: "0", minWidth: "12rem" }}
               />,
               <AddLink text="Add Project" to={"/projects/new"} />
             ]}
