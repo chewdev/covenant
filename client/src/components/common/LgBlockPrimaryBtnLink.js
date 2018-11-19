@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function LgBlockPrimaryBtnLink({ to, text }) {
   return (
-    <Link className="btn btn-primary btn-lg btn-block" to={to}>
+    <Link className="btn btn-outline-primary btn-lg btn-block" to={to}>
       {text}
     </Link>
   );
