@@ -157,14 +157,14 @@ class AddProjectLocation extends Component {
             this.props.projectlocations.projectlocation === null) ? (
             <Link
               to="/projectlocations"
-              className="btn btn-lg btn-primary ml-4"
+              className="btn btn-lg btn-outline-primary ml-4"
             >
               Back to All Project Locations
             </Link>
           ) : (
             <Link
               to={`/projectlocations/${this.props.match.params.id}`}
-              className="btn btn-lg btn-primary ml-4"
+              className="btn btn-lg btn-outline-primary ml-4"
             >
               Back to Project Location
             </Link>
