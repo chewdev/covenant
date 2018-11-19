@@ -16,10 +16,7 @@ export default function EmployeeTableRow({ employee }) {
         </Link>,
         formatPhoneNumber(employee.phonenumber) || "Unavailable",
         employee.title || "Unavailable",
-        <Link
-          className="btn btn-secondary"
-          to={`/employees/${employee._id}/edit`}
-        >
+        <Link className="btn btn-dark" to={`/employees/${employee._id}/edit`}>
           Update
         </Link>
       ]}
