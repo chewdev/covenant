@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import UpdatePassword from "./UpdatePassword";
-import { updatePassword } from "../../actions/authActions";
+import { updatePassword, logoutUser } from "../../actions/authActions";
 
 class User extends Component {
   constructor(props) {
@@ -19,6 +20,12 @@ class User extends Component {
     this.toggleUpdateBox = this.toggleUpdateBox.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  onLogoutClick(e) {
+    e.preventDefault();
+    this.props.logoutUser();
+    this.props.history.push("/");
   }
 
   toggleUpdateBox() {
@@ -72,10 +79,8 @@ class User extends Component {
         <div className="card text-center border-dark">
           <div className="card-header bg-dark text-white">User Info</div>
           <div className="card-body p-0 pt-2">
-            <div className="card-title text-primary">
-              <h2>
-                <strong>{user.name || "Name Unavailable"}</strong>
-              </h2>
+            <div className="card-title">
+              <h2>{user.name || "Name Unavailable"}</h2>
             </div>
             <div className="list-group">
               <div className="list-group-item">
@@ -104,6 +109,24 @@ class User extends Component {
                   newpassword2={this.state.newpassword2}
                 />
               ) : null}
+              <div className="list-group-item bg-dark">
+                {isAuthenticated &&
+                user.exp > Date.now() / 1000 &&
+                user.role === 4 ? (
+                  <Link
+                    className="btn btn-outline-light col-5 mr-2"
+                    to="/register"
+                  >
+                    Add User
+                  </Link>
+                ) : null}
+                <button
+                  className="btn btn-outline-light col-5 ml-2"
+                  onClick={this.onLogoutClick.bind(this)}
+                >
+                  Logout
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -122,6 +145,7 @@ class User extends Component {
 
 User.propTypes = {
   updatePassword: PropTypes.func.isRequired,
+  logoutUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
 
@@ -132,5 +156,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { updatePassword }
+  { updatePassword, logoutUser }
 )(User);

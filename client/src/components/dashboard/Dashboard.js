@@ -3,26 +3,9 @@ import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import User from "../user/User";
 import PropTypes from "prop-types";
-import { logoutUser } from "../../actions/authActions";
 
 class Dashboard extends Component {
-  onLogoutClick(e) {
-    e.preventDefault();
-    this.props.logoutUser();
-    this.props.history.push("/");
-  }
-
   render() {
-    const { isAuthenticated, user } = this.props.auth;
-    const logoutButton = (
-      <button
-        onClick={this.onLogoutClick.bind(this)}
-        className="btn btn-dark btn-block mb-4 mt-0 "
-      >
-        Logout
-      </button>
-    );
-
     return (
       <div>
         <div className="container mt-4">
@@ -48,7 +31,7 @@ class Dashboard extends Component {
 
                           <Link
                             to="/schedule"
-                            className="btn btn-outline-secondary btn-lg mb-4 ml-2"
+                            className="btn btn-outline-dark btn-lg mb-4 ml-2"
                           >
                             View All
                           </Link>
@@ -67,7 +50,7 @@ class Dashboard extends Component {
 
                           <Link
                             to="/projects"
-                            className="btn btn-outline-secondary btn-lg mb-4 ml-2"
+                            className="btn btn-outline-dark btn-lg mb-4 ml-2"
                           >
                             View All
                           </Link>
@@ -85,7 +68,7 @@ class Dashboard extends Component {
                           </Link>
                           <Link
                             to="/customers"
-                            className="btn btn-outline-secondary btn-lg mb-4 ml-2"
+                            className="btn btn-outline-dark btn-lg mb-4 ml-2"
                           >
                             View All
                           </Link>
@@ -103,7 +86,7 @@ class Dashboard extends Component {
                           </Link>
                           <Link
                             to="/employees"
-                            className="btn btn-outline-secondary btn-lg mb-4 ml-2"
+                            className="btn btn-outline-dark btn-lg mb-4 ml-2"
                           >
                             View All
                           </Link>
@@ -121,7 +104,7 @@ class Dashboard extends Component {
                           </Link>
                           <Link
                             to="/projectlocations"
-                            className="btn btn-outline-secondary btn-lg mb-4 ml-2"
+                            className="btn btn-outline-dark btn-lg mb-4 ml-2"
                           >
                             View All
                           </Link>
@@ -135,48 +118,10 @@ class Dashboard extends Component {
             </div>
           </div>
         </div>
-        <User />
-        <div className="container">
-          <div
-            className="row"
-            style={{ display: "flex", justifyContent: "center" }}
-          >
-            {isAuthenticated &&
-            user.exp > Date.now() / 1000 &&
-            user.role === 4 ? (
-              <div className="col-md-8 m-auto row">
-                <div className="pl-0 pr-2 col-6">
-                  <Link
-                    to="/register"
-                    className="btn btn-primary btn-block mb-4 "
-                  >
-                    Add User
-                  </Link>
-                </div>
-                <div className="pl-2 pr-0 col-6">{logoutButton}</div>
-              </div>
-            ) : (
-              <div className="col-md-8 m-auto row">
-                <div className="col-12 p-0 m-auto">{logoutButton}</div>
-              </div>
-            )}
-          </div>
-        </div>
+        <User history={this.props.history} />
       </div>
     );
   }
 }
 
-Dashboard.propTypes = {
-  logoutUser: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired
-};
-
-const mapStateToProps = state => ({
-  auth: state.auth
-});
-
-export default connect(
-  mapStateToProps,
-  { logoutUser }
-)(withRouter(Dashboard));
+export default Dashboard;
