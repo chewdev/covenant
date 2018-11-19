@@ -1,7 +1,6 @@
 import React from "react";
 import TableRow from "../common/TableRow";
 import { Link } from "react-router-dom";
-import { formatPhoneNumber } from "../../utils/phoneNumbers";
 
 export default function ScheduleTableRow({
   schedule,
@@ -13,7 +12,7 @@ export default function ScheduleTableRow({
     <TableRow
       classes="text-dark"
       tdArray={[
-        <Link className="btn btn-secondary" to={`/schedule/${schedule._id}`}>
+        <Link className="btn btn-dark" to={`/schedule/${schedule._id}`}>
           Open Item
         </Link>,
         <Link to={`/projects/${schedule.project}`}>{projectName}</Link>,
