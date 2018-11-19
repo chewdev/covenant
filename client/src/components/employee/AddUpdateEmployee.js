@@ -157,13 +157,16 @@ class AddEmployee extends Component {
           (this.props.editOrAdd !== "add" &&
             !this.props.isLoading &&
             this.props.employees.employee === null) ? (
-            <Link to="/employees" className="btn btn-lg btn-primary ml-4">
+            <Link
+              to="/employees"
+              className="btn btn-lg btn-outline-primary ml-4"
+            >
               Back to All Employees
             </Link>
           ) : (
             <Link
               to={`/employees/${this.props.match.params.id}`}
-              className="btn btn-lg btn-primary ml-4"
+              className="btn btn-lg btn-outline-primary ml-4"
             >
               Back to Employee
             </Link>
