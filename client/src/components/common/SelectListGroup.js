@@ -9,7 +9,8 @@ const SelectListGroup = ({
   info,
   onChange,
   options,
-  style
+  style,
+  autofocus
 }) => {
   const selectOptions = options.map(option => (
     <option key={option.label} value={option.value}>
@@ -26,6 +27,7 @@ const SelectListGroup = ({
         name={name}
         value={value}
         onChange={onChange}
+        autoFocus={autofocus || false}
       >
         {selectOptions}
       </select>
