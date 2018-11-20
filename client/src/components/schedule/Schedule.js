@@ -104,7 +104,7 @@ class Schedule extends Component {
         const currentlocation = `${res.coords.latitude}+${
           res.coords.longitude
         }`;
-        const awaitCheckin = new Promise((resolve, reject) => {
+        const awaitCheckout = new Promise((resolve, reject) => {
           this.props.checkOutSchedule(
             this.props.match.params.id,
             currentlocation,
@@ -112,7 +112,7 @@ class Schedule extends Component {
             reject
           );
         });
-        awaitCheckin
+        awaitCheckout
           .then(() => this.setState({ checkingOut: false }))
           .catch(err => this.setState({ checkingOut: false }));
       },
@@ -205,9 +205,11 @@ class Schedule extends Component {
               <div className="list-group-item">
                 <div className="row mx-0">
                   {this.state.locationDenied ? (
-                    <small className="text-danger">
-                      Please enable location services to check in
-                    </small>
+                    <div className="col-12 text-center">
+                      <small className="text-danger text-center">
+                        Please enable location services to check in and out
+                      </small>
+                    </div>
                   ) : null}
                   <div className="col-sm-6 mb-4 mb-sm-0 px-0">
                     <h3>
