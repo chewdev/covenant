@@ -5,7 +5,12 @@ export default () => {
   return (
     <div>
       <img
-        style={{ width: "200px", margin: "auto", display: "block" }}
+        style={{
+          width: "100%",
+          maxWidth: "200px",
+          margin: "auto",
+          display: "block"
+        }}
         src={spinner}
         alt="Loading..."
       />
