@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
+const fetch = require("node-fetch");
+const mapsKey = require("../../config/keys").mapsKey;
 
 // Load Employee input validation
 const validateScheduleInput = require("../../validation/schedule");
@@ -172,29 +174,65 @@ router.put(
   "/:sched_id/checkin",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Schedule.findById(req.params.sched_id)
-      .populate("employees")
-      .populate("project")
-      .then(schedule => {
-        if (!schedule) {
-          return res.status(400).json({
-            error: "Scheduled appointment not found. Unable to check in."
-          });
-        } else {
-          schedule.checkin = new Date();
-          schedule
-            .save()
-            .then(schedule => res.json(schedule))
-            .catch(err =>
-              res.status(400).json({
-                error: "Error updating scheduled appointment check in."
+    if (!req.body.currentlocation) {
+      res
+        .status(400)
+        .json({ checkin: "Please allow location to be provided." });
+    } else {
+      Schedule.findById(req.params.sched_id)
+        .populate("employees")
+        .populate("project")
+        .populate({
+          path: "project",
+          populate: { path: "projectlocation" }
+        })
+        .then(schedule => {
+          if (!schedule) {
+            return res.status(400).json({
+              checkin: "Scheduled appointment not found. Unable to check in."
+            });
+          } else {
+            fetch(
+              `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${
+                req.body.currentlocation
+              }&destinations=${schedule.project.projectlocation.address.replace(
+                /\s/g,
+                "+"
+              )}&key=${mapsKey}`
+            )
+              .then(response => response.json())
+              .then(jsonresponse => {
+                if (jsonresponse.rows[0].elements[0].distance.value > 3200) {
+                  // 3200 meters, approx 2 miles
+                  return res.status(400).json({
+                    checkin: "Must be closer to location to check in."
+                  });
+                } else {
+                  schedule.checkin = new Date();
+                  schedule
+                    .save()
+                    .then(schedule => res.json(schedule))
+                    .catch(err =>
+                      res.status(400).json({
+                        checkin: "Error checking in. Try again later."
+                      })
+                    );
+                }
               })
-            );
-        }
-      })
-      .catch(err =>
-        res.status(404).json({ error: "Scheduled appointment not found." })
-      );
+              .catch(err =>
+                res
+                  .status(400)
+                  .json({ checkin: "Error checking in. Try again later." })
+              );
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          return res
+            .status(404)
+            .json({ checkin: "Scheduled appointment not found." });
+        });
+    }
   }
 );
 
@@ -205,29 +243,65 @@ router.put(
   "/:sched_id/checkout",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Schedule.findById(req.params.sched_id)
-      .populate("employees")
-      .populate("project")
-      .then(schedule => {
-        if (!schedule) {
-          return res.status(400).json({
-            error: "Scheduled appointment not found. Unable to check out."
-          });
-        } else {
-          schedule.checkout = new Date();
-          schedule
-            .save()
-            .then(schedule => res.json(schedule))
-            .catch(err =>
-              res.status(400).json({
-                error: "Error updating scheduled appointment check out."
+    if (!req.body.currentlocation) {
+      res
+        .status(400)
+        .json({ checkout: "Please allow location to be provided." });
+    } else {
+      Schedule.findById(req.params.sched_id)
+        .populate("employees")
+        .populate("project")
+        .populate({
+          path: "project",
+          populate: { path: "projectlocation" }
+        })
+        .then(schedule => {
+          if (!schedule) {
+            return res.status(400).json({
+              checkout: "Scheduled appointment not found. Unable to check out."
+            });
+          } else {
+            fetch(
+              `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${
+                req.body.currentlocation
+              }&destinations=${schedule.project.projectlocation.address.replace(
+                /\s/g,
+                "+"
+              )}&key=${mapsKey}`
+            )
+              .then(response => response.json())
+              .then(jsonresponse => {
+                if (jsonresponse.rows[0].elements[0].distance.value > 8000) {
+                  // 8000 meters, approx 5 miles
+                  return res.status(400).json({
+                    checkout: "Must be closer to location to check out."
+                  });
+                } else {
+                  schedule.checkout = new Date();
+                  schedule
+                    .save()
+                    .then(schedule => res.json(schedule))
+                    .catch(err =>
+                      res.status(400).json({
+                        checkout: "Error checking out. Try again later."
+                      })
+                    );
+                }
               })
-            );
-        }
-      })
-      .catch(err =>
-        res.status(404).json({ error: "Scheduled appointment not found." })
-      );
+              .catch(err =>
+                res
+                  .status(400)
+                  .json({ checkout: "Error checking out. Try again later." })
+              );
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          return res
+            .status(404)
+            .json({ checkout: "Scheduled appointment not found." });
+        });
+    }
   }
 );
 

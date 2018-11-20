@@ -67,43 +67,59 @@ export const setScheduleComplete = id => dispatch => {
 };
 
 // Check in for Schedule
-export const checkInSchedule = id => dispatch => {
+export const checkInSchedule = (
+  id,
+  currentlocation,
+  resolve,
+  reject
+) => dispatch => {
   dispatch(clearErrors());
 
   axios
-    .put(`/api/schedule/${id}/checkin`)
+    .put(`/api/schedule/${id}/checkin`, { currentlocation })
     .then(res =>
       dispatch({
         type: GET_SCHEDULE,
         payload: res.data
       })
     )
-    .catch(err =>
+    .then(() => {
+      resolve();
+    })
+    .catch(err => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data
-      })
-    );
+      });
+      reject();
+    });
 };
 
 // Check out of Schedule
-export const checkOutSchedule = id => dispatch => {
+export const checkOutSchedule = (
+  id,
+  currentlocation,
+  resolve,
+  reject
+) => dispatch => {
   dispatch(clearErrors());
 
   axios
-    .put(`/api/schedule/${id}/checkout`)
+    .put(`/api/schedule/${id}/checkout`, { currentlocation })
     .then(res =>
       dispatch({
         type: GET_SCHEDULE,
         payload: res.data
       })
     )
-    .catch(err =>
+    .then(() => resolve())
+    .catch(err => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data
-      })
-    );
+      });
+      return reject();
+    });
 };
 
 // Get Schedule

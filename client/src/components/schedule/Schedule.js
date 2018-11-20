@@ -13,7 +13,8 @@ import {
   deleteSchedule,
   setScheduleComplete,
   checkInSchedule,
-  checkOutSchedule
+  checkOutSchedule,
+  clearErrors
 } from "../../actions/scheduleActions";
 import isEmpty from "../../validation/is-empty";
 
@@ -23,7 +24,10 @@ class Schedule extends Component {
 
     this.state = {
       showTip: false,
-      showModal: false
+      showModal: false,
+      checkingIn: false,
+      checkingOut: false,
+      locationDenied: false
     };
   }
 
@@ -59,8 +63,68 @@ class Schedule extends Component {
     this.props.setScheduleComplete(this.props.match.params.id);
   }
 
+  componentWillUnmount() {
+    this.props.clearErrors();
+  }
+
+  onCheckIn() {
+    this.setState({ checkingIn: true });
+    navigator.geolocation.getCurrentPosition(
+      res => {
+        this.setState({ locationDenied: false });
+        const currentlocation = `${res.coords.latitude}+${
+          res.coords.longitude
+        }`;
+        const awaitCheckin = new Promise((resolve, reject) => {
+          this.props.checkInSchedule(
+            this.props.match.params.id,
+            currentlocation,
+            resolve,
+            reject
+          );
+        });
+        awaitCheckin
+          .then(() => this.setState({ checkingIn: false }))
+          .catch(err => this.setState({ checkingIn: false }));
+      },
+      err => {
+        this.setState({ checkingIn: false, locationDenied: true });
+      }
+    );
+  }
+
+  onCheckOut() {
+    if (!this.props.schedules.schedule.checkin) {
+      return;
+    }
+    this.setState({ checkingOut: true });
+    navigator.geolocation.getCurrentPosition(
+      res => {
+        this.setState({ locationDenied: false });
+        const currentlocation = `${res.coords.latitude}+${
+          res.coords.longitude
+        }`;
+        const awaitCheckin = new Promise((resolve, reject) => {
+          this.props.checkOutSchedule(
+            this.props.match.params.id,
+            currentlocation,
+            resolve,
+            reject
+          );
+        });
+        awaitCheckin
+          .then(() => this.setState({ checkingOut: false }))
+          .catch(err => this.setState({ checkingOut: false }));
+      },
+      err => {
+        this.setState({ checkingOut: false, locationDenied: true });
+      }
+    );
+  }
+
   render() {
     const { schedule, scheduleloading } = this.props.schedules;
+    const { errors } = this.props;
     let scheduleContent;
 
     if (schedule === null) {
@@ -140,40 +204,64 @@ class Schedule extends Component {
               </div>
               <div className="list-group-item">
                 <div className="row mx-0">
+                  {this.state.locationDenied ? (
+                    <small className="text-danger">
+                      Please enable location services to check in
+                    </small>
+                  ) : null}
                   <div className="col-sm-6 mb-4 mb-sm-0 px-0">
                     <h3>
                       <u>Check-In</u>
                     </h3>
-                    {schedule.checkin ? (
+                    {this.state.checkingIn ? (
+                      <div
+                        className="d-flex justify-content-center align-items-center m-auto"
+                        style={{ width: "10rem", height: "10rem" }}
+                      >
+                        <Spinner />
+                      </div>
+                    ) : schedule.checkin ? (
                       <p>{new Date(schedule.checkin).toLocaleString()}</p>
                     ) : (
                       <button
                         className="btn btn-outline-primary btn-lg"
-                        onClick={() =>
-                          this.props.checkInSchedule(this.props.match.params.id)
-                        }
+                        onClick={this.onCheckIn.bind(this)}
                       >
                         Check In
                       </button>
+                    )}
+                    {errors.checkin && (
+                      <div>
+                        <small className="text-danger">{errors.checkin}</small>
+                      </div>
                     )}
                   </div>
                   <div className="col-sm-6 px-0">
                     <h3>
                       <u>Check-Out</u>
                     </h3>
-                    {schedule.checkout ? (
+                    {this.state.checkingOut ? (
+                      <div
+                        className="d-flex justify-content-center align-items-center m-auto"
+                        style={{ width: "10rem", height: "10rem" }}
+                      >
+                        <Spinner />
+                      </div>
+                    ) : schedule.checkout ? (
                       <p>{new Date(schedule.checkout).toLocaleString()}</p>
                     ) : (
                       <button
                         className="btn btn-outline-primary btn-lg"
-                        onClick={() =>
-                          this.props.checkOutSchedule(
-                            this.props.match.params.id
-                          )
-                        }
+                        onClick={this.onCheckOut.bind(this)}
+                        disabled={!schedule.checkin}
                       >
                         Check Out
                       </button>
+                    )}
+                    {errors.checkout && (
+                      <div>
+                        <small className="text-danger">{errors.checkout}</small>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -210,11 +298,13 @@ Schedule.propTypes = {
   setScheduleComplete: PropTypes.func.isRequired,
   checkInSchedule: PropTypes.func.isRequired,
   checkOutSchedule: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
   schedules: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  schedules: state.schedule
+  schedules: state.schedule,
+  errors: state.errors
 });
 
 export default connect(
@@ -224,6 +314,7 @@ export default connect(
     deleteSchedule,
     setScheduleComplete,
     checkInSchedule,
-    checkOutSchedule
+    checkOutSchedule,
+    clearErrors
   }
 )(withRouter(Schedule));
