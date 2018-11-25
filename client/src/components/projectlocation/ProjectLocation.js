@@ -137,11 +137,11 @@ class ProjectLocation extends Component {
                     <u>Address</u>
                   </h3>
 
-                  {(
+                  {projectlocation.address ? (
                     <address className="card-text text-secondary">
                       {projectlocation.address}
                     </address>
-                  ) || (
+                  ) : (
                     <p className="card-text text-secondary">
                       "No Address Provided"
                     </p>
