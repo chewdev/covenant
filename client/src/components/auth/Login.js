@@ -82,6 +82,7 @@ class Login extends Component {
                 />
                 <input
                   type="submit"
+                  value="Log In"
                   className="btn btn-primary btn-block mt-4"
                 />
               </form>
