@@ -21,11 +21,16 @@ class AddSchedule extends Component {
     super(props);
 
     let date = getLocalIsoDate();
+    const splitDate = date.split("-");
+    splitDate[0] = Number(splitDate[0]) + 1; // Add 1 to year
+    const datePlus1Year = splitDate.join("-");
 
     this.state = {
       project: "",
       employees: [],
       date: date,
+      currDate: date,
+      datePlus1Year: datePlus1Year,
       isComplete: "false",
       notes: "",
       errors: {},
@@ -245,8 +250,8 @@ class AddSchedule extends Component {
                   value={this.state.date}
                   onChange={this.onChange}
                   id="date"
-                  min="2017-01-01T00:00"
-                  max="2020-12-31T23:59"
+                  min={this.state.currDate}
+                  max={this.state.datePlus1Year}
                   style={{
                     boxShadow: "none",
                     WebkitAppearance: "searchfield"
