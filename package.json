@@ -29,5 +29,8 @@
     "concurrently": "^4.0.1",
     "node-sass": "^7.0.1",
     "nodemon": "^1.18.4"
+  },
+  "engines": {
+    "node": "10.x"
   }
 }
